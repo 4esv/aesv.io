@@ -1,0 +1,24 @@
+{%- if grid.isTerminal -%}
+{% extends "base-text.njk" %}
+{% block content %}
+404 — Not Found
+===============
+
+The page {{ route }} does not exist.
+
+Try: {{ site.url }}/
+{% endblock %}
+{%- else -%}
+{% extends "base.njk" %}
+{% block title %}404 — {{ site.name }}{% endblock %}
+{% block terminal %}
+<pre class="terminal">
+
+404 — Not Found
+
+The page {{ route }} does not exist.
+
+<a href="/">Return home</a>
+</pre>
+{% endblock %}
+{%- endif -%}

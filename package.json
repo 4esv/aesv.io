@@ -1,0 +1,32 @@
+{
+  "name": "aesv-io",
+  "version": "1.0.0",
+  "description": "Personal website for Axel Stevens - server-rendered HTML on a monospace character grid",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test 'test/**/*.test.js'",
+    "test:watch": "node --test --watch 'test/**/*.test.js'",
+    "lint": "eslint src/",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run lint && npm run format:check && npm run test"
+  },
+  "dependencies": {
+    "@fastify/static": "^8.0.0",
+    "@fastify/view": "^10.0.0",
+    "fastify": "^5.0.0",
+    "nunjucks": "^3.2.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.0.0",
+    "prettier": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./src:/app/src:ro
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    command: node --watch src/server.js

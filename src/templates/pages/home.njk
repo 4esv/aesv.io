@@ -1,0 +1,26 @@
+{%- if grid.isTerminal -%}
+{% extends "base-text.njk" %}
+{% block content %}
+{{ site.name }}
+{{ '=' | repeat(site.name | length) }}
+
+
+github    https://github.com/{{ site.github }}
+email     you@example.com
+
+
+MIT License. {{ now | date('Y') }}.
+{% endblock %}
+{%- else -%}
+{% extends "base.njk" %}
+{% block title %}{{ site.name }}{% endblock %}
+{% block terminal %}
+<section id="about">
+<pre class="terminal">
+<span class="section-rule">──</span> <span class="section-name">about</span> <span class="section-rule">───────────────────────────────────────────────</span>
+
+Your content here.
+</pre>
+</section>
+{% endblock %}
+{%- endif -%}

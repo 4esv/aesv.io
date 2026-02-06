@@ -1,0 +1,3 @@
+Contact: mailto:security@aesv.io
+Preferred-Languages: en
+Canonical: https://aesv.io/.well-known/security.txt

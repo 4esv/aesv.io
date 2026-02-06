@@ -1,0 +1,24 @@
+{#- Sidebar (desktop) -#}
+<aside id="sidebar">
+  <a href="#" class="logo">~</a>
+  <span class="name">{{ site.name }}</span>
+  <span class="sep">─────────────────</span>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+  </ul>
+  <span class="sep">─────────────────</span>
+  <ul class="ext-links">
+    <li><a href="https://github.com/{{ site.github }}">github ↗</a></li>
+    <li><a href="mailto:you@example.com">email ↗</a></li>
+  </ul>
+</aside>
+{#- Mobile links (visible on small screens, positioned above footer) -#}
+<div id="mobile-links">
+  <a href="https://github.com/{{ site.github }}">github ↗</a>
+  <a href="mailto:you@example.com">email ↗</a>
+</div>
+{#- Mobile nav (sticky header) -#}
+<nav id="mobile-nav">
+  <a href="#" class="logo">~</a>
+  <a href="#about">about</a>
+</nav>

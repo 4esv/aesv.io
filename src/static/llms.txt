@@ -1,0 +1,21 @@
+# aesv.io
+
+Personal website of Axel Stevens.
+
+## About
+
+Systems Integrator at Cornell University.
+
+## Sections
+
+- / - Home page with dynamic widgets (Spotify, Strava, GitHub)
+- /work - Professional work and projects
+- /life - Personal interests and hobbies
+
+## Technical
+
+This site uses a terminal-as-viewport architecture where the server renders
+HTML to exact grid dimensions (columns × rows) received from the client.
+Everything renders inside a single `<pre>` element for a monospace aesthetic.
+
+Built with Node.js, Fastify, Nunjucks, and HTMX.

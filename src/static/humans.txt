@@ -1,0 +1,10 @@
+/* TEAM */
+Developer: Axel Stevens
+Site: https://aesv.io
+Location: Ithaca, NY
+
+/* SITE */
+Last update: 2025
+Standards: HTML5, CSS3
+Software: Node.js, Fastify, Nunjucks, HTMX
+Font: IBM Plex Mono

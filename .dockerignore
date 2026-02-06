@@ -1,0 +1,11 @@
+node_modules/
+.git/
+.gitignore
+.env*
+*.md
+test/
+.github/
+docker-compose*.yml
+.editorconfig
+.prettierrc
+eslint.config.js

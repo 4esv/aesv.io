@@ -1,0 +1,13 @@
+services:
+  web:
+    image: ghcr.io/4esv/aesv-io:latest
+    ports:
+      - '3000:3000'
+    env_file:
+      - /opt/aesv/.env.prod
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
