@@ -255,7 +255,7 @@ footer a:focus {
 .no-scroll #mobile-nav a:not(.logo),
 .no-scroll #sidebar .nav-links,
 .no-scroll #sidebar .nav-links + .sep,
-.no-scroll footer a[href="#"] {
+.no-scroll footer a[href='#'] {
   display: none;
 }
 
@@ -322,7 +322,6 @@ a:focus {
 
 /* Mobile */
 @media (max-width: 767px) {
-
   #wrapper {
     display: flex;
     flex-direction: column;
