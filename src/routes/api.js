@@ -65,7 +65,7 @@ export async function apiRoutes(fastify) {
 
   // Background refresh on startup + interval
   refreshData(config)
-  setInterval(() => refreshData(config), REFRESH_INTERVAL)
+  setInterval(() => refreshData(config), REFRESH_INTERVAL).unref()
 }
 
 export function getPageData() {
