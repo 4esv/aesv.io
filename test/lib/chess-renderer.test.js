@@ -9,10 +9,10 @@ describe('renderBoard', () => {
     const lines = renderBoard(STARTING_FEN, 'white')
     assert.equal(lines.length, 9)
     assert.ok(lines[8].includes('a b c d e f g h'))
-    // Black pieces on rank 8 (top)
-    assert.ok(lines[0].includes('\u265C'))
-    // White pieces on rank 1 (bottom)
-    assert.ok(lines[7].includes('\u2656'))
+    // Black pieces on rank 8 (top) — outlined glyphs on dark bg
+    assert.ok(lines[0].includes('\u2656'))
+    // White pieces on rank 1 (bottom) — filled glyphs on dark bg
+    assert.ok(lines[7].includes('\u265C'))
   })
 
   it('renders starting position from black perspective', () => {
@@ -20,9 +20,9 @@ describe('renderBoard', () => {
     assert.equal(lines.length, 9)
     assert.ok(lines[8].includes('h g f e d c b a'))
     // White pieces on rank 1 (top when black perspective)
-    assert.ok(lines[0].includes('\u2656'))
+    assert.ok(lines[0].includes('\u265C'))
     // Black pieces on rank 8 (bottom when black perspective)
-    assert.ok(lines[7].includes('\u265C'))
+    assert.ok(lines[7].includes('\u2656'))
   })
 
   it('renders empty board', () => {
@@ -38,6 +38,6 @@ describe('renderBoard', () => {
     const scholarsMate = 'rnb1kbnr/pppp1ppp/8/4p3/2B1P2q/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1'
     const lines = renderBoard(scholarsMate, 'white')
     assert.equal(lines.length, 9)
-    assert.ok(lines[0].includes('\u265C'))
+    assert.ok(lines[0].includes('\u2656'))
   })
 })
