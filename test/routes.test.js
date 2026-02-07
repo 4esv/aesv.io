@@ -60,6 +60,49 @@ describe('Page Routes', () => {
   })
 })
 
+describe('API Routes', () => {
+  let app
+
+  before(async () => {
+    app = await build({ logger: false })
+  })
+
+  after(async () => {
+    await app.close()
+  })
+
+  it('GET /api/gpg returns text/plain', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/gpg',
+    })
+
+    assert.equal(response.statusCode, 200)
+    assert.ok(response.headers['content-type'].includes('text/plain'))
+    assert.ok(response.body.includes('BEGIN PGP PUBLIC KEY BLOCK'))
+  })
+
+  it('GET /api/spotify/auth returns 302', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/spotify/auth',
+    })
+
+    assert.equal(response.statusCode, 302)
+    assert.ok(response.headers.location.includes('accounts.spotify.com'))
+  })
+
+  it('GET /api/strava/auth returns 302', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/strava/auth',
+    })
+
+    assert.equal(response.statusCode, 302)
+    assert.ok(response.headers.location.includes('strava.com'))
+  })
+})
+
 describe('Grid Middleware', () => {
   let app
 

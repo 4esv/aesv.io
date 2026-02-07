@@ -28,4 +28,20 @@ export default Object.freeze({
     maxCols: envInt('GRID_MAX_COLS', 300),
     maxRows: envInt('GRID_MAX_ROWS', 100),
   }),
+
+  spotify: Object.freeze({
+    clientId: env('SPOTIFY_CLIENT_ID', ''),
+    clientSecret: env('SPOTIFY_CLIENT_SECRET', ''),
+    redirectUri: env('SPOTIFY_REDIRECT_URI', 'http://127.0.0.1:3000/api/spotify/callback'),
+  }),
+
+  strava: Object.freeze({
+    clientId: env('STRAVA_CLIENT_ID', ''),
+    clientSecret: env('STRAVA_CLIENT_SECRET', ''),
+    redirectUri: env('STRAVA_REDIRECT_URI', 'http://localhost:3000/api/strava/callback'),
+  }),
+
+  chess: Object.freeze({
+    username: env('CHESS_USERNAME', '4esv'),
+  }),
 })

@@ -4,9 +4,50 @@
 {{ site.name }}
 {{ '=' | repeat(site.name | length) }}
 
+Mexican-American creator and curator of software, music, food, and information.
+This is my corner of the internet and public page. Feel free to look around.
 
-github    https://github.com/{{ site.github }}
-email     you@example.com
+work
+
+  Systems Integrator @ Cornell University
+  Building internal applications, automations and supporting software.
+
+  mail@aesv.io
+
+code
+
+  dotfiles    https://github.com/4esv/dotfiles
+  neovim      https://github.com/4esv/nvim-config
+  pianito     https://github.com/4esv/pianito
+
+music
+
+  Keyboardist, bassist and emergency drummer.
+{% if spotify %}
+  top tracks
+{% for track in spotify.tracks %}    {{ track.name }} — {{ track.artist }}
+{% endfor %}
+  top artists
+{% for artist in spotify.artists %}    {{ artist.name }}
+{% endfor %}{% endif %}
+chess
+{% if chess %}
+  last victory: {{ chess.white }} vs {{ chess.black }}
+{% for line in chess.board %}  {{ line }}
+{% endfor %}
+  {{ chess.url }}
+{% endif %}
+sport
+
+  I walk, climb indoors, run the trails.
+{% if strava %}
+  last activity: {{ strava.name }}
+  {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.date }}
+{% endif %}
+
+github    https://github.com/4esv
+email     mail@aesv.io
+gpg       https://aesv.io/api/gpg
 
 
 MIT License. {{ now | date('Y') }}.
@@ -17,9 +58,110 @@ MIT License. {{ now | date('Y') }}.
 {% block terminal %}
 <section id="about">
 <pre class="terminal">
-<span class="section-rule">──</span> <span class="section-name">about</span> <span class="section-rule">───────────────────────────────────────────────</span>
+<span class="section-name">about</span>
 
-Your content here.
+  Mexican-American creator and curator of software,
+  music, food, and information.
+  This is my corner of the internet and public page.
+  Feel free to look around.
+</pre>
+</section>
+
+<section id="work">
+<pre class="terminal">
+<span class="section-name">work</span>
+
+  Systems Integrator @ <a href="https://cornell.edu">Cornell University</a>
+  Building internal applications, automations and supporting software.
+
+  I specialize in extending, automating and creating software.
+  Everything from building modules to integrate AI with robots,
+  to scripts that automate an existing asset tracking database,
+  to full stack applications to manage other applications.
+
+  Like my text editor, I work across
+  all operating systems via the command line.
+
+  Interested in projects and remote opportunities
+
+  <span class="subsection-name">cases</span>
+
+    <span class="dim">{Case Studies}</span>
+
+  <a href="mailto:mail@aesv.io">mail@aesv.io</a>
+</pre>
+</section>
+
+<section id="code">
+<pre class="terminal">
+<span class="section-name">code</span>
+
+  <a href="https://github.com/4esv/dotfiles">my dotfiles</a>
+  <a href="https://github.com/4esv/nvim-config">my neovim config</a>
+  <a href="https://github.com/4esv/pianito">pianito, the TUI piano tuner</a>
+
+  <a href="https://github.com/4esv">github ↗</a>
+</pre>
+</section>
+
+<section id="music">
+<pre class="terminal">
+<span class="section-name">music</span>
+
+  Keyboardist, bassist and emergency drummer.
+  I listen to everything from Mexican folklore
+  to Norwegian death metal.
+
+{% if spotify %}
+  <span class="subsection-name">top tracks</span>
+{% for track in spotify.tracks %}
+    <a href="{{ track.url }}">{{ track.name }}</a> — {{ track.artist }}
+{%- endfor %}
+
+  <span class="subsection-name">top artists</span>
+{% for artist in spotify.artists %}
+    <a href="{{ artist.url }}">{{ artist.name }}</a>
+{%- endfor %}
+
+{% endif %}
+  <a href="https://open.spotify.com/user/aesvel">spotify ↗</a>
+  <a href="https://soundcloud.com/4esv">soundcloud ↗</a>
+</pre>
+</section>
+
+<section id="chess">
+<pre class="terminal">
+<span class="section-name">chess</span>
+
+{% if chess %}
+  <span class="subsection-name">last victory</span>
+
+    {{ chess.white }} vs {{ chess.black }} · {{ chess.result }}
+
+<code>{% for line in chess.board %}    {{ line }}
+{% endfor %}</code>
+    <a href="{{ chess.url }}">view on chess.com ↗</a>
+{% else %}
+    <span class="dim">no recent victories loaded</span>
+{% endif %}
+</pre>
+</section>
+
+<section id="sport">
+<pre class="terminal">
+<span class="section-name">sport</span>
+
+  I walk, climb indoors, run the trails.
+  Sometimes hike the gorges and swim in the lake.
+
+{% if strava %}
+  <span class="subsection-name">last activity</span>
+
+    {{ strava.name }}
+    {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.date }}
+
+{% endif %}
+  <a href="https://www.strava.com/athletes/51674641">strava ↗</a>
 </pre>
 </section>
 {% endblock %}

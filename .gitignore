@@ -27,5 +27,8 @@ build/
 # Test coverage
 coverage/
 
+# Data (tokens, etc.)
+data/
+
 # Content
 CONTENT.md

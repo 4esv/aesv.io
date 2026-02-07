@@ -7,7 +7,9 @@
   font-weight: 400 900;
   font-display: swap;
   src: url('/fonts/source-code-pro-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
@@ -16,7 +18,10 @@
   font-weight: 400 900;
   font-display: swap;
   src: url('/fonts/source-code-pro-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
 }
 
 :root {
@@ -38,13 +43,14 @@ html {
   height: 100%;
   scroll-behavior: smooth;
   overscroll-behavior: none;
+  overflow-y: overlay;
 }
 
 body {
   min-height: 100%;
   font-family: 'Source Code Pro', monospace;
   font-size: 14px;
-  line-height: 1.2;
+  line-height: 1.4;
   background: var(--bg);
   color: var(--normal);
   overscroll-behavior: none;
@@ -73,13 +79,15 @@ body {
   display: grid;
   grid-template-columns: 24ch 1fr;
   grid-template-rows: 1fr auto;
-  max-width: 110ch;
+  max-width: 124ch;
   margin: 0 auto;
   padding: 0;
 }
 
 @supports not (min-height: 100dvh) {
-  #wrapper { min-height: 100vh; }
+  #wrapper {
+    min-height: 100vh;
+  }
 }
 
 .logo {
@@ -180,15 +188,21 @@ body {
 /* Main content */
 main {
   grid-column: 2;
-  padding: 3em 3ch 0 2ch;
+  padding: calc(16ch + 3em) 3ch 0 2ch;
   min-width: 0;
 }
 
 pre {
   font-family: inherit;
   font-size: inherit;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  white-space: pre;
+}
+
+code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.2;
+  white-space: pre;
 }
 
 /* Sections — top-level with generous spacing */
@@ -247,6 +261,14 @@ footer a:focus {
   text-decoration-color: var(--normal);
 }
 
+/* Hide nav clutter when page fits in viewport */
+.no-scroll #mobile-nav a:not(.logo),
+.no-scroll #sidebar .nav-links,
+.no-scroll #sidebar .nav-links + .sep,
+.no-scroll footer a[href="#"] {
+  display: none;
+}
+
 /* Links */
 a {
   color: var(--bright);
@@ -258,6 +280,28 @@ a {
 a:hover,
 a:focus {
   text-decoration-color: var(--bright);
+}
+
+/* GPG copy button */
+.gpg-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 0;
+  line-height: 2;
+}
+
+.gpg-btn:hover,
+.gpg-btn:focus {
+  color: var(--normal);
+}
+
+/* Dim text */
+.dim {
+  color: var(--dim);
 }
 
 /* Selection */
@@ -288,9 +332,6 @@ a:focus {
 
 /* Mobile */
 @media (max-width: 767px) {
-  body {
-    font-size: 12px;
-  }
 
   #wrapper {
     display: flex;
@@ -307,15 +348,13 @@ a:focus {
     display: flex;
     align-items: center;
     gap: 2ch;
-    position: sticky;
+    position: absolute;
     top: 0;
     z-index: 10;
-    background: var(--bg);
     padding: 1.2em 2ch;
     overflow-x: auto;
     white-space: nowrap;
-    border-bottom: 1px solid var(--dim);
-    border-bottom-color: rgba(128, 128, 128, 0.2);
+    border-bottom: none;
     order: 1;
   }
 
@@ -338,16 +377,22 @@ a:focus {
   }
 
   main {
-    padding: 2em 2ch 0;
+    flex: 1;
+    padding: calc(2em + 6ch) 2ch 0;
     grid-column: auto;
     order: 2;
   }
 
   #mobile-links {
     display: flex;
+    align-items: baseline;
     gap: 2ch;
     padding: 2em 2ch 0;
     order: 3;
+  }
+
+  #mobile-links .gpg-btn {
+    line-height: inherit;
   }
 
   #mobile-links a {
@@ -358,6 +403,11 @@ a:focus {
   #mobile-links a:hover,
   #mobile-links a:focus {
     color: var(--bright);
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 
   section {
