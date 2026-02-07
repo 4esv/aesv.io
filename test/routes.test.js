@@ -82,20 +82,20 @@ describe('API Routes', () => {
     assert.ok(response.body.includes('BEGIN PGP PUBLIC KEY BLOCK'))
   })
 
-  it('GET /api/spotify/auth returns 302', async () => {
+  it('GET /api/auth/spotify returns 302', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: '/api/spotify/auth',
+      url: '/api/auth/spotify',
     })
 
     assert.equal(response.statusCode, 302)
     assert.ok(response.headers.location.includes('accounts.spotify.com'))
   })
 
-  it('GET /api/strava/auth returns 302', async () => {
+  it('GET /api/auth/strava returns 302', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: '/api/strava/auth',
+      url: '/api/auth/strava',
     })
 
     assert.equal(response.statusCode, 302)

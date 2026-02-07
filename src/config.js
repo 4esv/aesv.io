@@ -32,13 +32,13 @@ export default Object.freeze({
   spotify: Object.freeze({
     clientId: env('SPOTIFY_CLIENT_ID', ''),
     clientSecret: env('SPOTIFY_CLIENT_SECRET', ''),
-    redirectUri: env('SPOTIFY_REDIRECT_URI', 'http://127.0.0.1:3000/api/spotify/callback'),
+    redirectUri: env('SPOTIFY_REDIRECT_URI', 'http://127.0.0.1:3000/api/auth/spotify/callback'),
   }),
 
   strava: Object.freeze({
     clientId: env('STRAVA_CLIENT_ID', ''),
     clientSecret: env('STRAVA_CLIENT_SECRET', ''),
-    redirectUri: env('STRAVA_REDIRECT_URI', 'http://localhost:3000/api/strava/callback'),
+    redirectUri: env('STRAVA_REDIRECT_URI', 'http://localhost:3000/api/auth/strava/callback'),
   }),
 
   chess: Object.freeze({

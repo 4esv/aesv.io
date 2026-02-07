@@ -2,7 +2,6 @@ import { Chess } from 'chess.js'
 import { renderBoard } from '../lib/chess-renderer.js'
 
 const API_BASE = 'https://api.chess.com/pub/player'
-const CACHE_TTL = 30 * 60 * 1000
 const USER_AGENT = 'aesv.io/1.0'
 
 async function chessApi(url) {
@@ -13,14 +12,14 @@ async function chessApi(url) {
   return res.json()
 }
 
+function getUsername(player) {
+  return typeof player === 'object' ? player.username : player?.split('/').pop() || '?'
+}
+
 function getPlayerColor(game, username) {
   const lower = username.toLowerCase()
-  if (game.white?.toLowerCase().includes(lower)) return 'white'
-  if (game.black?.toLowerCase().includes(lower)) return 'black'
-  if (typeof game.white === 'object' && game.white?.username?.toLowerCase() === lower)
-    return 'white'
-  if (typeof game.black === 'object' && game.black?.username?.toLowerCase() === lower)
-    return 'black'
+  if (getUsername(game.white).toLowerCase() === lower) return 'white'
+  if (getUsername(game.black).toLowerCase() === lower) return 'black'
   return null
 }
 
@@ -42,11 +41,7 @@ function getFen(pgn) {
   }
 }
 
-export async function getLastVictory(username, cache) {
-  const cacheKey = `chess:${username}:last_victory`
-  const cached = cache.get(cacheKey)
-  if (cached) return cached
-
+export async function getLastVictory(username) {
   try {
     const archives = await chessApi(`${API_BASE}/${username}/games/archives`)
     if (!archives?.archives?.length) return null
@@ -65,21 +60,13 @@ export async function getLastVictory(username, cache) {
         const fen = getFen(game.pgn)
         if (!fen) continue
 
-        const white =
-          typeof game.white === 'object' ? game.white.username : game.white?.split('/').pop() || '?'
-        const black =
-          typeof game.black === 'object' ? game.black.username : game.black?.split('/').pop() || '?'
-
-        const result = {
-          white,
-          black,
+        return {
+          white: getUsername(game.white),
+          black: getUsername(game.black),
           result: `${color} wins`,
           url: game.url,
           board: renderBoard(fen, color),
         }
-
-        cache.set(cacheKey, result, CACHE_TTL)
-        return result
       }
     }
 

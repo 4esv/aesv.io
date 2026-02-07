@@ -4,7 +4,6 @@ const AUTHORIZE_URL = 'https://www.strava.com/oauth/authorize'
 const TOKEN_URL = 'https://www.strava.com/oauth/token'
 const API_BASE = 'https://www.strava.com/api/v3'
 const SCOPE = 'activity:read_all'
-const CACHE_TTL = 10 * 60 * 1000
 
 export function getAuthUrl(config) {
   const params = new URLSearchParams({
@@ -75,39 +74,24 @@ function metersToMiles(meters) {
   return (meters * 0.000621371).toFixed(2)
 }
 
-export async function getLastActivity(config, cache) {
-  const cacheKey = 'strava:last_activity'
-  const cached = cache.get(cacheKey)
-  if (cached) return cached
+export async function getLastActivity(config) {
+  const token = await refreshAccessToken(config)
+  if (!token) return null
 
-  try {
-    const token = await refreshAccessToken(config)
-    if (!token) return null
+  const res = await fetch(`${API_BASE}/athlete/activities?per_page=1`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
 
-    const res = await fetch(`${API_BASE}/athlete/activities?per_page=1`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+  if (!res.ok) return null
 
-    if (!res.ok) return null
+  const [activity] = await res.json()
+  if (!activity) return null
 
-    const [activity] = await res.json()
-    if (!activity) return null
-
-    const result = {
-      name: activity.name,
-      type: activity.sport_type || activity.type,
-      distance: metersToMiles(activity.distance),
-      duration: formatDuration(activity.moving_time),
-      date: new Date(activity.start_date_local).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }),
-    }
-
-    cache.set(cacheKey, result, CACHE_TTL)
-    return result
-  } catch {
-    return null
+  return {
+    name: activity.name,
+    type: activity.sport_type || activity.type,
+    distance: metersToMiles(activity.distance),
+    duration: formatDuration(activity.moving_time),
+    elevation: Math.round(activity.total_elevation_gain * 3.28084),
   }
 }

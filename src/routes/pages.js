@@ -42,7 +42,7 @@ export async function registerPageRoutes(fastify) {
         route,
         site: fastify.config.site,
         grid,
-        ...request.pageData,
+        ...fastify.getPageData(),
       })
     })
   }

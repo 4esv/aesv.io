@@ -71,7 +71,7 @@ MIT License. {{ now | date('Y') }}.
 <pre class="terminal">
 <span class="section-name">work</span>
 
-  Systems Integrator @ <a href="https://cornell.edu">Cornell University</a>
+  Systems Integrator @ <a href="https://cornell.edu">Cornell University ↗</a>
   Building internal applications, automations and supporting software.
 
   I specialize in extending, automating and creating software.
@@ -86,8 +86,74 @@ MIT License. {{ now | date('Y') }}.
 
   <span class="subsection-name">cases</span>
 
-    <span class="dim">{Case Studies}</span>
+    <span class="subsection-name">Interfolio Dossier Builder</span>
+    Automated assembly of faculty tenure review packets
 
+    Built a full-stack system in three languages.
+    React frontend submits jobs to a Node.js/Express
+    API, which queues work through BullMQ and Redis.
+    A Python worker pulls documents through Interfolio's
+    HMAC-SHA1 authenticated API, classifies them with
+    regex pattern matching, merges PDFs with PyPDF2,
+    and generates nested bookmarks.
+    23K lines across 127 files and 6 languages.
+
+    Replaced a multi-day manual process with a
+    5-minute automated run.
+
+    <span class="dim">Python, Node.js, React, BullMQ, Redis,
+    PyPDF2, Interfolio API, MSSQL, Vite</span>
+
+
+    <span class="subsection-name">Device Asset Sync</span>
+    Bi-directional inventory tracking across 1,300+ devices
+
+    Wrote a bi-directional sync between Jamf MDM
+    and Snipe-IT in PowerShell. The Mac agent uses
+    an OOP class with exponential backoff, OAuth
+    token refresh, and request throttling. A separate
+    Windows agent deployed via Group Policy reports
+    system info at logon.
+
+    1,300+ devices tracked at 95%+ accuracy.
+    Eliminated manual inventory entirely.
+
+    <span class="dim">PowerShell, Jamf Pro API, Snipe-IT API,
+    Group Policy</span>
+
+
+    <span class="subsection-name">App Security Manager</span>
+    RBAC dashboard replacing legacy ColdFusion permissions
+
+    Built an RBAC dashboard with a three-tier role
+    model (Developer, Owner, Admin). LDAP live search
+    with drag-and-drop user assignment. Transactional
+    SQL for cascading permission deletes across linked
+    tables. Auth runs through the university's
+    Shibboleth/SAML reverse proxy.
+    3,400 lines serving two colleges from one interface.
+
+    Access changes take under a minute. Replaced
+    a ColdFusion system in use for over a decade.
+
+    <span class="dim">Node.js, Express, MSSQL, LDAP, Shibboleth/SAML</span>
+
+
+    <span class="subsection-name">NAO Bot Natural Conversation</span>
+    Conversational humanoid robot for research demo
+
+    Connected NAO's onboard microphone to OpenAI
+    Whisper for transcription, routed text through
+    GPT for response generation, and piped output
+    back through NAO's animated speech engine for
+    synchronized voice and gestures.
+
+    Delivered a working proof-of-concept for an
+    NSF grant proposal.
+
+    <span class="dim">Python, NAOqi SDK, OpenAI Whisper, OpenAI API</span>
+
+  <a href="https://www.linkedin.com/in/aesv/?skipRedirect=true">linkedin ↗</a>
   <a href="mailto:mail@aesv.io">mail@aesv.io</a>
 </pre>
 </section>
@@ -96,9 +162,9 @@ MIT License. {{ now | date('Y') }}.
 <pre class="terminal">
 <span class="section-name">code</span>
 
-  <a href="https://github.com/4esv/dotfiles">my dotfiles</a>
-  <a href="https://github.com/4esv/nvim-config">my neovim config</a>
-  <a href="https://github.com/4esv/pianito">pianito, the TUI piano tuner</a>
+  <a href="https://github.com/4esv/dotfiles">my dotfiles ↗</a>
+  <a href="https://github.com/4esv/nvim-config">my neovim config ↗</a>
+  <a href="https://github.com/4esv/pianito">pianito, the TUI piano tuner ↗</a>
 
   <a href="https://github.com/4esv">github ↗</a>
 </pre>
@@ -115,12 +181,12 @@ MIT License. {{ now | date('Y') }}.
 {% if spotify %}
   <span class="subsection-name">top tracks</span>
 {% for track in spotify.tracks %}
-    <a href="{{ track.url }}">{{ track.name }}</a> — {{ track.artist }}
+    <a href="{{ track.url }}">{{ track.name }} ↗</a> by {{ track.artist }}
 {%- endfor %}
 
   <span class="subsection-name">top artists</span>
 {% for artist in spotify.artists %}
-    <a href="{{ artist.url }}">{{ artist.name }}</a>
+    <a href="{{ artist.url }}">{{ artist.name }} ↗</a>
 {%- endfor %}
 
 {% endif %}
@@ -140,7 +206,7 @@ MIT License. {{ now | date('Y') }}.
 
 <code>{% for line in chess.board %}    {{ line }}
 {% endfor %}</code>
-    <a href="{{ chess.url }}">view on chess.com ↗</a>
+      <a href="{{ chess.url }}">view on chess.com ↗</a>
 {% else %}
     <span class="dim">no recent victories loaded</span>
 {% endif %}
@@ -158,7 +224,7 @@ MIT License. {{ now | date('Y') }}.
   <span class="subsection-name">last activity</span>
 
     {{ strava.name }}
-    {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.date }}
+    {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain
 
 {% endif %}
   <a href="https://www.strava.com/athletes/51674641">strava ↗</a>

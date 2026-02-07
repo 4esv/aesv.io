@@ -1,32 +1,39 @@
 const PIECES = {
-  K: '\u2654',
-  Q: '\u2655',
-  R: '\u2656',
-  B: '\u2657',
-  N: '\u2658',
-  P: '\u2659',
-  k: '\u265A',
-  q: '\u265B',
-  r: '\u265C',
-  b: '\u265D',
-  n: '\u265E',
-  p: '\u265F',
+  K: '\u265A',
+  Q: '\u265B',
+  R: '\u265C',
+  B: '\u265D',
+  N: '\u265E',
+  P: '\u265F',
+  k: '\u2654',
+  q: '\u2655',
+  r: '\u2656',
+  b: '\u2657',
+  n: '\u2658',
+  p: '\u2659',
 }
 
-const EMPTY = '\u00B7'
+const LIGHT_EMPTY = '\u00B7'
+const DARK_EMPTY = ' '
 
 function fenToBoard(fen) {
   const placement = fen.split(' ')[0]
   const rows = placement.split('/')
   const board = []
 
-  for (const row of rows) {
+  for (let r = 0; r < rows.length; r++) {
     const rank = []
-    for (const ch of row) {
+    let file = 0
+    for (const ch of rows[r]) {
       if (ch >= '1' && ch <= '8') {
-        for (let i = 0; i < parseInt(ch, 10); i++) rank.push(EMPTY)
+        for (let i = 0; i < parseInt(ch, 10); i++) {
+          const isDark = (r + file) % 2 === 1
+          rank.push(isDark ? DARK_EMPTY : LIGHT_EMPTY)
+          file++
+        }
       } else {
         rank.push(PIECES[ch] || ch)
+        file++
       }
     }
     board.push(rank)
@@ -53,19 +60,13 @@ export function renderBoard(fen, perspective = 'white') {
   const fileLabels = perspective === 'white' ? 'a b c d e f g h' : 'h g f e d c b a'
 
   const lines = []
-  lines.push(
-    '  \u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510'
-  )
 
   for (let i = 0; i < 8; i++) {
     const pieces = board[i].join(' ')
-    lines.push(`${rankLabels[i]} \u2502 ${pieces} \u2502`)
+    lines.push(`${rankLabels[i]}  ${pieces}`)
   }
 
-  lines.push(
-    '  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518'
-  )
-  lines.push(`    ${fileLabels}`)
+  lines.push(`   ${fileLabels}`)
 
   return lines
 }

@@ -4,7 +4,6 @@ const AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 const TOKEN_URL = 'https://accounts.spotify.com/api/token'
 const API_BASE = 'https://api.spotify.com/v1'
 const SCOPE = 'user-top-read'
-const CACHE_TTL = 10 * 60 * 1000
 
 export function getAuthUrl(config) {
   const params = new URLSearchParams({
@@ -65,11 +64,7 @@ async function refreshAccessToken(config) {
   return data.access_token
 }
 
-async function fetchApi(path, config, cache) {
-  const cacheKey = `spotify:${path}`
-  const cached = cache.get(cacheKey)
-  if (cached) return cached
-
+async function fetchApi(path, config) {
   const token = await refreshAccessToken(config)
   if (!token) return null
 
@@ -78,35 +73,24 @@ async function fetchApi(path, config, cache) {
   })
 
   if (!res.ok) return null
-
-  const data = await res.json()
-  cache.set(cacheKey, data, CACHE_TTL)
-  return data
+  return res.json()
 }
 
-export async function getTopTracks(config, cache) {
-  try {
-    const data = await fetchApi('/me/top/tracks?limit=5&time_range=medium_term', config, cache)
-    if (!data?.items) return []
-    return data.items.map((t) => ({
-      name: t.name,
-      artist: t.artists.map((a) => a.name).join(', '),
-      url: t.external_urls.spotify,
-    }))
-  } catch {
-    return []
-  }
+export async function getTopTracks(config) {
+  const data = await fetchApi('/me/top/tracks?limit=5&time_range=medium_term', config)
+  if (!data?.items) return []
+  return data.items.map((t) => ({
+    name: t.name,
+    artist: t.artists.map((a) => a.name).join(', '),
+    url: t.external_urls.spotify,
+  }))
 }
 
-export async function getTopArtists(config, cache) {
-  try {
-    const data = await fetchApi('/me/top/artists?limit=5&time_range=medium_term', config, cache)
-    if (!data?.items) return []
-    return data.items.map((a) => ({
-      name: a.name,
-      url: a.external_urls.spotify,
-    }))
-  } catch {
-    return []
-  }
+export async function getTopArtists(config) {
+  const data = await fetchApi('/me/top/artists?limit=5&time_range=medium_term', config)
+  if (!data?.items) return []
+  return data.items.map((a) => ({
+    name: a.name,
+    url: a.external_urls.spotify,
+  }))
 }

@@ -10,7 +10,7 @@ import config from './config.js'
 import { registerErrorHandler } from './errors/handler.js'
 import { registerFilters, registerGlobals } from './lib/template-helpers.js'
 import { registerGridMiddleware } from './middleware/grid.js'
-import { apiRoutes } from './routes/api.js'
+import { apiRoutes, getPageData } from './routes/api.js'
 import { registerPageRoutes } from './routes/pages.js'
 
 const TEMPLATES_DIR = join(import.meta.dirname, 'templates')
@@ -60,6 +60,8 @@ export async function build(opts = {}) {
   })
 
   await fastify.register(apiRoutes)
+  fastify.decorate('getPageData', getPageData)
+
   await registerPageRoutes(fastify)
   registerErrorHandler(fastify)
 
