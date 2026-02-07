@@ -1,13 +1,21 @@
 services:
   web:
+    container_name: aesv-site
     image: ghcr.io/4esv/aesv-io:latest
     ports:
-      - '3000:3000'
+      - '2935:3000'
     env_file:
       - /opt/aesv/.env.prod
+    networks:
+      - caddy_net
     restart: unless-stopped
     logging:
       driver: json-file
       options:
         max-size: '10m'
         max-file: '3'
+
+networks:
+  caddy_net:
+    external: true
+    name: n8n-docker-caddy_default

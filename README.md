@@ -1,8 +1,10 @@
-# mono
+# aesv.io
 
-A single-page personal site. Monospace. Two columns on desktop, one on mobile. Serves plain text to terminal clients.
+My personal site at [aesv.io](https://aesv.io). Monospace terminal aesthetic. Two columns on desktop, single column on mobile. Serves plain text to terminal clients (`curl aesv.io`).
 
-Built with [Fastify](https://fastify.dev) and [Nunjucks](https://mozilla.github.io/nunjucks/). Self-hosted [Source Code Pro](https://github.com/adobe-fonts/source-code-pro). Lighthouse 100.
+Live data from Spotify, Strava, and Chess.com APIs, refreshed in the background. Built with Fastify, Nunjucks, and self-hosted Source Code Pro.
+
+Want a blank version to start from? Check out the [`clean-template`](https://github.com/4esv/aesv.io/tree/clean-template) branch.
 
 ## Run
 
@@ -20,11 +22,17 @@ Open [localhost:3000](http://localhost:3000), or `curl localhost:3000`.
 src/
 ├── server.js              # Fastify app
 ├── config.js              # Environment config
-├── routes/pages.js        # Auto-discovers templates → routes
-├── middleware/grid.js      # Terminal client detection
-├── errors/handler.js       # 404 / 500
-├── lib/template-helpers.js # Nunjucks filters
-├── grid/                  # Layout math, text utilities, borders
+├── routes/
+│   ├── pages.js           # Auto-discovers templates -> routes
+│   └── api.js             # OAuth callbacks, GPG, data loader
+├── services/
+│   ├── spotify.js         # Spotify top tracks/artists
+│   ├── strava.js          # Strava last activity
+│   └── chess.js           # Chess.com last victory
+├── lib/
+│   ├── chess-renderer.js  # Unicode board renderer
+│   └── template-helpers.js
+├── middleware/grid.js     # Terminal client detection
 ├── static/
 │   ├── css/style.css      # All styles
 │   └── fonts/             # Self-hosted woff2
@@ -34,19 +42,12 @@ src/
     └── pages/home.njk     # The page
 ```
 
-## Make it yours
-
-- **Content**: Edit `src/templates/pages/home.njk`. Add `<section>` blocks. The sidebar and footer are in `src/templates/partials/grid/`.
-- **Identity**: Set `SITE_NAME` and `SITE_TAGLINE` in `.env`, or edit the defaults in `src/config.js`.
-- **Sections**: Add nav links in the sidebar partial. Add matching `<section id="...">` blocks in the home template.
-- **Style**: Colors live in CSS custom properties at the top of `style.css`. The font is in `src/static/fonts/`.
-
-New `.njk` files in `src/templates/pages/` automatically become routes.
-
 ## Deploy
 
+CI/CD via GitHub Actions: push to `main` builds a Docker image, pushes to GHCR, and deploys via SSH.
+
 ```
-docker compose up -d
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 Or run `npm start` behind a reverse proxy.
