@@ -25,15 +25,15 @@ music
   Keyboardist, bassist and emergency drummer.
 {% if spotify %}
   top tracks
-{% for track in spotify.tracks %}    {{ track.name }} — {{ track.artist }}
+{% for track in spotify.tracks %}    {{ track.name | safe }} — {{ track.artist | safe }}
 {% endfor %}
   top artists
-{% for artist in spotify.artists %}    {{ artist.name }}
+{% for artist in spotify.artists %}    {{ artist.name | safe }}
 {% endfor %}{% endif %}
 chess
 {% if chess %}
-  last victory: {{ chess.white }} vs {{ chess.black }}
-{% for line in chess.board %}  {{ line }}
+  last victory: {{ chess.white | safe }} vs {{ chess.black | safe }}
+{% for line in chess.board %}  {{ line | safe }}
 {% endfor %}
   {{ chess.url }}
 {% endif %}
@@ -41,8 +41,8 @@ sport
 
   I walk, climb indoors, run the trails.
 {% if strava %}
-  last activity: {{ strava.name }}
-  {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.date }}
+  last activity: {{ strava.name | safe }}
+  {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain
 {% endif %}
 
 github    https://github.com/4esv
@@ -181,8 +181,7 @@ MIT License. {{ now | date('Y') }}.
 {% if spotify %}
   <span class="subsection-name">top tracks</span>
 {% for track in spotify.tracks %}
-    <a href="{{ track.url }}">{{ track.name }} ↗</a>
-      by {{ track.artist }}
+    <a href="{{ track.url }}">{{ track.name }} ↗</a> <span class="nowrap">by {{ track.artist }}</span>
 {%- endfor %}
 
   <span class="subsection-name">top artists</span>

@@ -290,6 +290,10 @@ a:focus {
 }
 
 /* Dim text */
+.nowrap {
+  white-space: nowrap;
+}
+
 .dim {
   color: var(--dim);
 }
