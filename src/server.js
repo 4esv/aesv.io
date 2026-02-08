@@ -57,6 +57,10 @@ export async function build(opts = {}) {
     if (request.url.endsWith('.woff2')) {
       reply.header('cache-control', 'public, max-age=31536000, immutable')
     }
+    reply.header(
+      'content-security-policy',
+      "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'",
+    )
   })
 
   await fastify.register(apiRoutes)

@@ -6,7 +6,7 @@ import * as strava from '../services/strava.js'
 import { getLastVictory } from '../services/chess.js'
 
 const GPG_PATH = join(import.meta.dirname, '../static/gpg.asc')
-const REFRESH_INTERVAL = 10 * 60 * 1000
+const REFRESH_INTERVAL = 5 * 60 * 1000
 
 // NOTE: shared page data, refreshed in background
 let pageData = { spotify: null, strava: null, chess: null }
@@ -28,6 +28,9 @@ async function refreshData(config) {
 
 export async function apiRoutes(fastify) {
   const { config } = fastify
+
+  // Health check for Docker and uptime monitoring
+  fastify.get('/health', async () => ({ status: 'ok' }))
 
   // Spotify OAuth
   fastify.get('/api/auth/spotify', async (_request, reply) => {
