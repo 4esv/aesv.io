@@ -11,6 +11,9 @@ RUN npm ci --omit=dev
 # Copy source
 COPY src/ ./src/
 
+# Create data directory for token storage
+RUN mkdir -p /app/data && chown node:node /app/data
+
 # Create non-root user
 USER node
 

@@ -6,6 +6,8 @@ services:
       - '2935:3000'
     env_file:
       - /opt/aesv/.env.prod
+    volumes:
+      - /opt/aesv/data:/app/data
     networks:
       - caddy_net
     restart: unless-stopped
