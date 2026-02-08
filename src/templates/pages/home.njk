@@ -181,7 +181,8 @@ MIT License. {{ now | date('Y') }}.
 {% if spotify %}
   <span class="subsection-name">top tracks</span>
 {% for track in spotify.tracks %}
-    <a href="{{ track.url }}">{{ track.name }} ↗</a> by {{ track.artist }}
+    <a href="{{ track.url }}">{{ track.name }} ↗</a>
+      by {{ track.artist }}
 {%- endfor %}
 
   <span class="subsection-name">top artists</span>
