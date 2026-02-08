@@ -25,7 +25,6 @@ export default [
     },
   },
   {
-    // Browser scripts
     files: ['src/static/js/**/*.js'],
     languageOptions: {
       globals: {
@@ -33,6 +32,8 @@ export default [
         document: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
+        navigator: 'readonly',
+        NodeFilter: 'readonly',
         htmx: 'readonly',
       },
     },

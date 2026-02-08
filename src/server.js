@@ -15,6 +15,17 @@ import { registerPageRoutes } from './routes/pages.js'
 
 const TEMPLATES_DIR = join(import.meta.dirname, 'templates')
 const STATIC_DIR = join(import.meta.dirname, 'static')
+const CSP_HEADER = [
+  "default-src 'none'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "font-src 'self'",
+  "img-src 'self'",
+  "connect-src 'self'",
+  "manifest-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ')
 
 /**
  * Build and configure the Fastify application
@@ -57,10 +68,7 @@ export async function build(opts = {}) {
     if (request.url.endsWith('.woff2')) {
       reply.header('cache-control', 'public, max-age=31536000, immutable')
     }
-    reply.header(
-      'content-security-policy',
-      "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'",
-    )
+    reply.header('content-security-policy', CSP_HEADER)
   })
 
   await fastify.register(apiRoutes)
@@ -79,11 +87,11 @@ async function start() {
     await app.listen({ port: config.port, host: config.host })
 
     console.log('')
-    console.log('  Local:   http://localhost:' + config.port)
+    console.log(`  Local:   http://localhost:${config.port}`)
     if (config.host === '0.0.0.0') {
       for (const iface of Object.values(networkInterfaces()).flat()) {
         if (iface?.family === 'IPv4' && !iface.internal) {
-          console.log('  Network: http://' + iface.address + ':' + config.port)
+          console.log(`  Network: http://${iface.address}:${config.port}`)
         }
       }
     }
