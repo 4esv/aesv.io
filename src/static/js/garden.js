@@ -1,10 +1,10 @@
 document.querySelectorAll('.countdown-btn[data-seconds]').forEach(function (el) {
-  var total = parseInt(el.dataset.seconds, 10)
+  const total = parseInt(el.dataset.seconds, 10)
 
   function fmt(s) {
-    var m = Math.floor(s / 60)
-    var sec = s % 60
-    var blocks = Math.ceil(s / 6)
+    const m = Math.floor(s / 60)
+    const sec = s % 60
+    const blocks = Math.ceil(s / 6)
     return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0') + ' ' + '█'.repeat(blocks)
   }
 
@@ -15,10 +15,10 @@ document.querySelectorAll('.countdown-btn[data-seconds]').forEach(function (el) 
     el.disabled = true
     el.classList.add('is-running')
 
-    var remaining = total - 1
+    let remaining = total - 1
     el.textContent = fmt(remaining)
 
-    var timer = setInterval(function () {
+    const timer = setInterval(function () {
       remaining -= 1
       el.textContent = fmt(remaining)
       if (remaining <= 0) {
