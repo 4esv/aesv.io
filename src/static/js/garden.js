@@ -4,7 +4,8 @@ document.querySelectorAll('.countdown-btn[data-seconds]').forEach(function (el) 
   function fmt(s) {
     var m = Math.floor(s / 60)
     var sec = s % 60
-    return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0')
+    var blocks = Math.ceil(s / 6)
+    return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0') + ' ' + '█'.repeat(blocks)
   }
 
   el.textContent = fmt(total)
