@@ -81,6 +81,7 @@ body {
   max-width: 124ch;
   margin: 0 auto;
   padding: 0;
+  column-gap: 2ch;
 }
 
 @supports not (min-height: 100dvh) {
@@ -289,6 +290,65 @@ a:focus {
   color: var(--normal);
 }
 
+/* Garden pages — all sidebar items and pre content on the same 1.4em line grid.
+   Logo margin 2.8em → logo occupies exactly 3×1.4=4.2em.
+   Name margin 0 → exactly 1×1.4em.
+   garden-links line-height 1.4 → matches pre, so baselines align pixel-perfect.
+   garden-index padding-top = sidebar-pt(3) + logo(4.2) + name(1.4) + 3 blanks(4.2) = 12.8em.
+   garden-entry padding-top = 3em (same as sidebar) — 3 blank pre-lines reach name level. */
+
+main.garden-index {
+  padding-top: 12.8em;
+}
+
+main.garden-entry {
+  padding-top: 3em;
+}
+
+#sidebar .garden-logo {
+  margin-bottom: 2.8em;
+}
+
+#sidebar .garden-name {
+  margin-bottom: 0;
+}
+
+#sidebar .garden-links {
+  list-style: none;
+}
+
+#sidebar .garden-links a {
+  color: var(--dim);
+  text-decoration: none;
+  display: block;
+  line-height: 1.4;
+}
+
+#sidebar .garden-links a:hover,
+#sidebar .garden-links a:focus {
+  color: var(--normal);
+}
+
+/* Garden countdown button */
+.countdown-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 0;
+  line-height: inherit;
+}
+
+.countdown-btn.is-running {
+  color: var(--normal);
+}
+
+.countdown-btn:disabled {
+  cursor: default;
+}
+
 /* Dim text */
 .nowrap {
   white-space: nowrap;
@@ -331,6 +391,7 @@ a:focus {
     flex-direction: column;
     max-width: 100%;
     padding: 0;
+    column-gap: 0;
   }
 
   #sidebar {

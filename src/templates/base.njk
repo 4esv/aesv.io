@@ -17,8 +17,8 @@
 <script src="/js/grid-wrap.js"></script>
   <a href="#main" class="skip-link">Skip to content</a>
   <div id="wrapper">
-    {% include "partials/grid/nav.njk" %}
-    <main id="main">
+    {% block nav %}{% include "partials/grid/nav.njk" %}{% endblock %}
+    <main id="main"{% block mainAttrs %}{% endblock %}>
       {% block terminal %}{% endblock %}
     </main>
     <footer>
@@ -26,5 +26,6 @@
     </footer>
   </div>
 <script src="/js/utils.js"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>

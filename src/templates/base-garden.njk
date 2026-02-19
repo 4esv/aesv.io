@@ -1,0 +1,9 @@
+{% extends "base.njk" %}
+
+{% block title %}garden · {{ site.name }}{% endblock %}
+
+{% block nav %}{% include "partials/grid/nav-garden.njk" %}{% endblock %}
+
+{% block mainAttrs %} class="garden-index"{% endblock %}
+
+{% block scripts %}<script src="/js/garden.js"></script>{% endblock %}
