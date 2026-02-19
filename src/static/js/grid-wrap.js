@@ -76,8 +76,13 @@
     }
   }
 
+  let lastWidth = window.innerWidth
+
   window.addEventListener('load', wrap)
   window.addEventListener('resize', function () {
+    const newWidth = window.innerWidth
+    if (newWidth === lastWidth) return
+    lastWidth = newWidth
     clearTimeout(timer)
     timer = setTimeout(wrap, 150)
   })
