@@ -118,7 +118,7 @@ body {
   color: var(--bright);
   text-decoration: none;
   display: block;
-  margin-bottom: 2.5em;
+  margin-bottom: 2.8em;
   font-size: 1em;
   font-weight: 900;
   font-family: 'Source Code Pro', monospace;
@@ -127,7 +127,7 @@ body {
 #sidebar .name {
   color: var(--bright);
   display: block;
-  margin-bottom: 0.2em;
+  margin-bottom: 0;
 }
 
 #sidebar .role {
@@ -177,7 +177,7 @@ body {
 /* Main content */
 main {
   grid-column: 2;
-  padding: calc(15ch + 1em) 3ch 0 2ch;
+  padding: 10em 3ch 0 2ch;
   min-width: 0;
 }
 
@@ -288,12 +288,11 @@ a:focus {
   color: var(--normal);
 }
 
-/* Garden pages — all sidebar items and pre content on the same 1.4em line grid.
-   Logo margin 2.8em → logo occupies exactly 3×1.4=4.2em.
-   Name margin 0 → exactly 1×1.4em.
-   garden-links line-height 1.4 → matches pre, so baselines align pixel-perfect.
+/* Garden pages — sidebar and content on the same 1.4em line grid.
+   Shared: logo margin 2.8em (2 lines) + name margin 0 (1 line) = name at 7.2em.
    garden-index padding-top = sidebar-pt(3) + logo(4.2) + name(1.4) + 1 blank(1.4) = 10em.
-   garden-entry padding-top = 3em — 3 blank pre-lines reach name level, 1 blank after ← index reaches 10em. */
+   garden-entry padding-top = 3em — 3 blank pre-lines reach name level (7.2em),
+   1 blank after ← index reaches content level (10em). */
 
 main.garden-index {
   padding-top: 10em;
@@ -301,14 +300,6 @@ main.garden-index {
 
 main.garden-entry {
   padding-top: 3em;
-}
-
-#sidebar .garden-logo {
-  margin-bottom: 2.8em;
-}
-
-#sidebar .garden-name {
-  margin-bottom: 0;
 }
 
 #sidebar .garden-links {
