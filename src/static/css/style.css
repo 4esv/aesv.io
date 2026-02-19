@@ -292,11 +292,11 @@ a:focus {
    Logo margin 2.8em → logo occupies exactly 3×1.4=4.2em.
    Name margin 0 → exactly 1×1.4em.
    garden-links line-height 1.4 → matches pre, so baselines align pixel-perfect.
-   garden-index padding-top = sidebar-pt(3) + logo(4.2) + name(1.4) + 3 blanks(4.2) = 12.8em.
-   garden-entry padding-top = 3em (same as sidebar) — 3 blank pre-lines reach name level. */
+   garden-index padding-top = sidebar-pt(3) + logo(4.2) + name(1.4) + 1 blank(1.4) = 10em.
+   garden-entry padding-top = 3em — 3 blank pre-lines reach name level, 1 blank after ← index reaches 10em. */
 
 main.garden-index {
-  padding-top: 12.8em;
+  padding-top: 10em;
 }
 
 main.garden-entry {
