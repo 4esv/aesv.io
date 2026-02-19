@@ -177,7 +177,7 @@ body {
 /* Main content */
 main {
   grid-column: 2;
-  padding: calc(15ch + 4em) 3ch 0 2ch;
+  padding: calc(15ch + 1em) 3ch 0 2ch;
   min-width: 0;
 }
 
