@@ -1,6 +1,4 @@
-document.querySelectorAll('.countdown-btn[data-seconds]').forEach(function (el) {
-  const total = parseInt(el.dataset.seconds, 10)
-
+;(function () {
   function fmt(s) {
     const m = Math.floor(s / 60)
     const sec = s % 60
@@ -10,10 +8,15 @@ document.querySelectorAll('.countdown-btn[data-seconds]').forEach(function (el) 
     )
   }
 
-  el.textContent = fmt(total)
+  document.querySelectorAll('.countdown-btn[data-seconds]').forEach(function (el) {
+    el.textContent = fmt(parseInt(el.dataset.seconds, 10))
+  })
 
-  el.addEventListener('click', function () {
-    if (el.disabled) return
+  // NOTE: event delegation — survives grid-wrap.js innerHTML replacement on resize
+  document.addEventListener('click', function (e) {
+    const el = e.target.closest('.countdown-btn[data-seconds]')
+    if (!el || el.disabled) return
+    const total = parseInt(el.dataset.seconds, 10)
     el.disabled = true
     el.classList.add('is-running')
 
@@ -29,4 +32,4 @@ document.querySelectorAll('.countdown-btn[data-seconds]').forEach(function (el) 
       }
     }, 1000)
   })
-})
+})()
