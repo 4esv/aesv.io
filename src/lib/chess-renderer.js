@@ -43,21 +43,15 @@ function fenToBoard(fen) {
 }
 
 /**
- * Render a FEN string as an array of display lines
+ * Render a FEN string as an array of display lines (always from white's perspective)
  * @param {string} fen - FEN position string
- * @param {'white'|'black'} perspective - which side is at the bottom
  * @returns {string[]}
  */
-export function renderBoard(fen, perspective = 'white') {
+export function renderBoard(fen) {
   const board = fenToBoard(fen)
 
-  if (perspective === 'black') {
-    board.reverse()
-    for (const row of board) row.reverse()
-  }
-
-  const rankLabels = perspective === 'white' ? [8, 7, 6, 5, 4, 3, 2, 1] : [1, 2, 3, 4, 5, 6, 7, 8]
-  const fileLabels = perspective === 'white' ? 'a b c d e f g h' : 'h g f e d c b a'
+  const rankLabels = [8, 7, 6, 5, 4, 3, 2, 1]
+  const fileLabels = 'a b c d e f g h'
 
   const lines = []
 

@@ -65,7 +65,7 @@ export async function getLastVictory(username) {
           black: getUsername(game.black),
           result: `${color} wins`,
           url: game.url,
-          board: renderBoard(fen, color),
+          board: renderBoard(fen),
         }
       }
     }
