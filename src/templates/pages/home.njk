@@ -55,184 +55,205 @@ gpg       https://aesv.io/api/gpg
 MIT License. {{ now | date('Y') }}.
 {% endblock %}
 {%- else -%}
-{% extends "base.njk" %}
+{% extends "base-pretext.njk" %}
 {% block title %}{{ site.name }}{% endblock %}
-{% block terminal %}
-<section id="about">
-<pre class="terminal">
-<span class="section-name">about</span>
 
-  Mexican-American creator and curator of software,
-  music, food, and information.
-  This is my corner of the internet and public page.
-  Feel free to look around.
-</pre>
+{% block content %}
+
+{# ── Hero ─────────────────────────────────────────────────────────────── #}
+<header id="hero">
+  {# NOTE: AsciiMotif renders ·>· as variable-weight ASCII art via pretext #}
+  <canvas id="motif-canvas" aria-hidden="true"></canvas>
+  <p class="hero-meta">
+    Mexican-American creator and curator of software, music, food, and information.
+    This is my corner of the internet and public page. Feel free to look around.
+  </p>
+</header>
+
+{# ── About ────────────────────────────────────────────────────────────── #}
+<section id="about" class="pt-section">
+  <div class="pt-label">about</div>
+  <p>
+    I specialize in extending, automating and creating software —
+    everything from AI integrations to full-stack applications.
+    Like my text editor, I work across all operating systems via the command line.
+  </p>
+  <p style="margin-top: 0.7em">
+    Interested in remote projects and opportunities.
+    <a href="mailto:mail@aesv.io">mail@aesv.io ↗</a>
+  </p>
 </section>
 
-<section id="work">
-<pre class="terminal">
-<span class="section-name">work</span>
+{# ── Work ─────────────────────────────────────────────────────────────── #}
+<section id="work" class="pt-section">
+  <div class="pt-label">work</div>
 
-  Systems Integrator @ <a href="https://cornell.edu">Cornell University ↗</a>
-  Building internal applications, automations and supporting software.
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">
+      Systems Integrator · <span class="muted">Cornell University</span>
+    </div>
+    <div class="pt-accordion-body">
+      <p class="pt-accordion-meta">Building internal applications, automations and supporting software.</p>
+      <div class="pt-chips">
+        <span class="pt-chip pt-chip--role">full-time</span>
+        <span class="pt-chip pt-chip--tool">Python</span>
+        <span class="pt-chip pt-chip--tool">Node.js</span>
+        <span class="pt-chip pt-chip--tool">PowerShell</span>
+        <span class="pt-chip pt-chip--tool">React</span>
+      </div>
+    </div>
+  </div>
 
-  I specialize in extending, automating and creating software.
-  Everything from building modules to integrate AI with robots,
-  to scripts that automate an existing asset tracking database,
-  to full stack applications to manage other applications.
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">
+      Interfolio Dossier Builder
+    </div>
+    <div class="pt-accordion-body">
+      <p>Automated assembly of faculty tenure review packets. Built a full-stack system: React frontend, Node.js/Express API, BullMQ + Redis queue, Python worker with PyPDF2 merge and nested bookmarks.</p>
+      <p>Replaced a multi-day manual process with a 5-minute automated run.</p>
+      <div class="pt-chips">
+        <span class="pt-chip pt-chip--lang">Python</span>
+        <span class="pt-chip pt-chip--lang">Node.js</span>
+        <span class="pt-chip pt-chip--tool">React</span>
+        <span class="pt-chip pt-chip--tool">BullMQ</span>
+        <span class="pt-chip pt-chip--tool">Redis</span>
+        <span class="pt-chip pt-chip--tool">PyPDF2</span>
+        <span class="pt-chip pt-chip--tool">MSSQL</span>
+      </div>
+    </div>
+  </div>
 
-  Like my text editor, I work across
-  all operating systems via the command line.
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">
+      Device Asset Sync
+    </div>
+    <div class="pt-accordion-body">
+      <p>Bi-directional sync between Jamf MDM and Snipe-IT in PowerShell. Mac agent with OOP class, exponential backoff, OAuth token refresh, and throttling. Windows agent via Group Policy.</p>
+      <p>1,300+ devices at 95%+ accuracy. Eliminated manual inventory entirely.</p>
+      <div class="pt-chips">
+        <span class="pt-chip pt-chip--lang">PowerShell</span>
+        <span class="pt-chip pt-chip--tool">Jamf Pro API</span>
+        <span class="pt-chip pt-chip--tool">Snipe-IT API</span>
+        <span class="pt-chip pt-chip--tool">Group Policy</span>
+      </div>
+    </div>
+  </div>
 
-  Interested in projects and remote opportunities
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">
+      App Security Manager
+    </div>
+    <div class="pt-accordion-body">
+      <p>RBAC dashboard with three-tier role model (Developer, Owner, Admin). LDAP live search, drag-and-drop user assignment, transactional SQL, Shibboleth/SAML auth. Replaced ColdFusion system in use for over a decade.</p>
+      <div class="pt-chips">
+        <span class="pt-chip pt-chip--lang">Node.js</span>
+        <span class="pt-chip pt-chip--tool">Express</span>
+        <span class="pt-chip pt-chip--tool">MSSQL</span>
+        <span class="pt-chip pt-chip--tool">LDAP</span>
+        <span class="pt-chip pt-chip--tool">Shibboleth/SAML</span>
+      </div>
+    </div>
+  </div>
 
-  <span class="subsection-name">cases</span>
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">
+      NAO Bot Natural Conversation
+    </div>
+    <div class="pt-accordion-body">
+      <p>Connected NAO's microphone to OpenAI Whisper for transcription, routed through GPT, piped back through NAO's animated speech engine. Proof-of-concept for an NSF grant proposal.</p>
+      <div class="pt-chips">
+        <span class="pt-chip pt-chip--lang">Python</span>
+        <span class="pt-chip pt-chip--tool">NAOqi SDK</span>
+        <span class="pt-chip pt-chip--tool">Whisper</span>
+        <span class="pt-chip pt-chip--tool">OpenAI API</span>
+      </div>
+    </div>
+  </div>
 
-    <span class="subsection-name">Interfolio Dossier Builder</span>
-    Automated assembly of faculty tenure review packets
-
-    Built a full-stack system in three languages.
-    React frontend submits jobs to a Node.js/Express
-    API, which queues work through BullMQ and Redis.
-    A Python worker pulls documents through Interfolio's
-    HMAC-SHA1 authenticated API, classifies them with
-    regex pattern matching, merges PDFs with PyPDF2,
-    and generates nested bookmarks.
-    23K lines across 127 files and 6 languages.
-
-    Replaced a multi-day manual process with a
-    5-minute automated run.
-
-    <span class="dim">Python, Node.js, React, BullMQ, Redis,
-    PyPDF2, Interfolio API, MSSQL, Vite</span>
-
-
-    <span class="subsection-name">Device Asset Sync</span>
-    Bi-directional inventory tracking across 1,300+ devices
-
-    Wrote a bi-directional sync between Jamf MDM
-    and Snipe-IT in PowerShell. The Mac agent uses
-    an OOP class with exponential backoff, OAuth
-    token refresh, and request throttling. A separate
-    Windows agent deployed via Group Policy reports
-    system info at logon.
-
-    1,300+ devices tracked at 95%+ accuracy.
-    Eliminated manual inventory entirely.
-
-    <span class="dim">PowerShell, Jamf Pro API, Snipe-IT API,
-    Group Policy</span>
-
-
-    <span class="subsection-name">App Security Manager</span>
-    RBAC dashboard replacing legacy ColdFusion permissions
-
-    Built an RBAC dashboard with a three-tier role
-    model (Developer, Owner, Admin). LDAP live search
-    with drag-and-drop user assignment. Transactional
-    SQL for cascading permission deletes across linked
-    tables. Auth runs through the university's
-    Shibboleth/SAML reverse proxy.
-    3,400 lines serving two colleges from one interface.
-
-    Access changes take under a minute. Replaced
-    a ColdFusion system in use for over a decade.
-
-    <span class="dim">Node.js, Express, MSSQL, LDAP, Shibboleth/SAML</span>
-
-
-    <span class="subsection-name">NAO Bot Natural Conversation</span>
-    Conversational humanoid robot for research demo
-
-    Connected NAO's onboard microphone to OpenAI
-    Whisper for transcription, routed text through
-    GPT for response generation, and piped output
-    back through NAO's animated speech engine for
-    synchronized voice and gestures.
-
-    Delivered a working proof-of-concept for an
-    NSF grant proposal.
-
-    <span class="dim">Python, NAOqi SDK, OpenAI Whisper, OpenAI API</span>
-
-  <a href="https://www.linkedin.com/in/aesv/?skipRedirect=true">linkedin ↗</a>
-  <a href="mailto:mail@aesv.io">mail@aesv.io</a>
-</pre>
+  <p style="margin-top: 1.4em">
+    <a href="https://www.linkedin.com/in/aesv/?skipRedirect=true">linkedin ↗</a>
+    · <a href="mailto:mail@aesv.io">mail@aesv.io</a>
+  </p>
 </section>
 
-<section id="code">
-<pre class="terminal">
-<span class="section-name">code</span>
-
-  <a href="https://github.com/4esv/pianito">pianito, the TUI piano tuner ↗</a>
-  <a href="https://github.com/4esv/bbq">bbq, a BQN quant toolkit ↗</a>
-
-  <a href="https://github.com/4esv/dotfiles">my dotfiles ↗</a>
-  <a href="https://github.com/4esv/nvim-config">my neovim config ↗</a>
-
-  <a href="https://github.com/4esv">github ↗</a>
-</pre>
+{# ── Code ─────────────────────────────────────────────────────────────── #}
+<section id="code" class="pt-section">
+  <div class="pt-label">code</div>
+  <p><a href="https://github.com/4esv/pianito">pianito ↗</a> — TUI piano tuner</p>
+  <p><a href="https://github.com/4esv/bbq">bbq ↗</a> — BQN quant toolkit</p>
+  <p style="margin-top: 0.7em">
+    <a href="https://github.com/4esv/dotfiles">dotfiles ↗</a>
+    · <a href="https://github.com/4esv/nvim-config">neovim config ↗</a>
+    · <a href="https://github.com/4esv">github ↗</a>
+  </p>
 </section>
 
-<section id="music">
-<pre class="terminal">
-<span class="section-name">music</span>
+{# ── Music ────────────────────────────────────────────────────────────── #}
+<section id="music" class="pt-section">
+  <div class="pt-label">music</div>
+  <p>Keyboardist, bassist and emergency drummer. I listen to everything from Mexican folklore to Norwegian death metal.</p>
 
-  Keyboardist, bassist and emergency drummer.
-  I listen to everything from Mexican folklore
-  to Norwegian death metal.
+  {% if spotify %}
+  <div class="pt-accordion" data-open="false" style="margin-top: 1.4em">
+    <div class="pt-accordion-header">top tracks &amp; artists</div>
+    <div class="pt-accordion-body">
+      <p class="pt-accordion-meta bold">tracks</p>
+      {% for track in spotify.tracks %}
+      <p><a href="{{ track.url }}">{{ track.name }} ↗</a> <span class="muted">by {{ track.artist }}</span></p>
+      {% endfor %}
+      <p class="pt-accordion-meta bold" style="margin-top: 0.7em">artists</p>
+      {% for artist in spotify.artists %}
+      <p><a href="{{ artist.url }}">{{ artist.name }} ↗</a></p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
-{% if spotify %}
-  <span class="subsection-name">top tracks</span>
-{% for track in spotify.tracks %}
-    <a href="{{ track.url }}">{{ track.name }} ↗</a> <span class="nowrap">by {{ track.artist }}</span>
-{%- endfor %}
-
-  <span class="subsection-name">top artists</span>
-{% for artist in spotify.artists %}
-    <a href="{{ artist.url }}">{{ artist.name }} ↗</a>
-{%- endfor %}
-
-{% endif %}
-  <a href="https://open.spotify.com/user/aesvel">spotify ↗</a>
-  <a href="https://soundcloud.com/4esv">soundcloud ↗</a>
-</pre>
+  <p style="margin-top: 1.4em">
+    <a href="https://open.spotify.com/user/aesvel">spotify ↗</a>
+    · <a href="https://soundcloud.com/4esv">soundcloud ↗</a>
+  </p>
 </section>
 
-<section id="chess">
-<pre class="terminal">
-<span class="section-name">chess</span>
+{# ── Chess — dynamic layout: board beside flowing text ────────────────── #}
+<section id="chess" class="pt-section">
+  <div class="pt-label">chess</div>
 
-{% if chess %}
-  <span class="subsection-name">last victory</span>
-
-    {{ chess.white }} vs {{ chess.black }} · {{ chess.result }}
-
-<code>{% for line in chess.board %}    {{ line }}
+  {% if chess %}
+  {# NOTE: pt-dynamic-section uses pretext to route text around the board widget #}
+  <div class="pt-dynamic-section">
+    <div class="pt-dynamic-widget chess-board">
+      <span class="muted">{{ chess.white }} vs {{ chess.black }} · {{ chess.result }}</span>
+      <code>{% for line in chess.board %}{{ line }}
 {% endfor %}</code>
       <a href="{{ chess.url }}">view on chess.com ↗</a>
-{% else %}
-    <span class="dim">no recent victories loaded</span>
-{% endif %}
-</pre>
+    </div>
+    <div class="pt-dynamic-text" data-content="Last victory on chess.com. {{ chess.white }} played white, {{ chess.black }} played black. Result: {{ chess.result }}.">
+      <p>Last victory on chess.com.</p>
+      <p class="muted">{{ chess.white }} vs {{ chess.black }} · {{ chess.result }}</p>
+      <p><a href="{{ chess.url }}">view on chess.com ↗</a></p>
+    </div>
+  </div>
+  {% else %}
+  <p class="muted">no recent victories loaded</p>
+  {% endif %}
 </section>
 
-<section id="sport">
-<pre class="terminal">
-<span class="section-name">sport</span>
+{# ── Sport ────────────────────────────────────────────────────────────── #}
+<section id="sport" class="pt-section">
+  <div class="pt-label">sport</div>
+  <p>I walk, climb indoors, run the trails. Sometimes hike the gorges and swim in the lake.</p>
 
-  I walk, climb indoors, run the trails.
-  Sometimes hike the gorges and swim in the lake.
+  {% if strava %}
+  <div style="margin-top: 1.4em">
+    <p class="muted">last activity</p>
+    <p>{{ strava.name }}</p>
+    <p class="muted">{{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain</p>
+  </div>
+  {% endif %}
 
-{% if strava %}
-  <span class="subsection-name">last activity</span>
-
-    {{ strava.name }}
-    {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain
-
-{% endif %}
-  <a href="https://www.strava.com/athletes/51674641">strava ↗</a>
-</pre>
+  <p style="margin-top: 1.4em"><a href="https://www.strava.com/athletes/51674641">strava ↗</a></p>
 </section>
+
 {% endblock %}
 {%- endif -%}

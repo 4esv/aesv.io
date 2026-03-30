@@ -1,0 +1,135 @@
+{% extends "base-pretext.njk" %}
+{% block title %}Pretext Demos · {{ site.name }}{% endblock %}
+
+{% block content %}
+<header id="hero" style="padding-bottom: 1.4em">
+  <canvas id="motif-canvas" aria-hidden="true"></canvas>
+  <p class="hero-meta">
+    This redesign is built on <a href="https://github.com/chenglou/pretext">pretext</a> —
+    a library for text measurement &amp; layout without DOM reads.
+    Below are the demos that inspired it, by <a href="https://github.com/chenglou">chenglou</a>.
+  </p>
+</header>
+
+<section class="pt-section">
+  <div class="pt-label">pretext demos</div>
+
+  <p style="margin-bottom: 1.4em">
+    Each demo explores a different capability pretext unlocks:
+    height without DOM measurement, manual line routing, and width-tight multiline UI.
+  </p>
+
+  <div class="pt-accordion" data-open="true">
+    <div class="pt-accordion-header">Variable Typographic ASCII</div>
+    <div class="pt-accordion-body">
+      <p>Particle-driven ASCII art comparing proportional vs monospace glyph widths. The technique powers the <span class="accent">·>·</span> canvas on every page — pretext measures each character at the current font weight so particles land precisely.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">canvas</span>
+        <span class="pt-chip pt-chip--tag">particles</span>
+        <span class="pt-chip pt-chip--tag">variable font</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/demos/variable-typographic-ascii">open demo ↗</a></p>
+    </div>
+  </div>
+
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">Rich Text</div>
+    <div class="pt-accordion-body">
+      <p>Inline formatting with code spans, links, and chips — all laid out together. Chips never split across lines while text keeps wrapping naturally. Used here for tech-stack tags in work case studies.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">inline layout</span>
+        <span class="pt-chip pt-chip--tag">chips</span>
+        <span class="pt-chip pt-chip--tag">line routing</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/demos/rich-note">open demo ↗</a></p>
+    </div>
+  </div>
+
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">Dynamic Layout</div>
+    <div class="pt-accordion-body">
+      <p>Fixed-height editorial spread with obstacle-aware title routing and continuous text flow. Used here to route text around the chess board widget — pretext computes line widths that skip the widget's bounding box.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">obstacle routing</span>
+        <span class="pt-chip pt-chip--tag">editorial</span>
+        <span class="pt-chip pt-chip--tag">reflow</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/demos/dynamic-layout">open demo ↗</a></p>
+    </div>
+  </div>
+
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">Accordion</div>
+    <div class="pt-accordion-body">
+      <p>Expand/collapse sections whose heights are predicted by pretext rather than measured from the DOM. This page uses exactly that — each case study accordion pre-calculates its expanded height so the CSS transition runs against a concrete value instead of the <code>max-height: 9999px</code> hack.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">accordion</span>
+        <span class="pt-chip pt-chip--tag">height prediction</span>
+        <span class="pt-chip pt-chip--tag">smooth transition</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/demos/accordion">open demo ↗</a></p>
+    </div>
+  </div>
+
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">Bubbles</div>
+    <div class="pt-accordion-body">
+      <p>Tight multiline message bubbles optimized for minimal wasted space. The same line-count principle applies to any UI where bubble width should shrink to its content.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">bubbles</span>
+        <span class="pt-chip pt-chip--tag">width-tight</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/demos/bubbles">open demo ↗</a></p>
+    </div>
+  </div>
+
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">Editorial Engine</div>
+    <div class="pt-accordion-body">
+      <p>Animated orbs, live text reflow, pull quotes, and multi-column flow — zero DOM measurements. The full showcase of what continuous pretext-driven layout looks like.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">animated</span>
+        <span class="pt-chip pt-chip--tag">multi-column</span>
+        <span class="pt-chip pt-chip--tag">pull quotes</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/demos/editorial-engine">open demo ↗</a></p>
+    </div>
+  </div>
+
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">Masonry</div>
+    <div class="pt-accordion-body">
+      <p>Text-card occlusion layout where height prediction comes from pretext instead of DOM reads. Enables proper virtualization without guesswork.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">masonry</span>
+        <span class="pt-chip pt-chip--tag">virtualization</span>
+        <span class="pt-chip pt-chip--tag">height prediction</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/demos/masonry">open demo ↗</a></p>
+    </div>
+  </div>
+
+  <div class="pt-accordion" data-open="false">
+    <div class="pt-accordion-header">Justification Comparison</div>
+    <div class="pt-accordion-body">
+      <p>Side-by-side CSS justification, hyphenation, and Knuth-Plass paragraph optimization. Shows the typographic quality ceiling pretext can reach.</p>
+      <div class="pt-chips" style="margin-bottom: 0.7em">
+        <span class="pt-chip pt-chip--tag">typography</span>
+        <span class="pt-chip pt-chip--tag">justification</span>
+        <span class="pt-chip pt-chip--tag">Knuth-Plass</span>
+      </div>
+      <p><a href="https://chenglou.me/pretext/">all demos index ↗</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="pt-section">
+  <div class="pt-label">source</div>
+  <p>
+    <a href="https://github.com/chenglou/pretext">pretext on github ↗</a>
+    · <a href="https://chenglou.me/pretext/">live demos ↗</a>
+    · <a href="https://github.com/4esv/aesv.io">this site ↗</a>
+  </p>
+</section>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ site.name }}{% endblock %}</title>
+  <meta name="description" content="{{ site.tagline }}">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f5f1ea">
+  <link rel="preload" href="/fonts/source-code-pro-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/pretext.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="wrapper">
+    {% block nav %}{% include "partials/pretext/nav.njk" %}{% endblock %}
+    <main id="main"{% block mainAttrs %}{% endblock %}>
+      {% block content %}{% endblock %}
+    </main>
+    <footer>
+      {% include "partials/pretext/footer.njk" %}
+    </footer>
+  </div>
+  <script type="module" src="/js/bundle.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,567 @@
+/* aesv.io — pretext redesign
+ *
+ * Design system built around three pretext concepts:
+ *   · Variable typographic ASCII  → font-weight axis on Source Code Pro
+ *   · Rich text with inline chips → .pt-chip variants
+ *   · Dynamic layout              → .pt-dynamic-section
+ *
+ * Palette borrowed from pretext's own demos (light / warm editorial)
+ * adapted for Source Code Pro's monospace grid.
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/source-code-pro-latin.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/source-code-pro-latin-ext.woff2') format('woff2');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+/* ─── Tokens ─────────────────────────────────────────────────────────────── */
+
+:root {
+  /* editorial warm palette — matches pretext demos */
+  --page:   #f5f1ea;
+  --panel:  #fffdf8;
+  --ink:    #201b18;
+  --muted:  #6d645d;
+  --rule:   #d8cec3;
+  --accent: #955f3b;
+
+  /* Source Code Pro variable weight axis */
+  --wt-light:  300;
+  --wt-normal: 400;
+  --wt-bold:   700;
+  --wt-black:  900;
+
+  /* single font size — IWANT.md */
+  --fs: clamp(11px, 2.8vw, 13px);
+  --lh: 1.4;
+  --lh-px: calc(var(--fs) * var(--lh));
+
+  /* layout units derived from the character grid */
+  --ch: 1ch;
+  --em: 1em;
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  overscroll-behavior: none;
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  min-height: 100%;
+  font-family: 'Source Code Pro', ui-monospace, monospace;
+  font-size: var(--fs);
+  line-height: var(--lh);
+  font-weight: var(--wt-normal);
+  background: var(--page);
+  color: var(--ink);
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+/* ─── Accessibility ──────────────────────────────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--ink);
+  color: var(--panel);
+  padding: 8px 12px;
+  z-index: 200;
+  text-decoration: none;
+  font-weight: var(--wt-bold);
+}
+
+.skip-link:focus { top: 0; }
+
+:focus { outline: none; }
+
+:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--panel);
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────── */
+
+#wrapper {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 22ch 1fr;
+  grid-template-rows: 1fr auto;
+  max-width: 120ch;
+  margin: 0 auto;
+  column-gap: 2ch;
+}
+
+@supports not (min-height: 100dvh) {
+  #wrapper { min-height: 100vh; }
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────────────────── */
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 22ch;
+  height: 100vh;
+  padding: 3em 2ch 3em 3ch;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 10;
+  border-right: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--panel) 90%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+@media (min-width: 768px) {
+  #sidebar {
+    left: max(0px, calc((100vw - 108ch) / 2));
+  }
+}
+
+/* ·>· logo */
+.logo {
+  color: var(--ink);
+  text-decoration: none;
+  display: block;
+  font-weight: var(--wt-black);
+  letter-spacing: -0.02em;
+  margin-bottom: 2.8em;
+  transition: color 160ms ease;
+}
+
+.logo:hover,
+.logo:focus {
+  color: var(--accent);
+}
+
+#sidebar .name {
+  color: var(--ink);
+  font-weight: var(--wt-bold);
+  display: block;
+}
+
+#sidebar .role {
+  color: var(--muted);
+  display: block;
+  line-height: var(--lh);
+}
+
+#sidebar .sep {
+  display: block;
+  line-height: var(--lh);
+}
+
+#sidebar ul {
+  list-style: none;
+}
+
+#sidebar .nav-links a,
+#sidebar .ext-links a {
+  color: var(--muted);
+  text-decoration: none;
+  display: block;
+  line-height: 2;
+  transition: color 120ms ease;
+}
+
+#sidebar .nav-links a:hover,
+#sidebar .nav-links a:focus,
+#sidebar .ext-links a:hover,
+#sidebar .ext-links a:focus {
+  color: var(--accent);
+}
+
+/* ─── Mobile nav ─────────────────────────────────────────────────────────── */
+
+#mobile-nav { display: none; }
+#mobile-links { display: none; }
+
+/* ─── Main ───────────────────────────────────────────────────────────────── */
+
+main {
+  grid-column: 2;
+  padding: 0 3ch 4em 2ch;
+  min-width: 0;
+}
+
+/* ─── Hero / ASCII motif ─────────────────────────────────────────────────── */
+
+#hero {
+  padding: 6em 0 3em;
+  position: relative;
+}
+
+#motif-canvas {
+  display: block;
+  width: 100%;
+  height: 7em;
+  /* NOTE: canvas renders ·>· in variable-weight ASCII via pretext */
+}
+
+.hero-meta {
+  margin-top: 1.4em;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+/* ─── Sections ───────────────────────────────────────────────────────────── */
+
+.pt-section {
+  margin-bottom: 4em;
+  padding-top: 2em;
+  border-top: 1px solid var(--rule);
+}
+
+.pt-label {
+  font-weight: var(--wt-black);
+  color: var(--accent);
+  font-size: var(--fs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.4em;
+}
+
+/* ─── Accordion — pretext height pre-calculation ─────────────────────────── */
+
+.pt-accordion {
+  margin-bottom: 1.4em;
+}
+
+.pt-accordion:last-child {
+  margin-bottom: 0;
+}
+
+.pt-accordion-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1ch;
+  cursor: pointer;
+  padding: 0.35em 0;
+  color: var(--ink);
+  font-weight: var(--wt-bold);
+  user-select: none;
+  border-radius: 2px;
+}
+
+.pt-accordion-header::before {
+  content: '▸';
+  font-weight: var(--wt-normal);
+  color: var(--accent);
+  transition: transform 200ms ease;
+  flex-shrink: 0;
+}
+
+.pt-accordion[data-open='true'] .pt-accordion-header::before {
+  transform: rotate(90deg);
+}
+
+.pt-accordion-header:hover { color: var(--accent); }
+
+.pt-accordion-body {
+  /* max-height set dynamically by accordion.js via pretext height calculation */
+  overflow: hidden;
+  padding-left: 2ch;
+  padding-top: 0.4em;
+}
+
+.pt-accordion-body p {
+  margin-bottom: 0.7em;
+  color: var(--ink);
+}
+
+.pt-accordion-body p:last-child {
+  margin-bottom: 0;
+}
+
+.pt-accordion-meta {
+  color: var(--muted);
+  margin-bottom: 0.4em;
+}
+
+/* ─── Rich text / Chips — pretext inline layout ──────────────────────────── */
+
+.pt-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3em;
+  margin-bottom: 0.4em;
+  line-height: var(--lh);
+}
+
+.pt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+}
+
+/* Base chip */
+.pt-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1em 0.5em;
+  border-radius: 2px;
+  font-size: calc(var(--fs) * 0.92);
+  font-weight: var(--wt-bold);
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+/* Chip tones */
+.pt-chip--lang {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.pt-chip--tool {
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  color: var(--muted);
+  border: 1px solid var(--rule);
+}
+
+.pt-chip--role {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.pt-chip--tag {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+}
+
+/* ─── Dynamic layout — text flowing around widgets ───────────────────────── */
+
+.pt-dynamic-section {
+  display: flex;
+  gap: 2ch;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.pt-dynamic-widget {
+  flex-shrink: 0;
+}
+
+.pt-dynamic-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pt-text-narrow {
+  /* width set dynamically by dynamic-layout.js */
+}
+
+.pt-text-wide {
+  /* full width after widget */
+  margin-top: 0.7em;
+}
+
+/* ─── Chess board (dynamic widget) ──────────────────────────────────────── */
+
+.chess-board {
+  font-size: var(--fs);
+  line-height: 1;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  padding: 0.5em 0.8em;
+  border-radius: 3px;
+}
+
+.chess-board code {
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre;
+  display: block;
+  color: var(--ink);
+}
+
+/* ─── Links ──────────────────────────────────────────────────────────────── */
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 120ms ease;
+}
+
+a:hover,
+a:focus {
+  text-decoration-color: var(--accent);
+}
+
+/* ─── Misc ───────────────────────────────────────────────────────────────── */
+
+.muted { color: var(--muted); }
+.accent { color: var(--accent); }
+.bold { font-weight: var(--wt-bold); }
+
+.gpg-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+  line-height: 2;
+  transition: color 120ms ease;
+}
+
+.gpg-btn:hover,
+.gpg-btn:focus { color: var(--accent); }
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+
+footer {
+  grid-column: 2;
+  padding: 2em 3ch 2em 2ch;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+  font-size: var(--fs);
+}
+
+footer a {
+  color: var(--muted);
+  text-decoration-color: var(--rule);
+}
+
+footer a:hover,
+footer a:focus { color: var(--accent); }
+
+/* ─── Mobile ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    column-gap: 0;
+  }
+
+  #sidebar {
+    display: none;
+  }
+
+  #mobile-nav {
+    display: flex;
+    align-items: center;
+    gap: 2ch;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 1em 2ch;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    order: 1;
+  }
+
+  #mobile-nav .logo {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: var(--wt-black);
+    flex-shrink: 0;
+  }
+
+  #mobile-nav a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  #mobile-nav a:hover { color: var(--accent); }
+
+  main {
+    flex: 1;
+    padding: 0 2ch 3em;
+    grid-column: auto;
+    order: 2;
+  }
+
+  #hero {
+    padding: 2.8em 0 2em;
+  }
+
+  #mobile-links {
+    display: flex;
+    align-items: baseline;
+    gap: 2ch;
+    flex-wrap: wrap;
+    padding: 2em 2ch 0;
+    order: 3;
+  }
+
+  #mobile-links a,
+  #mobile-links .gpg-btn {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  #mobile-links a:hover { color: var(--accent); }
+
+  footer {
+    grid-column: auto;
+    padding: 2em 2ch 2em;
+    order: 4;
+  }
+
+  .pt-dynamic-section {
+    flex-direction: column;
+  }
+}
+
+/* ─── Reduced motion ─────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+  #motif-canvas { display: none; }
+}
