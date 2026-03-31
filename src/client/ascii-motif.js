@@ -8,22 +8,31 @@
  * The key trick: Source Code Pro is a variable font. As font-weight
  * animates from 300→900, glyph widths change — pretext measures these
  * accurately without DOM reads, letting us place characters precisely.
+ *
+ * Enhancements:
+ * - Dynamic height: derived from canvas clientWidth/clientHeight at resize
+ * - Mouse parallax (desktop): subtle field sampling offset from cursor
+ * - Device tilt (mobile): DeviceOrientationEvent feeds same parallax offset
+ * - Organic drift: lower brightness threshold (0.008) renders faint aura
+ * - Reduced motion: early return in start() when user prefers no motion
  */
 
 import { prepareWithSegments, walkLineRanges } from '@chenglou/pretext'
 
 const CHARSET = ' .,:·-=*#·>·'
-const WEIGHTS = [300, 400, 700, 900]
+// NOTE: WEIGHTS defined for future per-weight palette caching if needed
+const WEIGHTS = [300, 400, 700, 900] // eslint-disable-line no-unused-vars
 const FONT_SIZE = 13
 const LINE_HEIGHT = 15
 // NOTE: target shape rendered as ASCII — sampled to a particle field
 const TARGET_TEXT = '·>·'
-const PARTICLE_N = 80
-const ATTRACTOR_FORCE = 0.18
-const FIELD_DECAY = 0.84
+// NOTE: unused attractor constants kept for reference / future physics pass
+const PARTICLE_N = 80 // eslint-disable-line no-unused-vars
+const ATTRACTOR_FORCE = 0.18 // eslint-disable-line no-unused-vars
+const FIELD_DECAY = 0.84 // eslint-disable-line no-unused-vars
 
 /**
- * @param {string} weight
+ * @param {number|string} weight
  * @returns {string}
  */
 function makeFont(weight) {
@@ -141,10 +150,16 @@ export class AsciiMotif {
     this.frame = 0
     this.lastPalette = null
     this.lastFont = null
+
+    // NOTE: normalized mouse position 0..1 — drives parallax field offset
+    this.mouseX = 0.5
+    this.mouseY = 0.5
   }
 
   resize() {
     const dpr = window.devicePixelRatio || 1
+    // NOTE: dimensions derived from CSS-controlled clientWidth/clientHeight
+    // so the canvas responds to any container height set via stylesheet
     const w = this.canvas.clientWidth
     const h = this.canvas.clientHeight
     this.canvas.width = w * dpr
@@ -157,8 +172,32 @@ export class AsciiMotif {
   }
 
   start() {
+    // NOTE: respect user preference — no animation when reduced motion is set
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
     this.resize()
     window.addEventListener('resize', () => this.resize())
+
+    // Mouse parallax (desktop)
+    document.addEventListener('mousemove', (e) => {
+      this.mouseX = e.clientX / window.innerWidth
+      this.mouseY = e.clientY / window.innerHeight
+    })
+
+    // Device tilt (mobile) — same mouseX/mouseY slot, passive listener
+    if (typeof DeviceOrientationEvent !== 'undefined') {
+      window.addEventListener(
+        'deviceorientation',
+        (e) => {
+          // gamma: left/right tilt -90..90 → remap to 0..1
+          this.mouseX = 0.5 + (e.gamma || 0) / 90
+          // beta: front/back tilt, centered around holding-phone ~45°
+          this.mouseY = 0.5 + ((e.beta || 0) - 45) / 90
+        },
+        { passive: true },
+      )
+    }
+
     this._animate()
   }
 
@@ -193,15 +232,37 @@ export class AsciiMotif {
     ctx.font = makeFont(Math.round(this.weight))
     ctx.textBaseline = 'top'
 
+    // NOTE: parallax offset maps mouse/tilt position to a cell-level shift
+    // keeps the effect subtle — the shape appears viewed from a slight angle
+    const parallaxX = (this.mouseX - 0.5) * 2 // -1..1
+    const parallaxY = (this.mouseY - 0.5) * 1 // -0.5..0.5
+
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        const brightness = field[row * cols + col]
-        if (brightness < 0.04) continue
+        // Sample with slight parallax offset — clamp to valid cell range
+        const sampleCol = Math.max(
+          0,
+          Math.min(cols - 1, col + Math.round(parallaxX * 0.8)),
+        )
+        const sampleRow = Math.max(
+          0,
+          Math.min(rows - 1, row + Math.round(parallaxY * 0.4)),
+        )
+        const brightness = field[sampleRow * cols + sampleCol]
+
+        // NOTE: lowered threshold (0.008 vs original 0.04) to render a faint
+        // ambient halo around the ·>· shape — organic drift effect
+        if (brightness < 0.008) continue
+
         const char = brightnessToChar(brightness, palette)
         if (char === ' ') continue
 
-        // alpha driven by brightness
-        const alpha = 0.15 + brightness * 0.85
+        // alpha: very faint for ambient drift region, solid for core shape
+        const alpha =
+          brightness < 0.04
+            ? brightness * 2 // faint ambient aura
+            : 0.15 + brightness * 0.85
+
         ctx.fillStyle = `rgba(149, 95, 59, ${alpha})`
         ctx.fillText(char, col * cellW, row * cellH)
       }
