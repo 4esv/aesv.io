@@ -58,181 +58,200 @@ MIT License. {{ now | date('Y') }}.
 {% extends "base.njk" %}
 {% block title %}{{ site.name }}{% endblock %}
 {% block terminal %}
-<section id="about">
-<pre class="terminal">
-<span class="section-name">about</span>
+<div id="tile-grid">
 
-  Mexican-American creator and curator of software,
-  music, food, and information.
-  This is my corner of the internet and public page.
-  Feel free to look around.
-</pre>
-</section>
+  <section class="tile tile--hero" id="hero" data-tile-label="·>·">
+    <canvas id="motif-canvas" aria-hidden="true"></canvas>
+    <p class="hero-meta">
+      Mexican-American creator and curator of software, music, food, and information.
+    </p>
+  </section>
 
-<section id="work">
-<pre class="terminal">
-<span class="section-name">work</span>
+  <section class="tile tile--about" id="about" data-tile-label="about">
+    <div class="pt-label">about</div>
+    <p>I specialize in extending, automating and creating software —
+    everything from AI integrations to full-stack applications.
+    Like my text editor, I work across all operating systems via the command line.</p>
+    <p class="mt-sm">Interested in remote projects and opportunities.
+    <a href="mailto:mail@aesv.io">mail@aesv.io ↗</a></p>
+  </section>
 
-  Systems Integrator @ <a href="https://cornell.edu">Cornell University ↗</a>
-  Building internal applications, automations and supporting software.
+  <section class="tile tile--work" id="work" data-tile-label="work">
+    <div class="pt-label">work</div>
 
-  I specialize in extending, automating and creating software.
-  Everything from building modules to integrate AI with robots,
-  to scripts that automate an existing asset tracking database,
-  to full stack applications to manage other applications.
+    <div class="pt-accordion" data-open="false">
+      <div class="pt-accordion-header">
+        <span>Systems Integrator @ <a href="https://cornell.edu">Cornell University ↗</a></span>
+        <span class="pt-chips">
+          <span class="pt-chip pt-chip--role">current</span>
+        </span>
+      </div>
+      <div class="pt-accordion-body">
+        <p>Building internal applications, automations and supporting software.</p>
+        <p>I specialize in extending, automating and creating software — everything from building modules to integrate AI with robots, to scripts that automate an existing asset tracking database, to full stack applications to manage other applications.</p>
+        <p>Like my text editor, I work across all operating systems via the command line.</p>
+        <p>Interested in projects and remote opportunities.</p>
+      </div>
+    </div>
 
-  Like my text editor, I work across
-  all operating systems via the command line.
+    <div class="pt-accordion" data-open="false">
+      <div class="pt-accordion-header">
+        <span>Interfolio Dossier Builder</span>
+        <span class="pt-chips">
+          <span class="pt-chip pt-chip--tag">automated assembly of faculty tenure review packets</span>
+        </span>
+      </div>
+      <div class="pt-accordion-body">
+        <p>Built a full-stack system in three languages. React frontend submits jobs to a Node.js/Express API, which queues work through BullMQ and Redis. A Python worker pulls documents through Interfolio's HMAC-SHA1 authenticated API, classifies them with regex pattern matching, merges PDFs with PyPDF2, and generates nested bookmarks. 23K lines across 127 files and 6 languages.</p>
+        <p>Replaced a multi-day manual process with a 5-minute automated run.</p>
+        <p class="pt-chips">
+          <span class="pt-chip pt-chip--lang">Python</span>
+          <span class="pt-chip pt-chip--lang">Node.js</span>
+          <span class="pt-chip pt-chip--tool">React</span>
+          <span class="pt-chip pt-chip--tool">BullMQ</span>
+          <span class="pt-chip pt-chip--tool">Redis</span>
+          <span class="pt-chip pt-chip--tool">PyPDF2</span>
+          <span class="pt-chip pt-chip--tool">Interfolio API</span>
+          <span class="pt-chip pt-chip--tool">MSSQL</span>
+          <span class="pt-chip pt-chip--tool">Vite</span>
+        </p>
+      </div>
+    </div>
 
-  Interested in projects and remote opportunities
+    <div class="pt-accordion" data-open="false">
+      <div class="pt-accordion-header">
+        <span>Device Asset Sync</span>
+        <span class="pt-chips">
+          <span class="pt-chip pt-chip--tag">bi-directional inventory tracking across 1,300+ devices</span>
+        </span>
+      </div>
+      <div class="pt-accordion-body">
+        <p>Wrote a bi-directional sync between Jamf MDM and Snipe-IT in PowerShell. The Mac agent uses an OOP class with exponential backoff, OAuth token refresh, and request throttling. A separate Windows agent deployed via Group Policy reports system info at logon.</p>
+        <p>1,300+ devices tracked at 95%+ accuracy. Eliminated manual inventory entirely.</p>
+        <p class="pt-chips">
+          <span class="pt-chip pt-chip--lang">PowerShell</span>
+          <span class="pt-chip pt-chip--tool">Jamf Pro API</span>
+          <span class="pt-chip pt-chip--tool">Snipe-IT API</span>
+          <span class="pt-chip pt-chip--tool">Group Policy</span>
+        </p>
+      </div>
+    </div>
 
-  <span class="subsection-name">cases</span>
+    <div class="pt-accordion" data-open="false">
+      <div class="pt-accordion-header">
+        <span>App Security Manager</span>
+        <span class="pt-chips">
+          <span class="pt-chip pt-chip--tag">RBAC dashboard replacing legacy ColdFusion permissions</span>
+        </span>
+      </div>
+      <div class="pt-accordion-body">
+        <p>Built an RBAC dashboard with a three-tier role model (Developer, Owner, Admin). LDAP live search with drag-and-drop user assignment. Transactional SQL for cascading permission deletes across linked tables. Auth runs through the university's Shibboleth/SAML reverse proxy. 3,400 lines serving two colleges from one interface.</p>
+        <p>Access changes take under a minute. Replaced a ColdFusion system in use for over a decade.</p>
+        <p class="pt-chips">
+          <span class="pt-chip pt-chip--lang">Node.js</span>
+          <span class="pt-chip pt-chip--tool">Express</span>
+          <span class="pt-chip pt-chip--tool">MSSQL</span>
+          <span class="pt-chip pt-chip--tool">LDAP</span>
+          <span class="pt-chip pt-chip--tool">Shibboleth/SAML</span>
+        </p>
+      </div>
+    </div>
 
-    <span class="subsection-name">Interfolio Dossier Builder</span>
-    Automated assembly of faculty tenure review packets
+    <div class="pt-accordion" data-open="false">
+      <div class="pt-accordion-header">
+        <span>NAO Bot Natural Conversation</span>
+        <span class="pt-chips">
+          <span class="pt-chip pt-chip--tag">conversational humanoid robot for research demo</span>
+        </span>
+      </div>
+      <div class="pt-accordion-body">
+        <p>Connected NAO's onboard microphone to OpenAI Whisper for transcription, routed text through GPT for response generation, and piped output back through NAO's animated speech engine for synchronized voice and gestures.</p>
+        <p>Delivered a working proof-of-concept for an NSF grant proposal.</p>
+        <p class="pt-chips">
+          <span class="pt-chip pt-chip--lang">Python</span>
+          <span class="pt-chip pt-chip--tool">NAOqi SDK</span>
+          <span class="pt-chip pt-chip--tool">OpenAI Whisper</span>
+          <span class="pt-chip pt-chip--tool">OpenAI API</span>
+        </p>
+      </div>
+    </div>
 
-    Built a full-stack system in three languages.
-    React frontend submits jobs to a Node.js/Express
-    API, which queues work through BullMQ and Redis.
-    A Python worker pulls documents through Interfolio's
-    HMAC-SHA1 authenticated API, classifies them with
-    regex pattern matching, merges PDFs with PyPDF2,
-    and generates nested bookmarks.
-    23K lines across 127 files and 6 languages.
+    <p class="mt-sm">
+      <a href="https://www.linkedin.com/in/aesv/?skipRedirect=true">linkedin ↗</a>
+      · <a href="mailto:mail@aesv.io">mail@aesv.io</a>
+    </p>
+  </section>
 
-    Replaced a multi-day manual process with a
-    5-minute automated run.
+  <section class="tile tile--code" id="code" data-tile-label="code">
+    <div class="pt-label">code</div>
+    <p><a href="https://github.com/4esv/pianito">pianito ↗</a> — TUI piano tuner</p>
+    <p><a href="https://github.com/4esv/bbq">bbq ↗</a> — BQN quant toolkit</p>
+    <p class="mt-sm">
+      <a href="https://github.com/4esv/dotfiles">dotfiles ↗</a>
+      · <a href="https://github.com/4esv/nvim-config">neovim config ↗</a>
+      · <a href="https://github.com/4esv">github ↗</a>
+    </p>
+  </section>
 
-    <span class="dim">Python, Node.js, React, BullMQ, Redis,
-    PyPDF2, Interfolio API, MSSQL, Vite</span>
+  <section class="tile tile--music" id="music" data-tile-label="music">
+    <div class="pt-label">music</div>
+    <p>Keyboardist, bassist and emergency drummer. I listen to everything from Mexican folklore to Norwegian death metal.</p>
+    {% if spotify %}
+    <div class="pt-accordion" data-open="false" style="margin-top: 1.4em">
+      <div class="pt-accordion-header">
+        <span>top tracks &amp; artists</span>
+      </div>
+      <div class="pt-accordion-body">
+        <p class="pt-label">top tracks</p>
+        {% for track in spotify.tracks %}
+        <p><a href="{{ track.url }}">{{ track.name }} ↗</a> <span class="muted">by {{ track.artist }}</span></p>
+        {%- endfor %}
+        <p class="pt-label" style="margin-top: 0.7em">top artists</p>
+        {% for artist in spotify.artists %}
+        <p><a href="{{ artist.url }}">{{ artist.name }} ↗</a></p>
+        {%- endfor %}
+      </div>
+    </div>
+    {% endif %}
+    <p class="mt-sm">
+      <a href="https://open.spotify.com/user/aesvel">spotify ↗</a>
+      · <a href="https://soundcloud.com/4esv">soundcloud ↗</a>
+    </p>
+  </section>
 
+  <section class="tile tile--chess" id="chess" data-tile-label="chess">
+    <div class="pt-label">chess</div>
+    {% if chess %}
+    <div class="pt-dynamic-section">
+      <div class="pt-dynamic-widget">
+        <p class="muted">last victory</p>
+        <p>{{ chess.white }} vs {{ chess.black }} · {{ chess.result }}</p>
+        <div class="chess-board">
+          {% for line in chess.board %}
+          <div class="chess-row">{{ line | safe }}</div>
+          {% endfor %}
+        </div>
+        <p class="mt-sm"><a href="{{ chess.url }}">view on chess.com ↗</a></p>
+      </div>
+    </div>
+    {% else %}
+    <p class="muted">no recent victories loaded</p>
+    {% endif %}
+  </section>
 
-    <span class="subsection-name">Device Asset Sync</span>
-    Bi-directional inventory tracking across 1,300+ devices
+  <section class="tile tile--sport" id="sport" data-tile-label="sport">
+    <div class="pt-label">sport</div>
+    <p>I walk, climb indoors, run the trails. Sometimes hike the gorges and swim in the lake.</p>
+    {% if strava %}
+    <div class="mt-sm">
+      <p class="muted">last activity</p>
+      <p>{{ strava.name }}</p>
+      <p class="muted">{{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain</p>
+    </div>
+    {% endif %}
+    <p class="mt-sm"><a href="https://www.strava.com/athletes/51674641">strava ↗</a></p>
+  </section>
 
-    Wrote a bi-directional sync between Jamf MDM
-    and Snipe-IT in PowerShell. The Mac agent uses
-    an OOP class with exponential backoff, OAuth
-    token refresh, and request throttling. A separate
-    Windows agent deployed via Group Policy reports
-    system info at logon.
-
-    1,300+ devices tracked at 95%+ accuracy.
-    Eliminated manual inventory entirely.
-
-    <span class="dim">PowerShell, Jamf Pro API, Snipe-IT API,
-    Group Policy</span>
-
-
-    <span class="subsection-name">App Security Manager</span>
-    RBAC dashboard replacing legacy ColdFusion permissions
-
-    Built an RBAC dashboard with a three-tier role
-    model (Developer, Owner, Admin). LDAP live search
-    with drag-and-drop user assignment. Transactional
-    SQL for cascading permission deletes across linked
-    tables. Auth runs through the university's
-    Shibboleth/SAML reverse proxy.
-    3,400 lines serving two colleges from one interface.
-
-    Access changes take under a minute. Replaced
-    a ColdFusion system in use for over a decade.
-
-    <span class="dim">Node.js, Express, MSSQL, LDAP, Shibboleth/SAML</span>
-
-
-    <span class="subsection-name">NAO Bot Natural Conversation</span>
-    Conversational humanoid robot for research demo
-
-    Connected NAO's onboard microphone to OpenAI
-    Whisper for transcription, routed text through
-    GPT for response generation, and piped output
-    back through NAO's animated speech engine for
-    synchronized voice and gestures.
-
-    Delivered a working proof-of-concept for an
-    NSF grant proposal.
-
-    <span class="dim">Python, NAOqi SDK, OpenAI Whisper, OpenAI API</span>
-
-  <a href="https://www.linkedin.com/in/aesv/?skipRedirect=true">linkedin ↗</a>
-  <a href="mailto:mail@aesv.io">mail@aesv.io</a>
-</pre>
-</section>
-
-<section id="code">
-<pre class="terminal">
-<span class="section-name">code</span>
-
-  <a href="https://github.com/4esv/pianito">pianito, the TUI piano tuner ↗</a>
-  <a href="https://github.com/4esv/bbq">bbq, a BQN quant toolkit ↗</a>
-
-  <a href="https://github.com/4esv/dotfiles">my dotfiles ↗</a>
-  <a href="https://github.com/4esv/nvim-config">my neovim config ↗</a>
-
-  <a href="https://github.com/4esv">github ↗</a>
-</pre>
-</section>
-
-<section id="music">
-<pre class="terminal">
-<span class="section-name">music</span>
-
-  Keyboardist, bassist and emergency drummer.
-  I listen to everything from Mexican folklore
-  to Norwegian death metal.
-
-{% if spotify %}
-  <span class="subsection-name">top tracks</span>
-{% for track in spotify.tracks %}
-    <a href="{{ track.url }}">{{ track.name }} ↗</a> <span class="nowrap">by {{ track.artist }}</span>
-{%- endfor %}
-
-  <span class="subsection-name">top artists</span>
-{% for artist in spotify.artists %}
-    <a href="{{ artist.url }}">{{ artist.name }} ↗</a>
-{%- endfor %}
-
-{% endif %}
-  <a href="https://open.spotify.com/user/aesvel">spotify ↗</a>
-  <a href="https://soundcloud.com/4esv">soundcloud ↗</a>
-</pre>
-</section>
-
-<section id="chess">
-<pre class="terminal">
-<span class="section-name">chess</span>
-
-{% if chess %}
-  <span class="subsection-name">last victory</span>
-
-    {{ chess.white }} vs {{ chess.black }} · {{ chess.result }}
-
-<code>{% for line in chess.board %}    {{ line }}
-{% endfor %}</code>
-      <a href="{{ chess.url }}">view on chess.com ↗</a>
-{% else %}
-    <span class="dim">no recent victories loaded</span>
-{% endif %}
-</pre>
-</section>
-
-<section id="sport">
-<pre class="terminal">
-<span class="section-name">sport</span>
-
-  I walk, climb indoors, run the trails.
-  Sometimes hike the gorges and swim in the lake.
-
-{% if strava %}
-  <span class="subsection-name">last activity</span>
-
-    {{ strava.name }}
-    {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain
-
-{% endif %}
-  <a href="https://www.strava.com/athletes/51674641">strava ↗</a>
-</pre>
-</section>
+</div>
 {% endblock %}
 {%- endif -%}
