@@ -88,6 +88,11 @@ body {
   color: var(--ink);
   overscroll-behavior: none;
   overflow-x: hidden;
+  /* NOTE: account for slim 4ch left rail on desktop */
+  padding-left: 4ch;
+  /* Win98 micro-detail: thin editorial scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
 }
 
 /* ─── Accessibility ──────────────────────────────────────────────────────── */
@@ -122,50 +127,46 @@ body {
 
 #wrapper {
   min-height: 100dvh;
-  display: grid;
-  grid-template-columns: 22ch 1fr;
-  grid-template-rows: 1fr auto;
-  max-width: 120ch;
-  margin: 0 auto;
-  column-gap: 2ch;
+  display: flex;
+  flex-direction: column;
 }
 
 @supports not (min-height: 100dvh) {
   #wrapper { min-height: 100vh; }
 }
 
-/* ─── Sidebar ────────────────────────────────────────────────────────────── */
+/* ─── Sidebar — slim fixed left rail ────────────────────────────────────── */
 
 #sidebar {
   position: fixed;
-  top: 0;
   left: 0;
-  width: 22ch;
+  top: 0;
+  width: 4ch;
   height: 100vh;
-  padding: 3em 2ch 3em 3ch;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em 0;
   border-right: 1px solid var(--rule);
-  background: color-mix(in srgb, var(--panel) 90%, transparent);
+  background: color-mix(in srgb, var(--panel) 95%, transparent);
   backdrop-filter: blur(4px);
+  z-index: 10;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) {
-  #sidebar {
-    left: max(0px, calc((100vw - 108ch) / 2));
-  }
-}
-
-/* ·>· logo */
+/* ·>· logo — rotated 90deg to read vertically top-to-bottom */
 .logo {
   color: var(--ink);
   text-decoration: none;
   display: block;
   font-weight: var(--wt-black);
   letter-spacing: -0.02em;
-  margin-bottom: 2.8em;
   transition: color 160ms ease;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  margin-bottom: 1.4em;
+  white-space: nowrap;
+  font-size: var(--fs);
 }
 
 .logo:hover,
@@ -173,41 +174,39 @@ body {
   color: var(--accent);
 }
 
-#sidebar .name {
-  color: var(--ink);
-  font-weight: var(--wt-bold);
-  display: block;
-}
-
-#sidebar .role {
-  color: var(--muted);
-  display: block;
-  line-height: var(--lh);
-}
-
-#sidebar .sep {
-  display: block;
-  line-height: var(--lh);
-}
-
-#sidebar ul {
+/* Nav dots — anchor links for each section */
+#sidebar .nav-dots {
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
 }
 
-#sidebar .nav-links a,
-#sidebar .ext-links a {
-  color: var(--muted);
-  text-decoration: none;
+#sidebar .nav-dots a {
   display: block;
-  line-height: 2;
-  transition: color 120ms ease;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rule);
+  text-indent: -9999px;
+  overflow: hidden;
+  transition: background 120ms ease, transform 120ms ease;
 }
 
-#sidebar .nav-links a:hover,
-#sidebar .nav-links a:focus,
-#sidebar .ext-links a:hover,
-#sidebar .ext-links a:focus {
-  color: var(--accent);
+#sidebar .nav-dots a:hover,
+#sidebar .nav-dots a:focus {
+  background: var(--accent);
+  transform: scale(1.4);
+}
+
+/* Hide old sidebar nav text elements — rail has no room for them */
+#sidebar .name,
+#sidebar .role,
+#sidebar .sep,
+#sidebar .nav-links,
+#sidebar .ext-links {
+  display: none;
 }
 
 /* ─── Mobile nav ─────────────────────────────────────────────────────────── */
@@ -218,9 +217,72 @@ body {
 /* ─── Main ───────────────────────────────────────────────────────────────── */
 
 main {
-  grid-column: 2;
-  padding: 0 3ch 4em 2ch;
+  flex: 1;
   min-width: 0;
+  padding: 0;
+}
+
+/* ─── Tile grid ──────────────────────────────────────────────────────────── */
+
+/* NOTE: auto-fill with minmax(38ch,1fr) fills ultrawide naturally without huge tiles */
+#tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(38ch, 1fr));
+  gap: 0;
+  padding: 2ch;
+}
+
+/* Tile — grid cell wrapper around .pt-section content */
+.tile {
+  padding: 2ch 2.5ch;
+  border: 1px solid var(--rule);
+  min-height: 14em;
+  position: relative;
+}
+
+/* Win98 micro-detail: subtle inset bevel on hover */
+.tile:hover {
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.8),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Win98 micro-detail: gripper dots in corner on hover */
+.tile::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+  /* 2x2 dot pattern using radial-gradient */
+  background-image:
+    radial-gradient(circle, var(--rule) 1px, transparent 1px),
+    radial-gradient(circle, var(--rule) 1px, transparent 1px),
+    radial-gradient(circle, var(--rule) 1px, transparent 1px),
+    radial-gradient(circle, var(--rule) 1px, transparent 1px);
+  background-size: 4px 4px;
+  background-position: 0 0, 4px 0, 0 4px, 4px 4px;
+  background-repeat: no-repeat;
+}
+
+.tile:hover::after {
+  opacity: 1;
+}
+
+/* Hero tile — spans 2 columns and 2 rows to stay prominent */
+.tile--hero {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* .pt-section inside a tile — remove its own top border/padding since tile provides container */
+.tile .pt-section {
+  margin-bottom: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 /* ─── Hero / ASCII motif ─────────────────────────────────────────────────── */
@@ -460,8 +522,7 @@ a:focus {
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
 
 footer {
-  grid-column: 2;
-  padding: 2em 3ch 2em 2ch;
+  padding: 2em 2.5ch;
   color: var(--muted);
   border-top: 1px solid var(--rule);
   font-size: var(--fs);
@@ -478,13 +539,16 @@ footer a:focus { color: var(--accent); }
 /* ─── Mobile ─────────────────────────────────────────────────────────────── */
 
 @media (max-width: 767px) {
-  #wrapper {
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-    column-gap: 0;
+  /* Remove left rail offset on mobile */
+  body {
+    padding-left: 0;
   }
 
+  #wrapper {
+    max-width: 100%;
+  }
+
+  /* Hide slim rail — mobile-nav takes over */
   #sidebar {
     display: none;
   }
@@ -510,6 +574,9 @@ footer a:focus { color: var(--accent); }
     text-decoration: none;
     font-weight: var(--wt-black);
     flex-shrink: 0;
+    /* Reset vertical writing-mode for mobile nav logo */
+    writing-mode: horizontal-tb;
+    transform: none;
   }
 
   #mobile-nav a {
@@ -521,13 +588,38 @@ footer a:focus { color: var(--accent); }
 
   main {
     flex: 1;
-    padding: 0 2ch 3em;
-    grid-column: auto;
+    padding: 0;
     order: 2;
   }
 
+  /* Single column on mobile — revert to block flow */
+  #tile-grid {
+    display: block;
+    padding: 0;
+  }
+
+  /* Mobile tile borders — horizontal rules only, no side borders */
+  .tile {
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+    border-top: none;
+    /* Reset hero span on mobile */
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .tile:first-child {
+    border-top: 1px solid var(--rule);
+  }
+
+  /* Restore pt-section border on mobile where tiles have no side borders */
+  .tile .pt-section {
+    padding-top: 1.4em;
+  }
+
   #hero {
-    padding: 2.8em 0 2em;
+    padding: 2.8em 2ch 2em;
   }
 
   #mobile-links {
@@ -548,8 +640,7 @@ footer a:focus { color: var(--accent); }
   #mobile-links a:hover { color: var(--accent); }
 
   footer {
-    grid-column: auto;
-    padding: 2em 2ch 2em;
+    padding: 2em 2ch;
     order: 4;
   }
 
