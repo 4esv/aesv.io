@@ -1,4 +1,4 @@
-// node_modules/@chenglou/pretext/dist/bidi.js
+// ../../../node_modules/@chenglou/pretext/dist/bidi.js
 var baseTypes = [
   "BN",
   "BN",
@@ -639,7 +639,7 @@ function computeSegmentLevels(normalized, segStarts) {
   return segLevels;
 }
 
-// node_modules/@chenglou/pretext/dist/analysis.js
+// ../../../node_modules/@chenglou/pretext/dist/analysis.js
 var collapsibleWhitespaceRunRe = /[ \t\n\r\f]+/g;
 var needsWhitespaceNormalizationRe = /[\t\n\r\f]| {2,}|^ | $/;
 function getWhiteSpaceProfile(whiteSpace) {
@@ -1431,7 +1431,7 @@ function analyzeText(text, profile, whiteSpace = "normal") {
   };
 }
 
-// node_modules/@chenglou/pretext/dist/measurement.js
+// ../../../node_modules/@chenglou/pretext/dist/measurement.js
 var measureContext = null;
 var segmentMetricCaches = /* @__PURE__ */ new Map();
 var cachedEngineProfile = null;
@@ -1592,7 +1592,7 @@ function getFontMeasurementState(font, needsEmojiCorrection) {
   return { cache, fontSize, emojiCorrection };
 }
 
-// node_modules/@chenglou/pretext/dist/line-break.js
+// ../../../node_modules/@chenglou/pretext/dist/line-break.js
 function canBreakAfter(kind) {
   return kind === "space" || kind === "preserved-space" || kind === "tab" || kind === "zero-width-break" || kind === "soft-hyphen";
 }
@@ -2377,7 +2377,7 @@ function layoutNextLineRangeSimple(prepared, normalizedStart, maxWidth) {
   return finishLine();
 }
 
-// node_modules/@chenglou/pretext/dist/layout.js
+// ../../../node_modules/@chenglou/pretext/dist/layout.js
 var sharedGraphemeSegmenter2 = null;
 var sharedLineTextCaches = /* @__PURE__ */ new WeakMap();
 function getSharedGraphemeSegmenter2() {
@@ -2770,6 +2770,8 @@ var AsciiMotif = class {
     this.frame = 0;
     this.lastPalette = null;
     this.lastFont = null;
+    this.mouseX = 0.5;
+    this.mouseY = 0.5;
   }
   resize() {
     const dpr = window.devicePixelRatio || 1;
@@ -2783,8 +2785,23 @@ var AsciiMotif = class {
     this.field = sampleTargetField(this.cols, this.rows, makeFont(900));
   }
   start() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     this.resize();
     window.addEventListener("resize", () => this.resize());
+    document.addEventListener("mousemove", (e) => {
+      this.mouseX = e.clientX / window.innerWidth;
+      this.mouseY = e.clientY / window.innerHeight;
+    });
+    if (typeof DeviceOrientationEvent !== "undefined") {
+      window.addEventListener(
+        "deviceorientation",
+        (e) => {
+          this.mouseX = 0.5 + (e.gamma || 0) / 90;
+          this.mouseY = 0.5 + ((e.beta || 0) - 45) / 90;
+        },
+        { passive: true }
+      );
+    }
     this._animate();
   }
   stop() {
@@ -2809,13 +2826,23 @@ var AsciiMotif = class {
     ctx.clearRect(0, 0, this.canvas.clientWidth, this.canvas.clientHeight);
     ctx.font = makeFont(Math.round(this.weight));
     ctx.textBaseline = "top";
+    const parallaxX = (this.mouseX - 0.5) * 2;
+    const parallaxY = (this.mouseY - 0.5) * 1;
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        const brightness = field[row * cols + col];
-        if (brightness < 0.04) continue;
+        const sampleCol = Math.max(
+          0,
+          Math.min(cols - 1, col + Math.round(parallaxX * 0.8))
+        );
+        const sampleRow = Math.max(
+          0,
+          Math.min(rows - 1, row + Math.round(parallaxY * 0.4))
+        );
+        const brightness = field[sampleRow * cols + sampleCol];
+        if (brightness < 8e-3) continue;
         const char = brightnessToChar(brightness, palette);
         if (char === " ") continue;
-        const alpha = 0.15 + brightness * 0.85;
+        const alpha = brightness < 0.04 ? brightness * 2 : 0.15 + brightness * 0.85;
         ctx.fillStyle = `rgba(149, 95, 59, ${alpha})`;
         ctx.fillText(char, col * cellW, row * cellH);
       }
