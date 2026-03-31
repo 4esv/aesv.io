@@ -12,6 +12,7 @@ import { AsciiMotif } from './ascii-motif.js'
 import { initAccordions } from './accordion.js'
 import { initRichText } from './rich-text.js'
 import { initDynamicLayout } from './dynamic-layout.js'
+import { initMinimap } from './mobile-scroll.js'
 
 function init() {
   // 1. ASCII motif canvas
@@ -36,7 +37,10 @@ function init() {
   // 4. Dynamic layout (text around widgets)
   initDynamicLayout()
 
-  // 5. GPG copy button
+  // 5. Mobile minimap scroll navigation
+  initMinimap()
+
+  // 6. GPG copy button
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.gpg-btn')
     if (!btn) return
