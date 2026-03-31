@@ -12,6 +12,7 @@
   <meta name="theme-color" content="#f5f1ea">
   <link rel="preload" href="/fonts/source-code-pro-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/pretext.css">
+  <link rel="stylesheet" href="/css/mobile-minimap.css">
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -24,7 +25,13 @@
       {% include "partials/pretext/footer.njk" %}
     </footer>
   </div>
+  {% include "partials/pretext/mobile-minimap.njk" %}
   <script type="module" src="/js/bundle.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+    }
+  </script>
   {% block scripts %}{% endblock %}
 </body>
 </html>
