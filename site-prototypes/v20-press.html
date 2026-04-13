@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axel Stevens — Press</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══ THEME ═══ */
+:root {
+  --bg: #16161d; --fg: #e8e4df; --fg-sec: #a09a93; --fg-dim: #5c5750;
+  --surface: #1e1e26; --border: rgba(232,228,223,0.08);
+  --accent: #c2754a; --accent-h: #d4895e; --accent-m: rgba(194,117,74,0.15);
+  --font: 'IBM Plex Mono','Courier New',monospace; --size: 14px; --radius: 0px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--size);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.45;
+}
+
+/* ═══ PRESS WATERMARK ═══ */
+#watermark {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.75rem;
+  font-size: 10px;
+  color: var(--fg-dim);
+  letter-spacing: 0.2em;
+  z-index: 100;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ═══ ROLLER ═══ */
+#roller {
+  position: fixed;
+  top: 85vh;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--accent), var(--accent), transparent);
+  box-shadow: 0 4px 20px rgba(194,117,74,0.3), 0 1px 0 rgba(194,117,74,0.6);
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* ═══ LAYOUT ═══ */
+.press {
+  max-width: 80ch;
+  margin: 0 auto;
+  padding: 5rem 2rem 12rem;
+}
+
+@media (max-width: 640px) {
+  .press { padding: 3rem 1.25rem 8rem; }
+}
+
+/* ═══ PRINTABLE ELEMENTS ═══ */
+.line {
+  opacity: 0;
+  transition: filter 400ms ease-out, opacity 0.05s;
+}
+
+/* freshly printed: copper tint fades to normal over 400ms */
+.line.printed {
+  opacity: 1;
+  filter: blur(1.5px) sepia(0.4) brightness(1.3);
+}
+
+.line.settled {
+  opacity: 1;
+  filter: none;
+}
+
+/* ═══ TYPOGRAPHY ═══ */
+.masthead {
+  margin-bottom: 4rem;
+}
+
+.masthead-logo {
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.masthead-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.masthead-sub {
+  font-size: 13px;
+  color: var(--fg-sec);
+  margin-top: 0.3rem;
+}
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.section-id {
+  font-size: 10px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+p {
+  font-size: 14px;
+  color: var(--fg);
+  line-height: 1.8;
+  margin-bottom: 1.1rem;
+}
+
+p.dim {
+  color: var(--fg-sec);
+}
+
+.motif {
+  display: block;
+  font-size: 12px;
+  color: var(--fg-dim);
+  letter-spacing: 0.3em;
+  margin: 3.5rem 0;
+  text-align: center;
+}
+
+/* Work entries */
+.work-entry {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.work-entry:last-child {
+  border-bottom: none;
+}
+
+.work-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 0.3rem;
+}
+
+.work-meta {
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+.work-desc {
+  font-size: 13px;
+  color: var(--fg-sec);
+  line-height: 1.8;
+  margin-bottom: 0.6rem;
+}
+
+.work-result {
+  font-size: 12px;
+  color: var(--accent);
+  padding-top: 0.5rem;
+}
+.work-result::before { content: '→ '; }
+
+/* Code table */
+.code-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.code-table tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.code-table td {
+  padding: 0.55rem 0;
+  font-size: 13px;
+  vertical-align: baseline;
+}
+
+.code-table td:first-child {
+  color: var(--accent);
+  width: 110px;
+}
+
+.code-table td:nth-child(2) {
+  color: var(--fg-dim);
+  width: 60px;
+  font-size: 11px;
+}
+
+.code-table td:last-child {
+  color: var(--fg-sec);
+}
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(194,117,74,0.3);
+  transition: border-color 0.15s;
+}
+a:hover { border-color: var(--accent); }
+
+/* Footer */
+.press-footer {
+  margin-top: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--fg-dim);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+</style>
+</head>
+<body>
+
+<div id="watermark">PRESS</div>
+<div id="roller"></div>
+
+<main class="press">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="line masthead-logo">·&gt;·</div>
+    <div class="line masthead-name">Axel Stevens</div>
+    <div class="line masthead-sub">Systems Integrator · Cornell University · Ithaca, NY</div>
+  </header>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="line section-id">§ about</div>
+    <p class="line">Mexican American sentient flesh pile. Casual pianist, bassist and emergency drummer. I build interfaces for humans and systems for machines.</p>
+    <p class="line dim">Systems integrator at Cornell University. Based in Ithaca, NY. Most of what I build lives at the seam between one system and another — different APIs, different languages, different teams, different eras of software.</p>
+    <p class="line dim">My job is to make them work together.</p>
+    <p class="line dim">Open to remote work and new projects. <a href="mailto:mail@aesv.io">mail@aesv.io</a></p>
+  </section>
+
+  <span class="line motif">· &gt; ·</span>
+
+  <!-- WORK -->
+  <section class="section" id="work">
+    <div class="line section-id">§ work</div>
+
+    <p class="line">Every project I've built here started the same way: someone had a manual process that was eating their time, and no off-the-shelf tool could fit the specific shape of their problem. So I built custom ones.</p>
+
+    <div class="work-entry">
+      <div class="line work-title">Interfolio Dossier Builder</div>
+      <div class="line work-meta">2024 · React · Node.js · BullMQ · Python · PyPDF2 · MSSQL</div>
+      <p class="line work-desc">Faculty tenure review used to be a multi-day ordeal: coordinators collecting documents by hand, sorting them, merging PDFs, emailing everything around. I built a React frontend where staff submit jobs, an Express API queues them through BullMQ and Redis, and a Python worker handles all the document work — authenticated API calls, regex classification, PDF merging, nested bookmark generation.</p>
+      <div class="line work-result">Multi-day manual process → 5 minutes. 23,000 lines, 6 languages, 127 files.</div>
+    </div>
+
+    <div class="work-entry">
+      <div class="line work-title">Device Asset Sync</div>
+      <div class="line work-meta">2023 · PowerShell · Python · Jamf · Snipe-IT · OAuth · MDM</div>
+      <p class="line work-desc">1,300 assets across two management systems that had never spoken. I wrote a bi-directional PowerShell sync with proper OOP structure — exponential backoff, OAuth token refresh, request throttling — and deployed a Windows logon agent via Group Policy. Now handling 40,000+ devices.</p>
+      <div class="line work-result">Inventory accuracy: unreliable → 95%+. Weekly manual reconciliation: eliminated.</div>
+    </div>
+
+    <div class="work-entry">
+      <div class="line work-title">App Security Manager</div>
+      <div class="line work-meta">2023 · Node.js · MSSQL · LDAP · SAML · RBAC</div>
+      <p class="line work-desc">A ColdFusion system that had been running for over a decade needed to die. I built its replacement: three-tier RBAC dashboard with live LDAP search, drag-and-drop user assignment, transactional SQL, and Shibboleth/SAML authentication. Permission changes that used to require a sysadmin email chain now take under a minute.</p>
+      <div class="line work-result">Two colleges served. Access changes under 1 minute. 3,400 lines.</div>
+    </div>
+
+    <div class="work-entry">
+      <div class="line work-title">NAO Bot</div>
+      <div class="line work-meta">2022 · Python · OpenAI · Whisper · NAOqi · Aldebaran</div>
+      <p class="line work-desc">A research team needed a humanoid conversation demo for an NSF grant. I wired NAO's microphone to Whisper, Whisper to GPT, GPT to NAO's speech engine with synchronized gestures. Full speech-to-speech AI loop on humanoid hardware.</p>
+      <div class="line work-result">Proof-of-concept delivered. NSF grant supported.</div>
+    </div>
+  </section>
+
+  <span class="line motif">· &gt; ·</span>
+
+  <!-- CODE -->
+  <section class="section" id="code">
+    <div class="line section-id">§ code</div>
+    <p class="line dim">Public work. Mostly tools I actually use.</p>
+    <table class="code-table">
+      <tr class="line"><td><a href="https://github.com/4esv/pianito">pianito</a></td><td>Go</td><td>MIDI sequencer — couldn't find one I liked, wrote one</td></tr>
+      <tr class="line"><td><a href="https://github.com/4esv/bbq">bbq</a></td><td>BQN</td><td>array language experiments — makes your brain hurt productively</td></tr>
+      <tr class="line"><td><a href="https://github.com/4esv/dotfiles">dotfiles</a></td><td>Shell</td><td>machine configuration, public in case it's useful</td></tr>
+      <tr class="line"><td><a href="https://github.com/4esv/nvim-config">nvim-config</a></td><td>Lua</td><td>Neovim setup</td></tr>
+    </table>
+    <p class="line dim" style="margin-top:1.1rem">Languages I reach for: Python, JavaScript, Go, PowerShell, Bash, SQL, R. Array languages (BQN, APL) for thinking.</p>
+  </section>
+
+  <span class="line motif">· &gt; ·</span>
+
+  <!-- MUSIC -->
+  <section class="section" id="music">
+    <div class="line section-id">§ music</div>
+    <p class="line">Keyboardist, bassist, emergency drummer. The range goes from corridos to death metal with no apology. Mexican folklore to Norwegian death metal.</p>
+    <p class="line dim"><a href="https://soundcloud.com/4esv">soundcloud</a> has some of it.</p>
+  </section>
+
+  <span class="line motif">· &gt; ·</span>
+
+  <!-- CHESS -->
+  <section class="section" id="chess">
+    <div class="line section-id">§ chess</div>
+    <p class="line">4esv on chess.com. Blitz mostly. I play badly but persistently — the last game I won is a small monument to the victories between the losses.</p>
+  </section>
+
+  <span class="line motif">· &gt; ·</span>
+
+  <!-- SPORT -->
+  <section class="section" id="sport">
+    <div class="line section-id">§ sport</div>
+    <p class="line">Ithaca is surrounded by gorges and a lake. I walk, climb at the gym, run the trails. Sometimes I swim in Cayuga Lake.</p>
+    <p class="line dim"><a href="https://strava.com/athletes/51674641">strava</a></p>
+  </section>
+
+  <span class="line motif">· &gt; ·</span>
+
+  <!-- LINKS -->
+  <footer class="press-footer">
+    <a class="line" href="https://github.com/4esv" target="_blank">github</a>
+    <a class="line" href="mailto:mail@aesv.io">email</a>
+    <a class="line" href="https://linkedin.com/in/aesv" target="_blank">linkedin</a>
+    <a class="line" href="https://soundcloud.com/4esv" target="_blank">soundcloud</a>
+    <a class="line" href="https://strava.com/athletes/51674641" target="_blank">strava</a>
+    <span class="line" style="margin-left:auto;color:var(--fg-dim)">MIT · 2025</span>
+  </footer>
+
+</main>
+
+<script>
+const lines = document.querySelectorAll('.line');
+
+function update() {
+  const rollerY = window.scrollY + window.innerHeight * 0.85;
+
+  lines.forEach(el => {
+    const elTop = el.getBoundingClientRect().top + window.scrollY;
+
+    if (elTop < rollerY) {
+      if (!el.classList.contains('printed') && !el.classList.contains('settled')) {
+        el.classList.add('printed');
+        // copper tint settles after CSS transition completes
+        setTimeout(() => {
+          if (el.classList.contains('printed')) {
+            el.classList.replace('printed', 'settled');
+          }
+        }, 400);
+      }
+    } else {
+      el.classList.remove('printed', 'settled');
+    }
+  });
+}
+
+window.addEventListener('scroll', update, { passive: true });
+update();
+</script>
+</body>
+</html>
