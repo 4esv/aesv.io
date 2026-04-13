@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axel Stevens — Field Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══ THEME ═══ */
+:root {
+  --bg: #16161d; --fg: #e8e4df; --fg-sec: #a09a93; --fg-dim: #5c5750;
+  --surface: #1e1e26; --border: rgba(232,228,223,0.08);
+  --accent: #c2754a; --accent-h: #d4895e; --accent-m: rgba(194,117,74,0.15);
+  --font: 'IBM Plex Mono','Courier New',monospace; --size: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--size);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+}
+
+/* ═══ LAYOUT ═══ */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page-header {
+  flex-shrink: 0;
+  padding: 1.4rem 2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.page-header-title {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dim);
+  text-transform: lowercase;
+}
+
+.page-header-sub {
+  font-size: 11px;
+  color: var(--fg-dim);
+  letter-spacing: 0.06em;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ═══ CONTENT PANE ═══ */
+.content-pane {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2.4rem 2.8rem 4rem;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--fg-dim) transparent;
+}
+
+.content-pane::-webkit-scrollbar { width: 4px; }
+.content-pane::-webkit-scrollbar-track { background: transparent; }
+.content-pane::-webkit-scrollbar-thumb { background: var(--fg-dim); }
+
+.tab-section {
+  display: none;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  max-width: 680px;
+}
+
+.tab-section.active {
+  display: block;
+}
+
+.tab-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══ VERTICAL TABS ═══ */
+.tab-rail {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 2rem 0;
+  border-left: 1px solid var(--border);
+}
+
+.tab-btn {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  rotate: 180deg;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  background: none;
+  border: none;
+  padding: 1.2rem 0.7rem;
+  position: relative;
+  transition: color 0.15s ease, padding-right 0.15s ease;
+  user-select: none;
+  outline: none;
+}
+
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.15s ease;
+}
+
+.tab-btn:hover {
+  color: var(--fg-sec);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  padding-right: 1.4rem;
+}
+
+.tab-btn.active::after {
+  width: calc(100% - 1rem);
+}
+
+/* ═══ TYPOGRAPHY ═══ */
+.fn-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 2rem;
+}
+
+.fn-label::before {
+  content: '§ ';
+  color: var(--accent);
+}
+
+.fn-entry {
+  margin-bottom: 2.4rem;
+}
+
+.fn-date {
+  font-size: 11px;
+  color: var(--fg-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+.fn-heading {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.fn-body {
+  color: var(--fg-sec);
+  line-height: 1.8;
+}
+
+.fn-body p {
+  margin-bottom: 0.8rem;
+}
+
+.fn-body p:last-child {
+  margin-bottom: 0;
+}
+
+.fn-tag {
+  font-size: 11px;
+  color: var(--fg-dim);
+  margin-top: 0.6rem;
+  letter-spacing: 0.04em;
+}
+
+.fn-tag span {
+  color: var(--accent);
+}
+
+.fn-result {
+  font-size: 12px;
+  color: var(--accent);
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent-m);
+}
+
+.fn-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* ═══ INLINE FOOTNOTES ═══ */
+.fn-expand-btn {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+  user-select: none;
+  margin-left: 0.4rem;
+  transition: color 0.12s;
+  font-family: var(--font);
+  background: none;
+  border: none;
+  padding: 0;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.fn-expand-btn:hover {
+  color: var(--accent-h);
+}
+
+.fn-footnote {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.22s ease;
+  overflow: hidden;
+}
+
+.fn-footnote.open {
+  grid-template-rows: 1fr;
+}
+
+.fn-footnote-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fn-footnote-card {
+  background: var(--surface);
+  border-left: 2px solid var(--accent);
+  padding: 0.9rem 1.1rem;
+  margin: 0.6rem 0 0.4rem;
+  font-size: 12px;
+  color: var(--fg-sec);
+  line-height: 1.7;
+}
+
+.fn-footnote-card strong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+/* ═══ CODE TABLE ═══ */
+.fn-code-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fn-code-table td {
+  padding: 0.5rem 0;
+  vertical-align: top;
+  color: var(--fg-sec);
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fn-code-table td:first-child {
+  color: var(--accent);
+  padding-right: 1.6rem;
+  white-space: nowrap;
+}
+
+.fn-code-table td:nth-child(2) {
+  color: var(--fg-dim);
+  padding-right: 1.2rem;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* ═══ LINKS ═══ */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-m);
+  transition: border-color 0.12s;
+}
+
+a:hover {
+  border-color: var(--accent);
+}
+
+/* ═══ PAGE NUMBER ═══ */
+.page-num {
+  position: fixed;
+  bottom: 1.2rem;
+  right: 5.2rem;
+  font-size: 11px;
+  color: var(--fg-dim);
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ═══ MOBILE ═══ */
+@media (max-width: 680px) {
+  .page-header { padding: 1rem; }
+
+  .body { flex-direction: column; }
+
+  .tab-rail {
+    flex-direction: row;
+    justify-content: flex-start;
+    border-left: none;
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    align-items: stretch;
+  }
+
+  .tab-rail::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    writing-mode: horizontal-tb;
+    rotate: none;
+    padding: 0.8rem 1rem;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .tab-btn.active {
+    padding-right: 1rem;
+  }
+
+  .tab-btn::after {
+    bottom: auto;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: none;
+  }
+
+  .tab-btn.active::after {
+    width: 100%;
+  }
+
+  .content-pane {
+    padding: 1.6rem 1.2rem 5rem;
+  }
+
+  .page-num {
+    right: 1rem;
+    bottom: 0.8rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="page-header">
+    <span class="page-header-title">axel stevens — field notes</span>
+    <span class="page-header-sub">ithaca, ny · 2026</span>
+  </header>
+
+  <div class="body">
+
+    <!-- ═══ CONTENT PANE ═══ -->
+    <main class="content-pane" id="content-pane">
+
+      <!-- IDENTITY -->
+      <section class="tab-section active" id="tab-identity" data-page="01">
+        <div class="fn-label">Identity</div>
+
+        <div class="fn-entry">
+          <div class="fn-date">subject · ongoing observation</div>
+          <div class="fn-heading">Axel Stevens</div>
+          <div class="fn-body">
+            <p>Mexican American sentient flesh pile. Present location: Ithaca, NY. Systems Integrator, Cornell University.</p>
+            <p>I build interfaces for humans and systems for machines to serve humans.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>note on the above:</strong> this is not a metaphor. one half of the work is a dashboard someone clicks. the other half is a pipeline running at 3am that nobody sees. both matter. the pipeline slightly more.
+                </div>
+              </div>
+            </div>
+            <p>Casual pianist, bassist and emergency drummer. Text editor: neovim. Works across all operating systems via the command line.</p>
+            <p>Open to remote work and consulting. <a href="mailto:mail@aesv.io">mail@aesv.io</a></p>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">field conditions</div>
+          <div class="fn-heading">Environment</div>
+          <div class="fn-body">
+            <p>Operates primarily in terminal. zsh, tmux, neovim. Comfortable in Windows when required, prefers unix.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>on windows:</strong> acquired powershell fluency out of necessity. ended up writing a 4,000-line OOP powershell sync engine. the language punishes you for caring about code quality and then rewards you when you persist.
+                </div>
+              </div>
+            </div>
+            <p>Languages in active use: Python, JavaScript, Go, PowerShell, Bash, SQL, Lua, BQN.</p>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">contact / presence</div>
+          <div class="fn-heading">Links</div>
+          <div class="fn-body">
+            <p>
+              <a href="https://github.com/4esv" target="_blank">github</a> ·
+              <a href="mailto:mail@aesv.io">email</a> ·
+              <a href="https://linkedin.com/in/aesv" target="_blank">linkedin</a> ·
+              <a href="https://soundcloud.com/4esv" target="_blank">soundcloud</a> ·
+              <a href="https://strava.com/athletes/51674641" target="_blank">strava</a> ·
+              <a href="https://garden.aesv.io" target="_blank">garden</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORK -->
+      <section class="tab-section" id="tab-work" data-page="02">
+        <div class="fn-label">Work</div>
+
+        <div class="fn-entry">
+          <div class="fn-date">cornell university · oct 2022–present</div>
+          <div class="fn-heading">Current Assignment</div>
+          <div class="fn-body">
+            <p>Systems Integrator. Builds internal applications, automation tooling, and API integrations for university operations. Works full-stack as problem requires.</p>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">case file · 2024</div>
+          <div class="fn-heading">Interfolio Dossier Builder</div>
+          <div class="fn-body">
+            <p>Faculty tenure review packet assembly was a multi-day manual operation. Subject automated it.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>stack detail:</strong> React job submission interface → Node/Express API → BullMQ + Redis queue → Python document worker. HMAC-SHA1 authenticated Interfolio API access. Regex classification. PyPDF merge with nested bookmark generation. MSSQL persistence.
+                </div>
+              </div>
+            </div>
+            <p>Complex document assembly for academic promotion review. Multi-day manual process replaced with automated run.</p>
+          </div>
+          <div class="fn-tag">Stack: <span>React · Node.js · BullMQ · Python · PyPDF2 · MSSQL</span></div>
+          <div class="fn-result">→ 5-minute automated run. 23,000 lines, 127 files, 6 languages.</div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">case file · 2023</div>
+          <div class="fn-heading">Device Asset Sync</div>
+          <div class="fn-body">
+            <p>MDM pipeline for 40,000+ devices. Jamf (Mac) and Snipe-IT (Windows) had no shared state. Subject built bidirectional sync.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>architecture note:</strong> OOP PowerShell with exponential backoff, OAuth2 token lifecycle management. Windows GPO deployment agent. Designed to survive API rate limits and partial failures without manual intervention.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fn-tag">Stack: <span>PowerShell · Python · Jamf · Snipe-IT · OAuth2</span></div>
+          <div class="fn-result">→ 95%+ accuracy. Zero manual reconciliation.</div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">case file · 2023</div>
+          <div class="fn-heading">App Security Manager</div>
+          <div class="fn-body">
+            <p>ColdFusion system managing access permissions for 50+ internal tools. Age: 10+ years. Subject replaced it.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>replacement spec:</strong> Node/Express RBAC dashboard. Three-tier role model. Live LDAP search. Drag-and-drop assignment. Transactional SQL. Shibboleth/SAML auth. The old system required a ticket and a week. The new one: under a minute.
+                </div>
+              </div>
+            </div>
+            <p>App vetting workflow replacement across two colleges. Access changes now take under one minute.</p>
+          </div>
+          <div class="fn-tag">Stack: <span>Node.js · MSSQL · LDAP · SAML · RBAC</span></div>
+          <div class="fn-result">→ Access changes &lt;1 min. 3,400 lines.</div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">case file · 2022</div>
+          <div class="fn-heading">NAO Bot</div>
+          <div class="fn-body">
+            <p>Aldebaran NAO humanoid robot without natural conversation capability. Subject connected it to the present moment.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>loop:</strong> NAO mic → Whisper transcription → GPT → NAO animated speech engine with gesture sync. Demonstrated for NSF grant proposal. Grant submitted.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fn-tag">Stack: <span>Python · OpenAI · Whisper · NAOqi · Azure</span></div>
+          <div class="fn-result">→ Working speech-to-speech AI loop on humanoid hardware.</div>
+        </div>
+      </section>
+
+      <!-- CODE -->
+      <section class="tab-section" id="tab-code" data-page="03">
+        <div class="fn-label">Code</div>
+
+        <div class="fn-entry">
+          <div class="fn-date">personal tooling · under active observation</div>
+          <div class="fn-heading">Repositories</div>
+          <div class="fn-body">
+            <p>Personal tools in current use. Built for actual problems.</p>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <table class="fn-code-table">
+          <tbody>
+            <tr>
+              <td><a href="https://github.com/4esv/pianito" target="_blank">pianito</a></td>
+              <td>Go</td>
+              <td>TUI MIDI sequencer and piano tuner. FFT-based. In use.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button>
+                <div class="fn-footnote">
+                  <div class="fn-footnote-inner">
+                    <div class="fn-footnote-card">
+                      built because every piano tuner app was either overkill or a subscription. this one runs in a terminal. detects pitch via FFT, displays deviation in cents. go because the latency had to be real.
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/4esv/bbq" target="_blank">bbq</a></td>
+              <td>BQN</td>
+              <td>Array language experiments. Quantitative toolkit. In use.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button>
+                <div class="fn-footnote">
+                  <div class="fn-footnote-inner">
+                    <div class="fn-footnote-card">
+                      BQN is an array programming language descended from APL. writing it requires a custom keyboard layer or composing symbols with backslash sequences. worth it. the way it expresses data transformations is unlike anything else.
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/4esv/dotfiles" target="_blank">dotfiles</a></td>
+              <td>Shell</td>
+              <td>Computing environment. Versioned. Cross-platform.</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/4esv/nvim-config" target="_blank">nvim-config</a></td>
+              <td>Lua</td>
+              <td>Neovim configuration. In use daily. Slow accumulation of muscle memory.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">full language inventory</div>
+          <div class="fn-body">
+            <p>Python · JavaScript · Go · PowerShell · Bash · SQL · R · Lua · BQN</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOUND -->
+      <section class="tab-section" id="tab-sound" data-page="04">
+        <div class="fn-label">Sound</div>
+
+        <div class="fn-entry">
+          <div class="fn-date">instruments · frequency descending</div>
+          <div class="fn-heading">Playing</div>
+          <div class="fn-body">
+            <p>Keyboard (primary). Bass (primary). Drums (emergency).<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>on emergency drummer:</strong> the designation is accurate. plays drums when the drummer does not show. has never been the drummer. always becomes the drummer.
+                </div>
+              </div>
+            </div>
+            <p>Recordings: <a href="https://soundcloud.com/4esv" target="_blank">soundcloud.com/4esv</a></p>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">listening range · observed without contradiction</div>
+          <div class="fn-heading">Repertoire</div>
+          <div class="fn-body">
+            <p>Mexican folklore to Norwegian death metal. Corridos through jazz. Bossa nova to hyperpop. The range is not a statement. It is just what is in the rotation.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>current:</strong> Chavela Vargas — La Llorona. Mayhem — Freezing Moon. Chet Baker — Almost Blue. Running sequentially, not shuffled. This is intentional.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">overlap noted</div>
+          <div class="fn-heading">Music × Code</div>
+          <div class="fn-body">
+            <p>Both involve learning a formal system until it disappears. The goal in each case is for the system to stop being visible and for something else to come through.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  this is why pianito was written in go and not python. python would have worked. go required more up front. but the latency when it runs is imperceptible, which means it disappears, which is the point.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FIELD -->
+      <section class="tab-section" id="tab-field" data-page="05">
+        <div class="fn-label">Field</div>
+
+        <div class="fn-entry">
+          <div class="fn-date">chess.com · handle: 4esv</div>
+          <div class="fn-heading">Chess</div>
+          <div class="fn-body">
+            <p>Blitz mostly. Occasionally rapid. Prefers attacking play with positional foundation.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  <strong>last recorded loss:</strong> overextended queenside, dropped a piece. the kind of mistake that is obvious in retrospect and invisible in the moment. note for record: this is also a common failure mode in system design.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">daily · ithaca terrain</div>
+          <div class="fn-heading">Walking</div>
+          <div class="fn-body">
+            <p>Daily. Ithaca has an objectively unreasonable number of gorges for a city of its size. This is not a complaint.</p>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">seasonal · gorge system</div>
+          <div class="fn-heading">Climbing</div>
+          <div class="fn-body">
+            <p>Indoor climbing, regular. Gorge hiking, seasonal. The two skills share more than expected.<button class="fn-expand-btn" onclick="toggleNote(this)" aria-expanded="false">[+]</button></p>
+            <div class="fn-footnote">
+              <div class="fn-footnote-inner">
+                <div class="fn-footnote-card">
+                  both require reading the route before committing. in climbing this is literal. in gorge hiking the water level determines which path is available. planning under uncertainty with real-time route adjustment. familiar problem domain.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="fn-divider">
+
+        <div class="fn-entry">
+          <div class="fn-date">seasonal · cayuga lake</div>
+          <div class="fn-heading">Swimming</div>
+          <div class="fn-body">
+            <p>Cayuga Lake. Open water. Seasonal. The lake is cold until it isn't and then summer ends. Data source: <a href="https://strava.com/athletes/51674641" target="_blank">strava</a>.</p>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- /content-pane -->
+
+    <!-- ═══ VERTICAL TABS ═══ -->
+    <nav class="tab-rail" role="tablist" aria-label="Sections">
+      <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="identity" onclick="switchTab(this)">Identity</button>
+      <button class="tab-btn"        role="tab" aria-selected="false" data-tab="work"     onclick="switchTab(this)">Work</button>
+      <button class="tab-btn"        role="tab" aria-selected="false" data-tab="code"     onclick="switchTab(this)">Code</button>
+      <button class="tab-btn"        role="tab" aria-selected="false" data-tab="sound"    onclick="switchTab(this)">Sound</button>
+      <button class="tab-btn"        role="tab" aria-selected="false" data-tab="field"    onclick="switchTab(this)">Field</button>
+    </nav>
+
+  </div><!-- /body -->
+
+</div><!-- /page -->
+
+<div class="page-num" id="page-num">01 / 05</div>
+
+<script>
+const PAGE_NUMS = { identity: '01', work: '02', code: '03', sound: '04', field: '05' };
+const contentPane = document.getElementById('content-pane');
+const pageNum = document.getElementById('page-num');
+
+function nextPaint(fn) {
+  requestAnimationFrame(() => requestAnimationFrame(fn));
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(btn) {
+  const currentSection = document.querySelector('.tab-section.active');
+  const nextSection = document.getElementById('tab-' + btn.dataset.tab);
+
+  if (currentSection === nextSection) return;
+
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
+
+  if (currentSection) {
+    currentSection.classList.remove('visible');
+    setTimeout(() => {
+      currentSection.classList.remove('active');
+      activateSection(nextSection, btn);
+    }, 200);
+  } else {
+    activateSection(nextSection, btn);
+  }
+}
+
+function activateSection(section, btn) {
+  section.classList.add('active');
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+  contentPane.scrollTop = 0;
+  pageNum.textContent = PAGE_NUMS[btn.dataset.tab] + ' / 05';
+  nextPaint(() => section.classList.add('visible'));
+}
+
+// ── Footnote toggle ───────────────────────────────────────────────────────────
+function toggleNote(btn) {
+  const footnote = btn.nextElementSibling;
+  if (!footnote || !footnote.classList.contains('fn-footnote')) return;
+
+  const isOpen = footnote.classList.contains('open');
+  footnote.classList.toggle('open', !isOpen);
+  btn.setAttribute('aria-expanded', !isOpen);
+  btn.textContent = isOpen ? '[+]' : '[−]';
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const active = document.querySelector('.tab-section.active');
+  if (active) nextPaint(() => active.classList.add('visible'));
+});
+</script>
+
+</body>
+</html>
