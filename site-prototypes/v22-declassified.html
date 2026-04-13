@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AESV-001 // TOP SECRET // NOFORN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ═══ THEME ═══ */
+:root {
+  --bg: #16161d; --fg: #e8e4df; --fg-sec: #a09a93; --fg-dim: #5c5750;
+  --surface: #1e1e26; --border: rgba(232,228,223,0.08);
+  --accent: #c2754a; --accent-h: #d4895e; --accent-m: rgba(194,117,74,0.15);
+  --font: 'IBM Plex Mono','Courier New',monospace; --size: 14px; --radius: 0px;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--size);
+  line-height: 1.7;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ═══ DOCUMENT LAYOUT ═══ */
+.document {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  position: relative;
+}
+
+/* ═══ CLASSIFICATION BANNER ═══ */
+.class-banner {
+  border: 1px solid var(--accent);
+  text-align: center;
+  padding: 0.4rem 1rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+/* ═══ DOCUMENT HEADER ═══ */
+.doc-header {
+  border: 1px solid var(--border);
+  padding: 1rem 1.2rem;
+  margin-bottom: 2.5rem;
+  font-size: 11px;
+  color: var(--fg-sec);
+  line-height: 2;
+}
+
+.doc-header-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.doc-field strong {
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  display: block;
+}
+
+.doc-field span {
+  color: var(--fg-sec);
+}
+
+.doc-subject {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ═══ SECTION ═══ */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══ PARAGRAPH ROWS ═══ */
+.para {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 0 1rem;
+  margin-bottom: 0.7rem;
+  align-items: baseline;
+}
+
+.para-num {
+  color: var(--fg-dim);
+  font-size: 11px;
+  text-align: right;
+  padding-top: 0.05rem;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.para-text {
+  font-size: 13px;
+  color: var(--fg-sec);
+  line-height: 1.75;
+}
+
+.para-text strong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+/* ═══ REDACTION SYSTEM ═══ */
+.redact {
+  position: relative;
+  display: inline;
+  border-bottom: 1px dotted var(--fg-dim);
+  cursor: cell;
+}
+
+/* The bar pseudo-element */
+.redact::after {
+  content: '';
+  position: absolute;
+  inset: -1px -2px;
+  background: var(--fg);
+  transform-origin: left;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+/* Hover: lighten to 40% opacity (peek) */
+.redact:hover::after {
+  opacity: 0.35;
+}
+
+/* Revealed: bar slides off to the right */
+.redact.revealed::after {
+  transform: scaleX(0);
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* After transition ends, hide completely */
+.redact.revealed-done::after {
+  display: none;
+}
+
+/* Re-redacting (animate back in) */
+.redact.re-redacting::after {
+  transform: scaleX(1);
+  opacity: 1;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Revealed: remove dotted underline */
+.redact.revealed,
+.redact.revealed-done {
+  border-bottom: none;
+  cursor: default;
+}
+
+/* ═══ PERMANENT REDACTION ═══ */
+.redact-perm {
+  position: relative;
+  display: inline;
+  cursor: not-allowed;
+}
+
+.redact-perm::after {
+  content: '';
+  position: absolute;
+  inset: -1px -2px;
+  background: var(--fg-dim);
+  pointer-events: none;
+  animation: perm-pulse 3s ease-in-out infinite;
+}
+
+@keyframes perm-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+/* ═══ DECLASSIFIED STAMP ═══ */
+.stamp {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  transform: rotate(-4deg);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.stamp.visible {
+  display: block;
+  opacity: 1;
+}
+
+/* ═══ KEYBOARD HINT ═══ */
+.key-hint {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--fg-dim);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+  z-index: 100;
+}
+
+kbd {
+  display: inline-block;
+  border: 1px solid var(--border);
+  padding: 0.1rem 0.35rem;
+  font-family: var(--font);
+  font-size: 9px;
+  color: var(--fg-dim);
+}
+
+/* ═══ DOCUMENT FOOTER ═══ */
+.doc-footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--fg-dim);
+  letter-spacing: 0.08em;
+}
+
+/* ═══ DIVIDER ═══ */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0.5rem 0 1.5rem;
+}
+
+/* ═══ MISSION ENTRY ═══ */
+.mission {
+  border: 1px solid var(--border);
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.7rem;
+  position: relative;
+}
+
+.mission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.mission-code {
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mission-year {
+  font-size: 10px;
+  color: var(--fg-dim);
+}
+
+.mission-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mission-body {
+  font-size: 12px;
+  color: var(--fg-sec);
+  line-height: 1.65;
+}
+
+.mission-result {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 0.4rem;
+}
+
+.missions-block {
+  margin-top: 0.8rem;
+  margin-left: 3.5rem;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .document { padding: 1.2rem 1rem 4rem; }
+  .para { grid-template-columns: 2.8rem 1fr; }
+  .doc-header-row { flex-direction: column; gap: 0.5rem; }
+  .key-hint { bottom: 1rem; font-size: 9px; }
+  .stamp { bottom: 1rem; right: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="document">
+
+  <!-- Classification Banner -->
+  <div class="class-banner">[ TOP SECRET // NOFORN ]</div>
+
+  <!-- Document Header -->
+  <div class="doc-header">
+    <div class="doc-header-row">
+      <div class="doc-field">
+        <strong>Date</strong>
+        <span>APRIL 2026</span>
+      </div>
+      <div class="doc-field">
+        <strong>Originator</strong>
+        <span>AXEL STEVENS</span>
+      </div>
+      <div class="doc-field">
+        <strong>Copy</strong>
+        <span>1 OF 1</span>
+      </div>
+      <div class="doc-field">
+        <strong>Classification</strong>
+        <span>TS // NOFORN</span>
+      </div>
+    </div>
+    <div class="doc-subject">SUBJECT: AXEL STEVENS — SYSTEMS INTEGRATOR / REF: AESV-001</div>
+  </div>
+
+  <!-- ═══ SECTION 1: IDENTITY ═══ -->
+  <div class="section">
+    <div class="section-label">§ 1 — IDENTITY</div>
+
+    <div class="para">
+      <span class="para-num">1.a</span>
+      <span class="para-text">
+        Subject identifies as
+        <span class="redact">Mexican American</span>.
+        Self-described as a
+        <span class="redact">sentient flesh pile</span>.
+        Confirmed biological.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">1.b</span>
+      <span class="para-text">
+        Primary function:
+        <strong>builds interfaces for humans and systems for machines</strong>.
+        Secondary biological activities include
+        <span class="redact">casual piano and bass performance</span>,
+        with tertiary capability in
+        <span class="redact">emergency drumming (invoked only under duress)</span>.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">1.b.i</span>
+      <span class="para-text">
+        Subject location:
+        <span class="redact">Ithaca, New York. Coordinates withheld.</span>
+        Contact vector: <strong>mail@aesv.io</strong>.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">1.c</span>
+      <span class="para-text">
+        Online identifiers:
+        <span class="redact">github.com/4esv</span>,
+        <span class="redact">chess.com/member/4esv</span>,
+        <span class="redact-perm">██████████████ (redacted per EO-22)</span>.
+      </span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══ SECTION 2: OPERATIONAL HISTORY ═══ -->
+  <div class="section">
+    <div class="section-label">§ 2 — OPERATIONAL HISTORY</div>
+
+    <div class="para">
+      <span class="para-num">2.a</span>
+      <span class="para-text">
+        Subject has operated under institutional cover at
+        <span class="redact">Cornell University, Ithaca NY</span>
+        since
+        <span class="redact">2022</span>.
+        Official designation: <strong>Systems Integrator</strong>.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">2.b</span>
+      <span class="para-text">Documented operations follow:</span>
+    </div>
+
+    <div class="missions-block">
+
+      <div class="mission">
+        <div class="mission-header">
+          <span class="mission-code">OP-DOSSIER // 2024</span>
+          <span class="mission-year">PRIORITY: HIGH</span>
+        </div>
+        <div class="mission-title">Interfolio Dossier Builder</div>
+        <div class="mission-body">
+          <span class="redact">Automated complex academic promotion document assembly. Faculty tenure review packets previously required multiple days of manual PDF work per candidate.</span>
+          <br>
+          Stack:
+          <span class="redact">React → Node.js/Express → BullMQ/Redis → Python worker. Pulls Interfolio API, classifies with regex, merges PDFs, generates bookmarks.</span>
+        </div>
+        <div class="mission-result">→ Multi-day process reduced to 5 minutes. 23K lines, 127 files.</div>
+      </div>
+
+      <div class="mission">
+        <div class="mission-header">
+          <span class="mission-code">OP-SYNC // 2023</span>
+          <span class="mission-year">PRIORITY: HIGH</span>
+        </div>
+        <div class="mission-title">Device Asset Sync</div>
+        <div class="mission-body">
+          <span class="redact">MDM pipeline synchronizing 40,000+ devices across multiple management systems. Inventory accuracy raised from ~60% to 95%+.</span>
+          <br>
+          Method:
+          <span class="redact">Bi-directional Jamf ↔ Snipe-IT sync. PowerShell and Python. Normalized device identifiers across MDM systems.</span>
+        </div>
+        <div class="mission-result">→ 40k+ devices. Zero manual reconciliation after deployment.</div>
+      </div>
+
+      <div class="mission">
+        <div class="mission-header">
+          <span class="mission-code">OP-VETTER // 2023</span>
+          <span class="mission-year">PRIORITY: MEDIUM</span>
+        </div>
+        <div class="mission-title">App Security Manager</div>
+        <div class="mission-body">
+          <span class="redact">RBAC dashboard replacing a decade-old ColdFusion access manager. Manages application vetting workflow across two colleges.</span>
+          <br>
+          Auth:
+          <span class="redact">SAML SSO, LDAP integration, delegated role administration.</span>
+        </div>
+        <div class="mission-result">→ Legacy ColdFusion → production Node.js.</div>
+      </div>
+
+      <div class="mission">
+        <div class="mission-header">
+          <span class="mission-code">OP-NAO // 2022</span>
+          <span class="mission-year">PRIORITY: EXPERIMENTAL</span>
+        </div>
+        <div class="mission-title">NAO Bot — Aldebaran Humanoid</div>
+        <div class="mission-body">
+          <span class="redact">GPT-based natural conversation capability installed on an Aldebaran NAO humanoid robot. NSF-funded research proof-of-concept.</span>
+          <br>
+          Implementation:
+          <span class="redact">Python on-robot. Speech → GPT → speech pipeline. Full conversation loop with context retention.</span>
+        </div>
+        <div class="mission-result">→ Robot achieved natural conversation. NSF grant POC delivered.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══ SECTION 3: TECHNICAL CAPABILITIES ═══ -->
+  <div class="section">
+    <div class="section-label">§ 3 — TECHNICAL CAPABILITIES</div>
+
+    <div class="para">
+      <span class="para-num">3.a</span>
+      <span class="para-text">
+        Confirmed languages:
+        <span class="redact">Python, JavaScript/Node.js, Go, PowerShell, Lua, Shell/Bash</span>.
+        Unconfirmed:
+        <span class="redact-perm">████████████ (classification pending)</span>.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">3.b</span>
+      <span class="para-text">
+        Auth protocols: <strong>OAuth2, LDAP, Shibboleth/SAML, HMAC-SHA1</strong>.
+        Infrastructure: <span class="redact">Linux/macOS/Windows — all via command line</span>.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">3.c</span>
+      <span class="para-text">Open source assets documented in ANNEX-C:</span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">3.c.i</span>
+      <span class="para-text">
+        <strong>pianito</strong> (Go) —
+        <span class="redact">MIDI sequencer / terminal piano. FFT pitch detection. TUI interface.</span>
+        Repo: github.com/4esv/pianito
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">3.c.ii</span>
+      <span class="para-text">
+        <strong>bbq</strong> (BQN) —
+        <span class="redact">Array language experiments. Tacit programming. Quantitative toolkit.</span>
+        Repo: github.com/4esv/bbq
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">3.c.iii</span>
+      <span class="para-text">
+        <strong>dotfiles</strong> (Shell) —
+        <span class="redact">Cross-platform ZSH/TMux/Nvim environment. Managed via GNU Stow.</span>
+        Public.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">3.c.iv</span>
+      <span class="para-text">
+        <strong>nvim-config</strong> (Lua) —
+        <span class="redact">Neovim configuration evolved over years. LSP, Telescope, Treesitter.</span>
+        Opinionated.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">3.d</span>
+      <span class="para-text">
+        Additional capabilities:
+        <span class="redact-perm">████████████████████████████ (EYES ONLY)</span>.
+      </span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══ SECTION 4: EXTRACURRICULAR ACTIVITIES ═══ -->
+  <div class="section">
+    <div class="section-label">§ 4 — EXTRACURRICULAR ACTIVITIES — [LOW CLASSIFICATION]</div>
+
+    <div class="para">
+      <span class="para-num">4.a</span>
+      <span class="para-text">
+        <strong>Music.</strong> Subject is a keyboardist and bassist. Emergency drummer only when truly desperate.
+        Listening range documented as: <em>Mexican corridos to Norwegian death metal</em>. No apparent pattern. No judgment.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">4.a.i</span>
+      <span class="para-text">
+        Instruments confirmed: <strong>Fender Jazz Bass</strong>, <strong>Roland FP-30</strong>.
+        Sound cloud profile: soundcloud.com/4esv. Content:
+        <span class="redact">sessions, projects, occasional experiments</span>.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">4.b</span>
+      <span class="para-text">
+        <strong>Chess.</strong> Subject active on chess.com as <strong>4esv</strong>.
+        Preferred time controls: blitz. Wins shown. Losses are
+        <span class="redact">not shown — this is a design choice, not an oversight</span>.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">4.c</span>
+      <span class="para-text">
+        <strong>Physical activity.</strong> Walking, climbing gorges, swimming Cayuga Lake.
+        Notable routes: Cascadilla Gorge, Taughannock Falls, Buttermilk Falls.
+        Strava: strava.com/athletes/51674641.
+      </span>
+    </div>
+
+    <div class="para">
+      <span class="para-num">4.c.i</span>
+      <span class="para-text">
+        Threat assessment: subject is
+        <span class="redact">difficult to track due to irregular outdoor activity schedule and variable gorge routes</span>.
+        Monitor via Strava feed.
+      </span>
+    </div>
+  </div>
+
+  <!-- Document Footer -->
+  <div class="doc-footer">
+    <span>PAGE 1 OF 1</span>
+    <span>REF: AESV-001 // APRIL 2026</span>
+    <span>TS // NOFORN</span>
+  </div>
+
+</div><!-- /.document -->
+
+<!-- Declassified Stamp -->
+<div class="stamp" id="stamp">DECLASSIFIED</div>
+
+<!-- Keyboard hint -->
+<div class="key-hint">
+  <span>hover to peek</span>
+  <span>·</span>
+  <span>click to reveal</span>
+  <span>·</span>
+  <kbd>CTRL+R</kbd>
+  <span>re-redact last</span>
+</div>
+
+<script>
+let lastRevealed = null;
+
+const stamp = document.getElementById('stamp');
+
+document.querySelectorAll('.redact').forEach(el => {
+  el.addEventListener('click', function() {
+    if (this.classList.contains('revealed') || this.classList.contains('revealed-done')) return;
+
+    this.classList.add('revealed');
+    lastRevealed = this;
+
+    this.addEventListener('transitionend', function() {
+      this.classList.add('revealed-done');
+      this.classList.remove('revealed');
+      stamp.classList.add('visible');
+    }, { once: true });
+  });
+});
+
+// NOTE: Only intercept CTRL+R (not meta/cmd+R which is browser refresh)
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && !e.metaKey && e.key === 'r') {
+    e.preventDefault();
+    if (!lastRevealed) return;
+
+    const el = lastRevealed;
+    lastRevealed = null;
+
+    el.classList.remove('revealed-done', 'revealed');
+    void el.offsetWidth; // force reflow before re-redact animation
+    el.classList.add('re-redacting');
+
+    el.addEventListener('transitionend', function() {
+      el.classList.remove('re-redacting');
+    }, { once: true });
+  }
+});
+</script>
+</body>
+</html>
