@@ -44,6 +44,8 @@ export default [
         requestAnimationFrame: 'readonly',
         cancelAnimationFrame: 'readonly',
         getComputedStyle: 'readonly',
+        ResizeObserver: 'readonly',
+        Intl: 'readonly',
       },
     },
     rules: {
@@ -52,6 +54,6 @@ export default [
     },
   },
   {
-    ignores: ['node_modules/', 'src/static/js/htmx.min.js'],
+    ignores: ['node_modules/'],
   },
 ]

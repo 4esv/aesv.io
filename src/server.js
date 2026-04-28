@@ -12,7 +12,6 @@ import { registerFilters, registerGlobals } from './lib/template-helpers.js'
 import { registerGridMiddleware } from './middleware/grid.js'
 import { apiRoutes, getPageData } from './routes/api.js'
 import { registerChessRoutes } from './routes/chess.js'
-import { registerGardenRoutes } from './routes/garden.js'
 import { registerGrdnRoutes } from './routes/grdn.js'
 import { registerMusicRoutes } from './routes/music.js'
 import { registerPageRoutes } from './routes/pages.js'
@@ -83,7 +82,6 @@ export async function build(opts = {}) {
   await fastify.register(apiRoutes)
   fastify.decorate('getPageData', getPageData)
 
-  await registerGardenRoutes(fastify)
   await registerWorkRoutes(fastify)
   await registerGrdnRoutes(fastify)
   await registerMusicRoutes(fastify)

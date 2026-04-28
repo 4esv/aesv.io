@@ -20,15 +20,6 @@ export default Object.freeze({
     github: env('SITE_GITHUB', 'username'),
   }),
 
-  grid: Object.freeze({
-    defaultCols: envInt('GRID_DEFAULT_COLS', 80),
-    defaultRows: envInt('GRID_DEFAULT_ROWS', 24),
-    minCols: envInt('GRID_MIN_COLS', 20),
-    minRows: envInt('GRID_MIN_ROWS', 10),
-    maxCols: envInt('GRID_MAX_COLS', 300),
-    maxRows: envInt('GRID_MAX_ROWS', 100),
-  }),
-
   spotify: Object.freeze({
     clientId: env('SPOTIFY_CLIENT_ID', ''),
     clientSecret: env('SPOTIFY_CLIENT_SECRET', ''),

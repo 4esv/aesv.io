@@ -103,7 +103,7 @@ describe('API Routes', () => {
   })
 })
 
-describe('Grid Middleware', () => {
+describe('Terminal detection', () => {
   let app
 
   before(async () => {
@@ -114,51 +114,25 @@ describe('Grid Middleware', () => {
     await app.close()
   })
 
-  it('uses default grid when headers missing', async () => {
+  it('serves HTML to a regular browser', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/',
+      headers: { 'user-agent': 'Mozilla/5.0' },
     })
 
     assert.equal(response.statusCode, 200)
+    assert.ok(response.headers['content-type'].includes('text/html'))
   })
 
-  it('clamps grid to minimum values', async () => {
+  it('serves text/plain to curl', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/',
-      headers: {
-        'hx-grid-cols': '5',
-        'hx-grid-rows': '3',
-      },
+      headers: { 'user-agent': 'curl/8.4.0' },
     })
 
     assert.equal(response.statusCode, 200)
-  })
-
-  it('clamps grid to maximum values', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/',
-      headers: {
-        'hx-grid-cols': '1000',
-        'hx-grid-rows': '500',
-      },
-    })
-
-    assert.equal(response.statusCode, 200)
-  })
-
-  it('handles invalid grid values gracefully', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/',
-      headers: {
-        'hx-grid-cols': 'invalid',
-        'hx-grid-rows': 'also-invalid',
-      },
-    })
-
-    assert.equal(response.statusCode, 200)
+    assert.ok(response.headers['content-type'].includes('text/plain'))
   })
 })

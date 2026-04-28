@@ -1,5 +1,4 @@
 import { Chess } from 'chess.js'
-import { renderBoard } from '../lib/chess-renderer.js'
 import { renderBoardSvg } from '../lib/chess-board-svg.js'
 
 const API_BASE = 'https://api.chess.com/pub/player'
@@ -268,7 +267,6 @@ export async function getLastVictory(username) {
           timeControl: fmtTimeControl(game),
           timeClass: game.time_class || 'unknown',
           playerColor: color,
-          board: renderBoard(fen),
           svg: renderBoardSvg(fen),
         }
       }
