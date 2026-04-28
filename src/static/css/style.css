@@ -372,6 +372,76 @@ main.garden-entry {
   }
 }
 
+/* Watch tier (<360px) — terminal page on a smartwatch.
+   Single column already (mobile flex), but tighten further so
+   the prose-as-ASCII doesn't overflow horizontally. */
+@media (max-width: 359px) {
+  body {
+    font-size: 11px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  pre,
+  code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  main {
+    padding: calc(2em + 4ch) 1ch 0 1ch;
+  }
+  #mobile-nav {
+    padding: 0.8em 1ch;
+    gap: 1ch;
+  }
+  #mobile-nav a {
+    font-size: 11px;
+  }
+  footer {
+    padding: 2em 1ch 1em;
+  }
+  /* Tap targets at watch — links default to display:inline; only
+     widen the truly interactive ones */
+  a,
+  button {
+    min-height: 28px;
+  }
+}
+
+/* TV / billboard (≥2560px) — terminal pages from across a room. */
+@media (min-width: 2560px) {
+  body {
+    font-size: 28px;
+    line-height: 1.5;
+  }
+  #wrapper {
+    max-width: 200ch;
+    column-gap: 4ch;
+  }
+  #sidebar {
+    width: 32ch;
+    padding: 6em 4ch 6em 4ch;
+  }
+  main {
+    padding: 14em 6ch 0 4ch;
+  }
+  section {
+    margin-bottom: 6em;
+  }
+  .subsection {
+    margin-bottom: 4em;
+  }
+  footer {
+    padding: 6em 6ch 4em 4ch;
+  }
+  main.garden-index {
+    padding-top: 14em;
+  }
+  main.garden-entry {
+    padding-top: 4em;
+  }
+}
+
 /* Mobile */
 @media (max-width: 767px) {
   #wrapper {

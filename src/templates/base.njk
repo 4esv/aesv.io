@@ -4,28 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ site.name }}{% endblock %}</title>
-  <meta name="description" content="{{ site.tagline }}">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="description" content="{% block description %}{{ site.tagline }}{% endblock %}">
+  <link rel="icon" href="/logo-pixel.png" type="image/png">
+  <link rel="apple-touch-icon" href="/logo.png">
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#16161d">
-  <link rel="preload" href="/fonts/source-code-pro-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta name="theme-color" content="#F4ECD8">
+  <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/foundation.css">
+  {% block head %}{% endblock %}
 </head>
 <body>
-<script src="/js/grid-wrap.js"></script>
   <a href="#main" class="skip-link">Skip to content</a>
-  <div id="wrapper">
-    {% block nav %}{% include "partials/grid/nav.njk" %}{% endblock %}
-    <main id="main"{% block mainAttrs %}{% endblock %}>
-      {% block terminal %}{% endblock %}
-    </main>
-    <footer>
-      <pre>{% include "partials/grid/footer.njk" %}</pre>
-    </footer>
-  </div>
-<script src="/js/utils.js"></script>
-{% block scripts %}{% endblock %}
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

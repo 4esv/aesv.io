@@ -1,12 +1,12 @@
 {%- if grid.isTerminal -%}
 {% extends "base-text.njk" %}
 {% block content %}
-500 — Server Error
-==================
+500
+===
 
-Something went wrong.
+The server broke. I'll see it in the logs.
 
-Try: {{ site.url }}/
+{{ site.url }}/
 {% endblock %}
 {%- else -%}
 {% extends "base.njk" %}
@@ -14,11 +14,11 @@ Try: {{ site.url }}/
 {% block terminal %}
 <pre class="terminal">
 
-500 — Server Error
+500
 
-Something went wrong.
+The server broke. I'll see it in the logs.
 
-<a href="/">Return home</a>
+<a href="/">Home</a>
 </pre>
 {% endblock %}
 {%- endif -%}

@@ -1,11 +1,23 @@
 {
-  "name": "Site",
-  "short_name": "site",
+  "name": "Axel Stevens",
+  "short_name": "aesv.io",
+  "description": "Systems integrator. Mexican American. New York.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#16161d",
   "theme_color": "#16161d",
   "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",

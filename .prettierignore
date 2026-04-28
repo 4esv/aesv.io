@@ -1,0 +1,11 @@
+node_modules/
+.claude/
+site-prototypes/
+src/static/css/katex.min.css
+src/static/css/highlight.css
+src/static/js/htmx.min.js
+package-lock.json
+content/grdn/
+canvas/
+test-results/
+coverage/

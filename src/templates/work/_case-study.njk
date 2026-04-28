@@ -1,0 +1,24 @@
+<article class="case-study" id="cs-{{ cs.slug }}">
+  <div class="meta-row">
+    <span>{{ cs.year }}</span>
+    <span>{{ cs.tag }}</span>
+  </div>
+  <h3>{{ cs.title }}</h3>
+  <div class="blocks">
+    <div>
+      <span class="label">Problem</span>
+      <p>{{ cs.problem }}</p>
+    </div>
+    <div>
+      <span class="label">Solution</span>
+      <p>{{ cs.solution }}</p>
+    </div>
+  </div>
+  <div class="impact">
+    <span class="label">Impact</span>
+    {{ cs.impact }}
+  </div>
+  <div class="stack">
+    <span class="label">Stack ·</span>{{ cs.stack }}
+  </div>
+</article>

@@ -25,7 +25,7 @@ export default [
     },
   },
   {
-    files: ['src/static/js/**/*.js'],
+    files: ['src/static/js/**/*.js', 'src/static/sw.js'],
     languageOptions: {
       globals: {
         window: 'readonly',
@@ -35,7 +35,20 @@ export default [
         navigator: 'readonly',
         NodeFilter: 'readonly',
         htmx: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        self: 'readonly',
+        caches: 'readonly',
+        location: 'readonly',
+        performance: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame: 'readonly',
+        getComputedStyle: 'readonly',
       },
+    },
+    rules: {
+      'no-var': 'off',
+      'prefer-const': 'off',
     },
   },
   {

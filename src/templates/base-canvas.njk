@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>{% block title %}{{ site.name }}{% endblock %}</title>
+  <meta name="description" content="{{ site.tagline }}">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" id="theme-color-meta" content="#16161d">
+  <link rel="preload" href="/fonts/source-code-pro-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/canvas.css">
+</head>
+<body>
+  <a href="#reader" class="skip-link">Skip to content</a>
+
+  <div id="canvas-app">
+    <div id="canvas-wrap" aria-hidden="true">
+      <div id="canvas">
+        <svg id="connections" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+      </div>
+    </div>
+
+    <div id="minimap" aria-label="Canvas overview" title="Click to navigate">
+      <canvas id="minimap-canvas" width="140" height="90"></canvas>
+      <div id="minimap-viewport"></div>
+    </div>
+
+    <button id="palette-btn" aria-label="Open command palette" title="Command palette (⌘K)">
+      <span class="btn-label">palette</span>
+      <kbd class="shortcut">⌘K</kbd>
+    </button>
+
+    <div id="palette-overlay" role="dialog" aria-modal="true" aria-label="Command palette">
+      <div id="palette-box">
+        <div id="palette-search-row">
+          <span id="palette-icon" aria-hidden="true">›</span>
+          <input id="palette-input" type="text" placeholder="search or run a command…"
+                 autocomplete="off" spellcheck="false" aria-label="Command palette search">
+          <kbd id="palette-esc">esc</kbd>
+        </div>
+        <div id="palette-results" role="listbox"></div>
+        <div id="palette-footer" aria-hidden="true">
+          <span><kbd>↑↓</kbd> navigate</span>
+          <span><kbd>↵</kbd> select</span>
+          <span><kbd>esc</kbd> close</span>
+        </div>
+      </div>
+    </div>
+
+    <p id="canvas-hint" aria-hidden="true">
+      <kbd>⌘K</kbd> palette · scroll to zoom · drag to pan
+    </p>
+  </div>
+
+  <article id="reader" aria-label="Site content">
+    {% block reader %}{% endblock %}
+  </article>
+
+  <noscript>
+    <div class="noscript-msg">
+      <p>JavaScript is required for the interactive canvas.</p>
+      <p>Use <a href="?text=1">text mode</a> or curl this URL for a plain-text version.</p>
+    </div>
+  </noscript>
+
+  <script type="application/json" id="page-data">{% block page_data %}null{% endblock %}</script>
+  <script src="/js/canvas.js" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

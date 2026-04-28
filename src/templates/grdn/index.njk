@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>garden — Axel Stevens</title>
+  <meta name="description" content="A scattered notebook. Fiction, essays, fragments — discoverable by tag and date.">
+  <link rel="icon" href="/logo-pixel.png" type="image/png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <meta name="theme-color" content="#F4ECD8">
+  <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/foundation.css">
+  <link rel="stylesheet" href="/css/grdn.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <main id="main" class="grdn-shell garden-discovery">
+    {% set route = '/garden' %}
+    {% set pageEyebrow = 'a scattered notebook' %}
+    {% include "partials/site-header.njk" %}
+
+    <header class="grdn-hero">
+      <div class="eyebrow">A digital garden</div>
+      <h1>What I'm thinking about.</h1>
+      <p>{{ essays.length }} entries. Fiction, essays, fragments — added when I have something I want to keep. Search by word, filter by tag.</p>
+    </header>
+
+    <section class="garden-controls" aria-label="Filter the garden">
+      <label class="garden-search">
+        <span class="t-eyebrow">Search</span>
+        <input id="garden-search" type="search" class="field" placeholder="title, summary, tag…" autocomplete="off">
+      </label>
+
+      {% if tags.length %}
+      <div class="garden-tags" role="group" aria-label="Filter by tag">
+        <button class="tag-chip is-active" data-tag="" type="button">all <span class="count">{{ essays.length }}</span></button>
+        {% for t in tags %}
+        <button class="tag-chip" data-tag="{{ t.name }}" type="button">{{ t.name }} <span class="count">{{ t.count }}</span></button>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="garden-grid" aria-label="Notes">
+      {% if essays.length === 0 %}
+        <p class="empty">Nothing here yet.</p>
+      {% endif %}
+      {% for essay in essays %}
+        <a class="note-card"
+           href="{{ basePath }}/{{ essay.slug }}"
+           data-title="{{ essay.title | lower }}"
+           data-summary="{{ essay.summary | lower }}"
+           data-tags="{{ (essay.tags or []) | join(' ') | lower }}">
+          <div class="note-meta">
+            {% if essay.date %}<time datetime="{{ essay.date }}">{{ essay.date }}</time>{% endif %}
+            {% for tag in essay.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+          </div>
+          <h2 class="note-title">{{ essay.title }}</h2>
+          {% if essay.summary %}<p class="note-summary">{{ essay.summary }}</p>{% endif %}
+          <span class="note-arrow" aria-hidden="true">↗</span>
+        </a>
+      {% endfor %}
+      <p id="garden-empty" class="empty" hidden>No matches.</p>
+    </section>
+  </main>
+
+  {% include "partials/big-footer.njk" %}
+
+  <script src="/js/garden-discovery.js"></script>
+</body>
+</html>

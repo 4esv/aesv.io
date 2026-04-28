@@ -17,6 +17,7 @@ export function registerErrorHandler(fastify) {
 
   fastify.setErrorHandler(async (error, request, reply) => {
     const { grid } = request
+    console.error('[error]', request.method, request.url, error.stack || error.message)
     fastify.log.error(error)
     reply.status(error.statusCode || 500)
     return reply.view('pages/500.njk', {

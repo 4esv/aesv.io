@@ -6,237 +6,104 @@
 
 Mexican American sentient flesh pile.
 Casual pianist, bassist and emergency drummer.
-I build interfaces for humans and systems for machines to serve humans.
-This page is my public dashboard for my work and life.
-For weirder stuff, visit my digital garden (https://garden.aesv.io).
+I make system A talk to system B.
 
-work
+work       /work
+garden     /garden
+listening  /listening
+chess      /chess
+music      /music
 
-  Systems Integrator @ Cornell University
-  Building internal applications, automations and supporting software.
-
-  mail@aesv.io
-
-code
-
-  pianito     https://github.com/4esv/pianito
-  bbq         https://github.com/4esv/bbq
-
-  dotfiles    https://github.com/4esv/dotfiles
-  neovim      https://github.com/4esv/nvim-config
-
-music
-
-  Keyboardist, bassist and emergency drummer.
-{% if spotify %}
-  top tracks
-{% for track in spotify.tracks %}    {{ track.name | safe }} — {{ track.artist | safe }}
-{% endfor %}
-  top artists
-{% for artist in spotify.artists %}    {{ artist.name | safe }}
-{% endfor %}{% endif %}
-chess
+email      mail@aesv.io
+github     https://github.com/4esv
+gpg        https://aesv.io/api/gpg
+{% if recent %}
+last played: {{ recent.track }} — {{ recent.artist }}{% endif %}
 {% if chess %}
-  last victory: {{ chess.white | safe }} vs {{ chess.black | safe }}
-{% for line in chess.board %}  {{ line | safe }}
-{% endfor %}
-  {{ chess.url }}
-{% endif %}
-sport
-
-  I walk, climb indoors, run the trails.
-{% if strava %}
-  last activity: {{ strava.name | safe }}
-  {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain
-{% endif %}
-
-github    https://github.com/4esv
-email     mail@aesv.io
-gpg       https://aesv.io/api/gpg
-
+last chess victory: {{ chess.white }} vs {{ chess.black }}{% endif %}
+{% if weather %}
+weather: {{ weather.tempF }}F {{ weather.condition }} (Ithaca){% endif %}
 
 MIT License. {{ now | date('Y') }}.
 {% endblock %}
 {%- else -%}
-{% extends "base.njk" %}
-{% block title %}{{ site.name }}{% endblock %}
-{% block terminal %}
-<section id="about">
-<pre class="terminal">
-<span class="section-name">about</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aesv.io</title>
+  <meta name="description" content="Axel Stevens — systems integrator. Work, writing, listening.">
+  <link rel="icon" href="/logo-pixel.png" type="image/png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#F4ECD8">
+  <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/foundation.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <main id="main" class="dashboard">
+    {% include "partials/site-header.njk" %}
 
-  Mexican American sentient flesh pile.
-  Casual pianist, bassist and emergency drummer.
-  I build interfaces for humans and systems for machines to serve humans.
-  This page is my public dashboard for my work and life.
-  For weirder stuff, visit my <a href="https://garden.aesv.io">digital garden ↗</a>.
-</pre>
-</section>
+    <div class="dashboard-grid">
+      {# Top row: weather · music · time #}
+      <div class="widget-cell weather widget-cell-bare is-watch-primary">
+        {% include "partials/widgets/weather-ithaca.njk" %}
+      </div>
 
-<section id="work">
-<pre class="terminal">
-<span class="section-name">work</span>
+      <div class="widget-cell spotify">
+        {% include "partials/widgets/spotify-album.njk" %}
+      </div>
 
-  Systems Integrator @ <a href="https://cornell.edu">Cornell University ↗</a>
-  Building internal applications, automations and supporting software.
+      <div class="widget-cell time widget-cell-bare">
+        {% include "partials/widgets/time-ithaca.njk" %}
+      </div>
 
-  I specialize in extending, automating and creating software.
-  Everything from building modules to integrate AI with robots,
-  to scripts that automate an existing asset tracking database,
-  to full stack applications to manage other applications.
+      {# Bottom row: portfolio · chess · garden #}
+      {% set workTags = [
+        'react','node','python','powershell','bqn','fastify','vite','mssql',
+        'ldap','saml','shibboleth','oauth','redis','bullmq','frevvo','jamf',
+        'snipe','interfolio','azure','whisper','gpt','nunjucks','automation',
+        'integration','rbac','sso','cron','mdm','cms','devops'
+      ] %}
+      <a class="tile tile-link work tile-primary" href="/work">
+        <div class="tile-cloud" aria-hidden="true">
+          {% for tag in workTags %}<span style="--i:{{ loop.index0 }}">{{ tag }}</span>{% endfor %}
+        </div>
+        <div class="tile-content">
+          <div class="tile-desc">Six case studies. Services. Hire me.</div>
+          <div class="tile-title">work ↗</div>
+        </div>
+      </a>
 
-  Like my text editor, I work across
-  all operating systems via the command line.
+      <a class="widget-cell chess widget-cell-link" href="/chess" aria-label="Open the chess page">
+        {% include "partials/widgets/chess-match.njk" %}
+        <span class="cell-hover-label">chess →</span>
+      </a>
 
-  Interested in projects and remote opportunities
+      {% set grdnTags = [
+        'fiction','essays','music','chess','genetics','philosophy','identity',
+        'language','code','diy','automotive','baking','cooking','observation',
+        'prose','notes','reading','memory','place','history','tools',
+        'process','craft','health','finance','sketches','interviews','book notes'
+      ] %}
+      <a class="tile tile-link grdn" href="/garden">
+        <div class="tile-cloud" aria-hidden="true">
+          {% for tag in grdnTags %}<span style="--i:{{ loop.index0 }}">{{ tag }}</span>{% endfor %}
+        </div>
+        <div class="tile-content">
+          <div class="tile-desc">Writing, code, essays.</div>
+          <div class="tile-title">garden ↗</div>
+        </div>
+      </a>
+    </div>
 
-  <span class="subsection-name">cases</span>
+    <script src="/js/dashboard.js"></script>
+  </main>
 
-    <span class="subsection-name">Interfolio Dossier Builder</span>
-    Automated assembly of faculty tenure review packets
-
-    Built a full-stack system in three languages.
-    React frontend submits jobs to a Node.js/Express
-    API, which queues work through BullMQ and Redis.
-    A Python worker pulls documents through Interfolio's
-    HMAC-SHA1 authenticated API, classifies them with
-    regex pattern matching, merges PDFs with PyPDF2,
-    and generates nested bookmarks.
-    23K lines across 127 files and 6 languages.
-
-    Replaced a multi-day manual process with a
-    5-minute automated run.
-
-    <span class="dim">Python, Node.js, React, BullMQ, Redis,
-    PyPDF2, Interfolio API, MSSQL, Vite</span>
-
-
-    <span class="subsection-name">Device Asset Sync</span>
-    Bi-directional inventory tracking across 1,300+ devices
-
-    Wrote a bi-directional sync between Jamf MDM
-    and Snipe-IT in PowerShell. The Mac agent uses
-    an OOP class with exponential backoff, OAuth
-    token refresh, and request throttling. A separate
-    Windows agent deployed via Group Policy reports
-    system info at logon.
-
-    1,300+ devices tracked at 95%+ accuracy.
-    Eliminated manual inventory entirely.
-
-    <span class="dim">PowerShell, Jamf Pro API, Snipe-IT API,
-    Group Policy</span>
-
-
-    <span class="subsection-name">App Security Manager</span>
-    RBAC dashboard replacing legacy ColdFusion permissions
-
-    Built an RBAC dashboard with a three-tier role
-    model (Developer, Owner, Admin). LDAP live search
-    with drag-and-drop user assignment. Transactional
-    SQL for cascading permission deletes across linked
-    tables. Auth runs through the university's
-    Shibboleth/SAML reverse proxy.
-    3,400 lines serving two colleges from one interface.
-
-    Access changes take under a minute. Replaced
-    a ColdFusion system in use for over a decade.
-
-    <span class="dim">Node.js, Express, MSSQL, LDAP, Shibboleth/SAML</span>
-
-
-    <span class="subsection-name">NAO Bot Natural Conversation</span>
-    Conversational humanoid robot for research demo
-
-    Connected NAO's onboard microphone to OpenAI
-    Whisper for transcription, routed text through
-    GPT for response generation, and piped output
-    back through NAO's animated speech engine for
-    synchronized voice and gestures.
-
-    Delivered a working proof-of-concept for an
-    NSF grant proposal.
-
-    <span class="dim">Python, NAOqi SDK, OpenAI Whisper, OpenAI API</span>
-
-  <a href="https://www.linkedin.com/in/aesv/?skipRedirect=true">linkedin ↗</a>
-  <a href="mailto:mail@aesv.io">mail@aesv.io</a>
-</pre>
-</section>
-
-<section id="code">
-<pre class="terminal">
-<span class="section-name">code</span>
-
-  <a href="https://github.com/4esv/pianito">pianito, the TUI piano tuner ↗</a>
-  <a href="https://github.com/4esv/bbq">bbq, a BQN quant toolkit ↗</a>
-
-  <a href="https://github.com/4esv/dotfiles">my dotfiles ↗</a>
-  <a href="https://github.com/4esv/nvim-config">my neovim config ↗</a>
-
-  <a href="https://github.com/4esv">github ↗</a>
-</pre>
-</section>
-
-<section id="music">
-<pre class="terminal">
-<span class="section-name">music</span>
-
-  Keyboardist, bassist and emergency drummer.
-  I listen to everything from Mexican folklore
-  to Norwegian death metal.
-
-{% if spotify %}
-  <span class="subsection-name">top tracks</span>
-{% for track in spotify.tracks %}
-    <a href="{{ track.url }}">{{ track.name }} ↗</a> <span class="nowrap">by {{ track.artist }}</span>
-{%- endfor %}
-
-  <span class="subsection-name">top artists</span>
-{% for artist in spotify.artists %}
-    <a href="{{ artist.url }}">{{ artist.name }} ↗</a>
-{%- endfor %}
-
-{% endif %}
-  <a href="https://open.spotify.com/user/aesvel">spotify ↗</a>
-  <a href="https://soundcloud.com/4esv">soundcloud ↗</a>
-</pre>
-</section>
-
-<section id="chess">
-<pre class="terminal">
-<span class="section-name">chess</span>
-
-{% if chess %}
-  <span class="subsection-name">last victory</span>
-
-    {{ chess.white }} vs {{ chess.black }} · {{ chess.result }}
-
-<code>{% for line in chess.board %}    {{ line }}
-{% endfor %}</code>
-      <a href="{{ chess.url }}">view on chess.com ↗</a>
-{% else %}
-    <span class="dim">no recent victories loaded</span>
-{% endif %}
-</pre>
-</section>
-
-<section id="sport">
-<pre class="terminal">
-<span class="section-name">sport</span>
-
-  I walk, climb indoors, run the trails.
-  Sometimes hike the gorges and swim in the lake.
-
-{% if strava %}
-  <span class="subsection-name">last activity</span>
-
-    {{ strava.name }}
-    {{ strava.type }} · {{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft gain
-
-{% endif %}
-  <a href="https://www.strava.com/athletes/51674641">strava ↗</a>
-</pre>
-</section>
-{% endblock %}
+  {% include "partials/big-footer.njk" %}
+</body>
+</html>
 {%- endif -%}

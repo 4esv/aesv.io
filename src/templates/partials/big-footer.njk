@@ -1,0 +1,47 @@
+{# Shared neobrutalist footer — used on every cream-paper page. #}
+<footer class="big-footer">
+  <div class="big-footer-inner">
+    <p class="footer-marquee">aesv<span class="accent">·</span>io</p>
+    <p class="footer-tagline">Mexican American sentient flesh pile. Pianist, bassist, emergency drummer. I make system A talk to system B.</p>
+
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>Sites</h4>
+        <ul>
+          <li>{% if route == '/' %}<span aria-current="page">aesv.io</span>{% else %}<a href="/">aesv.io</a>{% endif %}</li>
+          <li>{% if route == '/work' %}<span aria-current="page">work</span>{% else %}<a href="/work">work</a>{% endif %}</li>
+          <li>{% if route and route.startsWith('/garden') %}<span aria-current="page">garden</span>{% else %}<a href="/garden">garden</a>{% endif %}</li>
+          <li>{% if route == '/music' %}<span aria-current="page">music</span>{% else %}<a href="/music">music</a>{% endif %}</li>
+          <li>{% if route == '/chess' %}<span aria-current="page">chess</span>{% else %}<a href="/chess">chess</a>{% endif %}</li>
+          <li>{% if route == '/listening' %}<span aria-current="page">listening</span>{% else %}<a href="/listening">listening</a>{% endif %}</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Reach me</h4>
+        <ul>
+          <li><a href="mailto:mail@aesv.io">mail@aesv.io</a></li>
+          <li><a href="https://github.com/4esv" rel="noopener">github.com/4esv</a></li>
+          <li><a href="/api/gpg">GPG public key</a></li>
+          <li><a href="https://linkedin.com/in/aesv" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Live</h4>
+        <ul>
+          <li><a href="https://open.spotify.com/user/4esv" rel="noopener">Spotify</a></li>
+          <li><a href="https://chess.com/member/4esv" rel="noopener">chess.com/4esv</a></li>
+          <li><a href="https://strava.com/athletes/51674641" rel="noopener">Strava</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Colophon</h4>
+        <p>Fastify and Nunjucks. Type in <strong>TAYBirdieRegular</strong>. Cream paper, ink borders, riso noise. No analytics, no trackers, no cookies.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© {{ now | date('Y') }} Axel Stevens · MIT</span>
+      <span>Built in Ithaca, New York</span>
+    </div>
+  </div>
+</footer>

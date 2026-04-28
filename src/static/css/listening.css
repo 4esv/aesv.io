@@ -1,0 +1,531 @@
+/* =========================================================
+   LISTENING — /listening on aesv.io
+   Spotify deep-dive page. Album-cover focused, all clamps for fluid type.
+   ========================================================= */
+
+.listen {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(16px, 3vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vw, 80px);
+}
+
+.listen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.listen-header .brand {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 28px);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.listen-header .brand img {
+  width: clamp(28px, 2.4vw, 36px);
+  height: auto;
+}
+.listen-header .nav-links {
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1vw, 14px);
+  letter-spacing: 0.04em;
+}
+.listen-header .nav-links a {
+  text-decoration: none;
+}
+
+.hero {
+  max-width: 60ch;
+}
+.hero .eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+}
+.hero .display {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+}
+.hero .lede {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.4vw, 22px);
+  line-height: 1.55;
+  color: var(--ink-mute);
+  margin: 0;
+}
+
+.block-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+.block-h {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0 0 28px;
+}
+
+/* Now playing — big asymmetric card */
+.now-playing {
+  padding: 0;
+}
+.now-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.55fr) 1fr;
+  gap: clamp(24px, 3vw, 48px);
+  align-items: center;
+  background: var(--cream);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-lg);
+  padding: clamp(20px, 2.5vw, 36px);
+}
+.now-art {
+  aspect-ratio: 1 / 1;
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+.now-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.now-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.now-track {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.now-artist {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 28px);
+  color: var(--ink);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.now-album {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1vw, 15px);
+  color: var(--ink-mute);
+  margin: 0 0 16px;
+}
+.now-meta .btn {
+  align-self: flex-start;
+  margin-top: 12px;
+}
+@media (max-width: 640px) {
+  .now-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Track stack — numbered list with hard typography */
+.track-stack {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: var(--border-thin);
+}
+.track-row {
+  display: grid;
+  grid-template-columns: clamp(48px, 5vw, 72px) 1fr auto;
+  gap: clamp(16px, 1.6vw, 24px);
+  align-items: center;
+  padding: clamp(14px, 1.6vw, 24px) clamp(8px, 1.6vw, 16px);
+  border-bottom: var(--border-thin);
+}
+.track-num {
+  font-family: var(--font-mono);
+  font-size: clamp(20px, 2vw, 32px);
+  font-weight: 700;
+  color: var(--lavender);
+}
+.track-meta {
+  min-width: 0;
+}
+.track-name {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 36px);
+  line-height: 1.05;
+  margin: 0 0 4px;
+  overflow-wrap: anywhere;
+}
+.track-artist {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1vw, 14px);
+  color: var(--ink-mute);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+.track-link {
+  font-family: var(--font-mono);
+  font-size: clamp(20px, 2vw, 28px);
+  text-decoration: none;
+  color: var(--ink);
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 9999px;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+.track-link:hover {
+  background: var(--lavender);
+  color: var(--offwhite);
+  border-color: var(--ink);
+}
+
+/* Artist marquee — big names, wraps inline */
+.artist-marquee {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 1.6vw, 28px);
+  align-items: baseline;
+}
+.artist-marquee li {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  position: relative;
+  padding-right: clamp(16px, 1.6vw, 28px);
+}
+.artist-marquee li::after {
+  content: '·';
+  position: absolute;
+  right: 0;
+  color: var(--lavender);
+  font-weight: 700;
+}
+.artist-marquee li:last-child {
+  padding-right: 0;
+}
+.artist-marquee li:last-child::after {
+  display: none;
+}
+.artist-marquee a {
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 4px solid transparent;
+}
+.artist-marquee a:hover {
+  color: var(--lavender);
+  border-bottom-color: var(--lavender);
+}
+
+.empty-state {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: clamp(20px, 2.5vw, 36px);
+}
+.empty-state p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(15px, 1.2vw, 18px);
+}
+
+/* =========================================================
+   LISTENING — Tiered responsive layers
+   ========================================================= */
+
+/* ---------- Watch tier (<360px) ----------
+   Album art + last-played track + artist. Drop top-tracks
+   list and artist marquee. */
+@media (max-width: 359px) {
+  .listen {
+    padding: 12px;
+    gap: 24px;
+  }
+  .listen-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .listen-header .nav-links {
+    font-size: 12px;
+    gap: 12px;
+  }
+  .hero {
+    margin-bottom: 0;
+  }
+  .hero .display {
+    font-size: 30px;
+  }
+  .hero .lede {
+    font-size: 14px;
+  }
+
+  .now-grid {
+    padding: 14px;
+    gap: 14px;
+    grid-template-columns: 1fr;
+  }
+  .now-track {
+    font-size: 22px;
+  }
+  .now-artist {
+    font-size: 16px;
+  }
+  .now-album {
+    font-size: 12px;
+  }
+  .now-meta .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  /* Drop the long lists at watch */
+  .block:not(.now-playing):not(.empty-state) {
+    display: none;
+  }
+}
+
+/* ---------- Wrist band (≤280px) ----------
+   Tighter than watch. Now-track on top, art below, artist
+   marquee hidden, track-stack reduced to first 5 visually. */
+@media (max-width: 280px) {
+  .listen {
+    padding: 8px;
+    gap: 16px;
+  }
+  .listen-header {
+    gap: 6px;
+  }
+  .listen-header .brand {
+    font-size: 16px;
+  }
+  .listen-header .nav-links {
+    font-size: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .hero .display {
+    font-size: 22px;
+  }
+  .hero .lede {
+    font-size: 12px;
+  }
+  .now-grid {
+    padding: 8px;
+    gap: 8px;
+  }
+  .now-track {
+    font-size: 18px;
+  }
+  .now-artist {
+    font-size: 13px;
+  }
+  .now-album {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .now-meta .btn {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+  .track-row {
+    grid-template-columns: 28px 1fr;
+    gap: 8px;
+    padding: 10px 4px;
+  }
+  .track-link {
+    display: none;
+  }
+  .track-num {
+    font-size: 16px;
+  }
+  .track-name {
+    font-size: 16px;
+    line-height: 1.05;
+  }
+  .track-artist {
+    font-size: 11px;
+  }
+}
+
+/* ---------- Phone tier (360–639px) ---------- */
+@media (min-width: 360px) and (max-width: 639px) {
+  .now-grid {
+    grid-template-columns: 1fr;
+  }
+  .track-row {
+    padding: 12px 8px;
+  }
+}
+
+/* ---------- Hand band (480–767px) ----------
+   Brief: "Two-up where natural". The track-stack feels
+   natural as a 2-col grid here — the row layout is per-row
+   already so we keep that, but the artist-marquee tightens. */
+@media (min-width: 480px) and (max-width: 767px) {
+  .artist-marquee {
+    gap: clamp(12px, 2vw, 20px);
+  }
+  .artist-marquee li {
+    font-size: clamp(24px, 6vw, 40px);
+    padding-right: 16px;
+  }
+}
+
+/* ---------- Lap band (768–1099px) ----------
+   2-col now-grid stays; tighten the desktop-y track-row
+   padding because at 768–1099 it can otherwise feel sparse. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .now-grid {
+    gap: clamp(20px, 2vw, 32px);
+    padding: 24px;
+  }
+  .track-row {
+    padding: 16px 12px;
+  }
+}
+
+/* ---------- Desktop tier (1600–2559px) ---------- */
+@media (min-width: 1600px) and (max-width: 2559px) {
+  .listen {
+    max-width: 1500px;
+    padding: 64px;
+  }
+  .now-grid {
+    padding: 56px;
+    gap: 64px;
+  }
+  .track-row {
+    padding: 28px 16px;
+  }
+}
+
+/* ---------- TV / billboard tier (≥2560px) ----------
+   Album art at 600px+. Read from across the room. */
+@media (min-width: 2560px) {
+  .listen {
+    max-width: 3200px;
+    padding: 120px 96px;
+    gap: 160px;
+  }
+  .listen-header .brand {
+    font-size: 36px;
+    gap: 24px;
+  }
+  .listen-header .brand img {
+    width: 64px;
+    height: 64px;
+  }
+  .listen-header .nav-links {
+    font-size: 22px;
+    gap: 48px;
+  }
+
+  .hero {
+    max-width: 80ch;
+  }
+  .hero .eyebrow {
+    font-size: 22px;
+    margin-bottom: 28px;
+  }
+  .hero .display {
+    font-size: 200px;
+    line-height: 0.95;
+  }
+  .hero .lede {
+    font-size: 36px;
+    line-height: 1.5;
+  }
+
+  .block-eyebrow {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+  .block-h {
+    font-size: 96px;
+    margin-bottom: 64px;
+  }
+
+  /* Now-playing: massive album art on the left */
+  .now-grid {
+    grid-template-columns: minmax(600px, 0.55fr) 1fr;
+    gap: 96px;
+    padding: 80px;
+  }
+  .now-art {
+    min-width: 600px;
+  }
+  .now-track {
+    font-size: 120px;
+    line-height: 0.95;
+  }
+  .now-artist {
+    font-size: 56px;
+  }
+  .now-album {
+    font-size: 28px;
+    margin-bottom: 32px;
+  }
+  .now-meta .btn {
+    padding: 24px 40px;
+    font-size: 24px;
+  }
+
+  /* Track list — fewer but bigger */
+  .track-row {
+    grid-template-columns: 120px 1fr auto;
+    gap: 48px;
+    padding: 48px 32px;
+  }
+  .track-num {
+    font-size: 64px;
+  }
+  .track-name {
+    font-size: 72px;
+    line-height: 1;
+  }
+  .track-artist {
+    font-size: 24px;
+  }
+  .track-link {
+    font-size: 56px;
+    padding: 12px 24px;
+    border-width: 4px;
+  }
+
+  .artist-marquee {
+    gap: 56px;
+  }
+  .artist-marquee li {
+    font-size: 160px;
+    line-height: 0.95;
+  }
+}

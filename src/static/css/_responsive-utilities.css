@@ -1,0 +1,161 @@
+/* =========================================================
+   RESPONSIVE UTILITIES — extreme-range bands
+   Imported from foundation.css. Class names map 1:1 to bands:
+     wrist    ≤ 280px
+     palm     281 – 479px
+     hand     480 – 767px
+     lap      768 – 1099px
+     desk     1100 – 1599px
+     wall     1600 – 2559px
+     billboard ≥ 2560px
+   Use sparingly — utilities should earn their keep across 2+ pages.
+   ========================================================= */
+
+/* ---------- Visibility helpers ---------- */
+/* Each `.hide-<band>` removes the element when viewport falls inside
+   that band; `.show-<band>` is inverse (display only inside band). */
+
+.show-wrist,
+.show-palm,
+.show-hand,
+.show-lap,
+.show-desk,
+.show-wall,
+.show-billboard {
+  display: none;
+}
+
+@media (max-width: 280px) {
+  .hide-wrist {
+    display: none !important;
+  }
+  .show-wrist {
+    display: revert;
+  }
+}
+@media (min-width: 281px) and (max-width: 479px) {
+  .hide-palm {
+    display: none !important;
+  }
+  .show-palm {
+    display: revert;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  .hide-hand {
+    display: none !important;
+  }
+  .show-hand {
+    display: revert;
+  }
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  .hide-lap {
+    display: none !important;
+  }
+  .show-lap {
+    display: revert;
+  }
+}
+@media (min-width: 1100px) and (max-width: 1599px) {
+  .hide-desk {
+    display: none !important;
+  }
+  .show-desk {
+    display: revert;
+  }
+}
+@media (min-width: 1600px) and (max-width: 2559px) {
+  .hide-wall {
+    display: none !important;
+  }
+  .show-wall {
+    display: revert;
+  }
+}
+@media (min-width: 2560px) {
+  .hide-billboard {
+    display: none !important;
+  }
+  .show-billboard {
+    display: revert;
+  }
+}
+
+/* Convenience: hide-below-X / hide-above-X */
+@media (max-width: 767px) {
+  .hide-below-lap {
+    display: none !important;
+  }
+}
+@media (max-width: 1099px) {
+  .hide-below-desk {
+    display: none !important;
+  }
+}
+@media (max-width: 1599px) {
+  .hide-below-wall {
+    display: none !important;
+  }
+}
+@media (max-width: 2559px) {
+  .hide-below-billboard {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  .hide-above-hand {
+    display: none !important;
+  }
+}
+@media (min-width: 1100px) {
+  .hide-above-lap {
+    display: none !important;
+  }
+}
+@media (min-width: 1600px) {
+  .hide-above-desk {
+    display: none !important;
+  }
+}
+@media (min-width: 2560px) {
+  .hide-above-wall {
+    display: none !important;
+  }
+}
+
+/* ---------- Touch-target helper for the wrist end ----------
+   At wrist sizes the user is almost certainly touching, not pointing.
+   .touch-44 guarantees 44px minimum hit area without affecting visuals
+   above wrist. */
+@media (max-width: 280px) {
+  .touch-44 {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ---------- Container helper ----------
+   Opt-in container queries: any element with `.q-container` becomes
+   the responsive context for its descendants. Children can use the
+   `@container` rules already defined in their own CSS files. */
+.q-container {
+  container-type: inline-size;
+}
+
+/* ---------- No-horizontal-scroll guard ----------
+   Belt-and-suspenders for the wrist band. Prevents content from ever
+   pushing past the viewport edge regardless of source class. */
+@media (max-width: 280px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+  .no-overflow-wrist {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}

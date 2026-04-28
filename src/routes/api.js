@@ -4,25 +4,32 @@ import { join } from 'path'
 import * as spotify from '../services/spotify.js'
 import * as strava from '../services/strava.js'
 import { getLastVictory } from '../services/chess.js'
+import { getCurrentWeather } from '../services/weather.js'
 
 const GPG_PATH = join(import.meta.dirname, '../static/gpg.asc')
 const REFRESH_INTERVAL = 5 * 60 * 1000
 
 // NOTE: shared page data, refreshed in background
-let pageData = { spotify: null, strava: null, chess: null }
+let pageData = { spotify: null, strava: null, chess: null, weather: null, recent: null }
 
 async function refreshData(config) {
-  const [tracks, artists, stravaData, chessData] = await Promise.all([
+  const [tracks, artists, recent, topShort, stravaData, chessData, weather] = await Promise.all([
     spotify.getTopTracks(config.spotify).catch(() => []),
     spotify.getTopArtists(config.spotify).catch(() => []),
+    spotify.getRecentlyPlayed(config.spotify).catch(() => null),
+    spotify.getTopTracksFull(config.spotify, { limit: 1, timeRange: 'short_term' }).catch(() => []),
     strava.getLastActivity(config.strava).catch(() => null),
     getLastVictory(config.chess.username).catch(() => null),
+    getCurrentWeather().catch(() => null),
   ])
 
   pageData = {
     spotify: tracks.length || artists.length ? { tracks, artists } : null,
+    recent,
+    topShort: topShort?.[0] || null,
     strava: stravaData,
     chess: chessData,
+    weather,
   }
 }
 

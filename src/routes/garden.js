@@ -1,7 +1,15 @@
+// /sketches — small templates-based garden (the original "garden.aesv.io" content).
+//
+// Mounted as a path on aesv.io. Was previously served from garden.aesv.io
+// via host-constrained routing; collapsed to /sketches to leave /garden free
+// for the markdown writing garden (see grdn.js). Filename kept as garden.js
+// to match the templates/garden/ folder.
+
 import { readdir } from 'fs/promises'
 import { join, parse } from 'path'
 
 const GARDEN_DIR = join(import.meta.dirname, '../templates/garden')
+const BASE_PATH = '/sketches'
 
 const ROOT_NAMES = new Set(['index', 'home'])
 
@@ -15,24 +23,23 @@ export async function registerGardenRoutes(fastify) {
     if (!entry.isFile() || !entry.name.endsWith('.njk')) continue
 
     const { name } = parse(entry.name)
-    const route = ROOT_NAMES.has(name) ? '/' : `/${name}`
+    const route = ROOT_NAMES.has(name) ? BASE_PATH : `${BASE_PATH}/${name}`
     const template = `garden/${entry.name}`
 
-    for (const host of ['garden.aesv.io', 'garden.aesv.io:3000']) {
-      fastify.get(route, { constraints: { host } }, async (request, reply) => {
-        const { grid } = request
+    fastify.get(route, async (request, reply) => {
+      const { grid } = request
 
-        if (grid.isTerminal) {
-          reply.header('Content-Type', 'text/plain; charset=utf-8')
-        }
+      if (grid.isTerminal) {
+        reply.header('Content-Type', 'text/plain; charset=utf-8')
+      }
 
-        return reply.view(template, {
-          route,
-          site: fastify.config.site,
-          grid,
-          ...fastify.getPageData(),
-        })
+      return reply.view(template, {
+        route,
+        basePath: BASE_PATH,
+        site: fastify.config.site,
+        grid,
+        ...fastify.getPageData(),
       })
-    }
+    })
   }
 }

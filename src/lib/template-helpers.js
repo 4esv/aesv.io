@@ -6,6 +6,10 @@ function toStr(value) {
  * @param {import('nunjucks').Environment} env
  */
 export function registerFilters(env) {
+  env.addFilter('safeJson', (obj) => {
+    return JSON.stringify(obj ?? null).replace(/<\//g, '<\\/')
+  })
+
   env.addFilter('repeat', (str, count) => {
     if (typeof str !== 'string' || typeof count !== 'number') return ''
     if (count < 0) return ''

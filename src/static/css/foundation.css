@@ -1,0 +1,1151 @@
+/* =========================================================
+   FOUNDATION — Simple-Friendly tokens for aesv.io family
+   Cream paper · ink borders · cartoon shadows · halftone
+   =========================================================
+
+   RESPONSIVE TIERS (literal px — CSS custom props are not
+   allowed inside @media expressions, so these live here as
+   documentation. Use the same numbers throughout the codebase.)
+
+     watch     <  360px    one thing per page; ≥44px tap; no footer
+     phone     360–639px   single column, full sections
+     tablet    640–1023px  2-column where appropriate
+     laptop    1024–1599px existing default (3-col dashboard)
+     desktop   1600–2559px breathing room; type +10–15%
+     tv        ≥ 2560px    1.5–2× type; 4-col layouts; readable
+                           from across a room. Fewer, bigger.
+
+   EXTREME-RANGE BANDS (additive — co-exist with the tiers
+   above. Used by per-page CSS via media queries with these
+   exact pixel numbers. Custom properties below are docs for
+   tooling/JS; @media cannot read var()s.)
+
+     wrist      ≤ 280px       single column, one thing
+     palm       281 – 479px   vertical stack, full-width tiles
+     hand       480 – 767px   stack with comfortable padding
+     lap        768 – 1099px  2-column grid
+     desk       1100 – 1599px existing 3-col layout
+     wall       1600 – 2559px generous 3-col, more density
+     billboard  ≥ 2560px      4-col, type +50–100%
+
+   Container queries: tiles/cards may also adapt independent
+   of viewport via `@container`. Use `inline-size` containers.
+   ========================================================= */
+
+/* Responsive utilities — must precede any other rule per CSS spec. */
+@import url('/css/_responsive-utilities.css');
+
+@font-face {
+  font-family: 'Birdie';
+  src:
+    url('/fonts/birdie-regular.woff2') format('woff2'),
+    url('/fonts/birdie-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ink: #1a1a1a;
+  --ink-mute: #5c5650;
+  --cream: #f4ecd8;
+  --cream-deep: #e8dfc8;
+  --paper: #f4ecd8;
+  --offwhite: #faf6f2;
+  --lavender: #8579a0;
+  --terracotta: #b86b4b;
+  --brick: #a84a3c;
+  --ochre: #c8924a;
+  --sage: #6b8576;
+  --white: #ffffff;
+
+  --bg: var(--cream);
+  --fg: var(--ink);
+  --fg-mute: var(--ink-mute);
+  --accent: var(--lavender);
+  --accent-fg: var(--offwhite);
+  --border: var(--ink);
+
+  --font-display: 'Birdie', system-ui, sans-serif;
+  --font-body: 'Birdie', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Consolas', monospace;
+
+  /* Fluid type via clamp(). Min · ideal (vw-based) · max.
+     "Pretext-equivalent" responsiveness with no JS. */
+  --fs-marquee: clamp(72px, 14vw, 240px);
+  --fs-hero: clamp(48px, 9vw, 112px);
+  --fs-h1: clamp(36px, 6vw, 80px);
+  --fs-h2: clamp(28px, 4vw, 48px);
+  --fs-h3: clamp(22px, 2.5vw, 32px);
+  --fs-body: clamp(16px, 1.1vw, 19px);
+  --fs-small: clamp(13px, 0.9vw, 14px);
+  --fs-eyebrow: clamp(11px, 0.75vw, 12px);
+  --fs-tile: clamp(20px, 2.4vw, 36px);
+
+  --lh-display: 1;
+  --lh-tight: 1.15;
+  --lh-body: 1.55;
+
+  --tracking-eyebrow: 0.12em;
+  --tracking-display: -0.01em;
+
+  --border-thin: 4px solid var(--ink);
+  --border-thick: 6px solid var(--ink);
+
+  --radius-square: 0;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 3px 3px 0 0 var(--ink);
+  --shadow-md: 6px 6px 0 0 var(--ink);
+  --shadow-lg: 10px 10px 0 0 var(--ink);
+  --shadow-pressed: 0 0 0 0 var(--ink);
+
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-6: 48px;
+  --s-8: 64px;
+  --s-12: 96px;
+
+  --grid-size: 32px;
+  --grid-line-color: rgba(26, 26, 26, 0.06);
+
+  --riso: 0.7;
+  --riso-misreg: 2px;
+
+  --ease-press: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-press: 120ms;
+  --dur-wiggle: 200ms;
+
+  /* Band thresholds — for documentation + JS handoff.
+     CSS @media cannot read var()s, but these numbers are
+     the source of truth referenced throughout the system. */
+  --bp-wrist: 280px;
+  --bp-palm: 480px;
+  --bp-hand: 768px;
+  --bp-lap: 1100px;
+  --bp-desk: 1600px;
+  --bp-wall: 2560px;
+
+  /* Type-step scale — 6 steps, fluid by default; the wall
+     and billboard media queries below bump the scale. Use
+     these in new components to avoid hard-coded clamps. */
+  --type-step-0: clamp(13px, 0.85vw, 14px); /* meta / eyebrow body */
+  --type-step-1: clamp(15px, 1.05vw, 17px); /* small body */
+  --type-step-2: clamp(17px, 1.2vw, 20px); /* body */
+  --type-step-3: clamp(22px, 2vw, 28px); /* tile-title-ish */
+  --type-step-4: clamp(28px, 3.5vw, 44px); /* h2 */
+  --type-step-5: clamp(40px, 6vw, 72px); /* hero */
+
+  /* Spacing-step alias — additive to --s-*. Components that
+     care about responsive growth at the wall/billboard ends
+     can use these instead of the fixed --s-* tokens. */
+  --space-step-1: clamp(8px, 1vw, 14px);
+  --space-step-2: clamp(16px, 1.6vw, 28px);
+  --space-step-3: clamp(24px, 2.4vw, 44px);
+  --space-step-4: clamp(32px, 3.6vw, 64px);
+
+  /* Reading-width tokens (used by grdn / case-study prose) */
+  --reading-narrow: 60ch;
+  --reading-default: 72ch;
+  --reading-wide: 84ch;
+}
+
+/* ---------- Reset / base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+html {
+  background-color: var(--cream);
+}
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background-color: var(--cream);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  position: relative;
+  isolation: isolate;
+}
+
+/* =========================================================
+   RISO — paper grain + ink dots + warm color speckle
+   Three layers stacked on body via ::before (fixed position so it
+   covers the entire scroll, not just the initial viewport).
+   Tunable via --riso (0..1) and --riso-misreg (px).
+   ========================================================= */
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layer 1: fine fractal ink grain */
+body::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch' seed='3'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.10  0 0 0 0 0.10  0 0 0 0.65 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: calc(var(--riso) * 0.35);
+  mix-blend-mode: multiply;
+}
+
+/* Layer 2: coarse paper texture, slightly off-register */
+body::after {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch' seed='11'/><feColorMatrix values='0 0 0 0 0.522  0 0 0 0 0.475  0 0 0 0 0.627  0 0 0 1 -0.6'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.18' numOctaves='2' stitchTiles='stitch' seed='17'/><feColorMatrix values='0 0 0 0 0.784  0 0 0 0 0.572  0 0 0 0 0.290  0 0 0 1 -0.7'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size:
+    600px 600px,
+    800px 800px;
+  background-position:
+    var(--riso-misreg) var(--riso-misreg),
+    0 0;
+  opacity: calc(var(--riso) * 0.55);
+  mix-blend-mode: multiply;
+}
+
+main,
+footer,
+header {
+  position: relative;
+  z-index: 1;
+}
+
+/* Per-surface riso classes (cards, buttons can opt-in to extra grain) */
+.riso {
+  position: relative;
+  isolation: isolate;
+}
+.riso > * {
+  position: relative;
+  z-index: 1;
+}
+.riso::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.10  0 0 0 0 0.10  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: calc(var(--riso) * 0.45);
+  mix-blend-mode: multiply;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+a:hover {
+  color: var(--lavender);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+}
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+  padding: 8px 16px;
+  background: var(--ink);
+  color: var(--cream);
+  z-index: 999;
+}
+
+/* ---------- Halftone overlay ---------- */
+.halftone {
+  position: relative;
+}
+.halftone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, var(--ink) 0.6px, transparent 0.6px);
+  background-size: 4px 4px;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* ---------- Type ---------- */
+.h-hero,
+.h-h1,
+.h-h2,
+.h-h3 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+}
+.h-hero {
+  font-size: var(--fs-hero);
+}
+.h-h1 {
+  font-size: var(--fs-h1);
+}
+.h-h2 {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-tight);
+}
+.h-h3 {
+  font-size: var(--fs-h3);
+  line-height: var(--lh-tight);
+}
+
+@media (max-width: 640px) {
+  .h-hero {
+    font-size: 56px;
+  }
+  .h-h1 {
+    font-size: 40px;
+  }
+  .h-h2 {
+    font-size: 28px;
+  }
+  .h-h3 {
+    font-size: 22px;
+  }
+}
+
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+.t-mute {
+  color: var(--ink-mute);
+}
+.t-small {
+  font-size: var(--fs-small);
+}
+
+.t-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.t-mono {
+  font-family: var(--font-mono);
+}
+
+.t-code {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  background: var(--ink);
+  padding: 2px 8px;
+  color: var(--cream);
+  border-radius: 0;
+}
+
+/* ---------- Primitives ---------- */
+.btn {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border: var(--border-thin);
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    box-shadow var(--dur-press) var(--ease-press);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius-square);
+}
+.btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-lg);
+  color: var(--ink);
+}
+.btn:active {
+  transform: translate(6px, 6px);
+  box-shadow: var(--shadow-pressed);
+}
+.btn-primary {
+  background: var(--lavender);
+  color: var(--offwhite);
+  border-color: var(--ink);
+}
+.btn-primary:hover {
+  color: var(--offwhite);
+}
+.btn-pill {
+  border-radius: var(--radius-pill);
+  padding: 12px 24px;
+}
+
+.card {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: var(--s-4);
+  border-radius: var(--radius-square);
+  position: relative;
+}
+.card-hero {
+  border: var(--border-thick);
+  box-shadow: var(--shadow-lg);
+  padding: var(--s-6);
+}
+
+/* ---------- Tile (link tiles on dashboard) ---------- */
+.tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: var(--s-4);
+  text-decoration: none;
+  color: var(--ink);
+  border-radius: var(--radius-square);
+  position: relative;
+  cursor: pointer;
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    box-shadow var(--dur-press) var(--ease-press);
+  min-height: 200px;
+}
+.tile:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+  color: var(--ink);
+}
+.tile:active {
+  transform: translate(6px, 6px);
+  box-shadow: var(--shadow-pressed);
+}
+.tile-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.tile-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.05;
+  margin: 12px 0 8px;
+  overflow-wrap: anywhere;
+}
+.tile-desc {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.tile-arrow {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  align-self: flex-end;
+  margin-top: 16px;
+}
+.tile-primary {
+  background: var(--lavender);
+  color: var(--offwhite);
+}
+.tile-primary .tile-eyebrow,
+.tile-primary .tile-desc,
+.tile-primary .tile-arrow {
+  color: var(--offwhite);
+}
+.tile:hover .tile-arrow {
+  transform: translate(2px, -2px);
+  transition: transform var(--dur-press) var(--ease-press);
+}
+
+/* ---------- Widget sticker (no card chrome — just shadow on the visual) ---------- */
+.widget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.widget-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  box-shadow: var(--shadow-md);
+  border: var(--border-thin);
+  background: var(--cream);
+  overflow: hidden;
+  position: relative;
+}
+.widget-art img,
+.widget-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.widget-caption {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.3;
+  word-wrap: break-word;
+}
+.widget-caption strong {
+  font-weight: 700;
+}
+.widget-caption .meta {
+  color: var(--ink-mute);
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Time / weather as text-stickers (no image) */
+.widget-bigtext {
+  font-family: var(--font-display);
+  font-size: 96px;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  padding: 24px 16px;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  word-break: break-word;
+}
+.widget-bigtext.alt {
+  background: var(--lavender);
+  color: var(--offwhite);
+}
+@media (max-width: 640px) {
+  .widget-bigtext {
+    font-size: 64px;
+  }
+}
+
+/* ---------- Field ---------- */
+.field {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  padding: 12px 16px;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  outline: none;
+  border-radius: 0;
+}
+.field:focus {
+  box-shadow: var(--shadow-md);
+  transform: translate(-1px, -1px);
+}
+
+/* ---------- Eyebrow / label utilities ---------- */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: inline-block;
+}
+.label-tag {
+  padding: 4px 10px;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-pill);
+  background: var(--cream);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ---------- Layout ---------- */
+.shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-4);
+}
+@media (max-width: 640px) {
+  .shell {
+    padding: var(--s-4) var(--s-2);
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.2vw, 32px);
+}
+.brand img {
+  width: clamp(28px, 2.4vw, 40px);
+  height: auto;
+}
+.brand:hover img {
+  animation: wiggle 200ms linear 1;
+}
+
+/* ---------- Site header (shared by every cream-paper page) ----------
+   Bento page is the visual anchor: brand left, nav center, name
+   right. Each page passes `pageEyebrow` to optionally swap the
+   right-side greeting for a page-specific label. */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 var(--s-4);
+}
+.site-nav {
+  display: flex;
+  gap: clamp(14px, 1.6vw, 24px);
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1vw, 15px);
+  letter-spacing: 0.04em;
+}
+.site-nav a {
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 2px solid transparent;
+  padding-bottom: 1px;
+  text-transform: lowercase;
+}
+.site-nav a:hover {
+  border-bottom-color: var(--lavender);
+  color: var(--lavender);
+}
+.site-nav a[aria-current='page'] {
+  border-bottom-color: var(--ink);
+}
+.dashboard-greeting {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 32px);
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0;
+  text-align: right;
+  max-width: 60ch;
+}
+.dashboard-greeting strong {
+  font-weight: 400;
+}
+.dashboard-greeting .meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 6px;
+}
+@media (max-width: 640px) {
+  .site-header {
+    gap: 8px;
+  }
+  .site-nav {
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* =========================================================
+   BIG FOOTER (shared by every cream-paper page)
+   ========================================================= */
+
+.big-footer {
+  margin-top: clamp(48px, 8vw, 120px);
+  padding: clamp(48px, 6vw, 96px) clamp(16px, 3vw, 48px) clamp(32px, 4vw, 56px);
+  background: var(--ink);
+  color: var(--cream);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.big-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='2' stitchTiles='stitch' seed='13'/><feColorMatrix values='0 0 0 0 0.957  0 0 0 0 0.925  0 0 0 0 0.847  0 0 0 1 -0.7'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.5;
+  mix-blend-mode: screen;
+}
+.big-footer > * {
+  position: relative;
+  z-index: 1;
+}
+.big-footer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 4vw, 48px);
+}
+.footer-marquee {
+  font-family: var(--font-display);
+  font-size: var(--fs-marquee);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--cream);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.footer-marquee .accent {
+  color: var(--lavender);
+}
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 32px);
+  line-height: 1.25;
+  margin: 0;
+  max-width: 36ch;
+  color: var(--cream);
+}
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: clamp(24px, 3vw, 40px);
+  padding-top: clamp(24px, 3vw, 40px);
+  border-top: 2px dashed rgba(244, 236, 216, 0.25);
+}
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: rgba(244, 236, 216, 0.6);
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer-col a {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.05vw, 15px);
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 1px;
+}
+.footer-col a:hover {
+  border-bottom-color: var(--lavender);
+  color: var(--lavender);
+}
+.footer-col li > [aria-current='page'] {
+  color: rgba(244, 236, 216, 0.55);
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.05vw, 15px);
+}
+.footer-col p {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1vw, 14px);
+  color: rgba(244, 236, 216, 0.75);
+  line-height: 1.5;
+  margin: 0;
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: clamp(20px, 2vw, 28px);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 216, 0.55);
+}
+
+/* =========================================================
+   RESPONSIVE — Tier-wide defaults (cream-paper system only)
+   The terminal stack (style.css, canvas.css) opts out by
+   not loading foundation.css.
+   ========================================================= */
+
+/* ---------- Watch tier (<360px) ----------
+   One thing per page. Big tap-targets. No riso burden on a
+   tiny screen. */
+@media (max-width: 359px) {
+  :root {
+    --s-2: 12px;
+    --s-3: 16px;
+    --s-4: 20px;
+    --s-6: 28px;
+    --riso: 0.4;
+  }
+  body {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .btn {
+    padding: 14px 18px;
+    font-size: 14px;
+    min-height: 44px;
+  }
+  .btn-pill {
+    padding: 14px 20px;
+  }
+  .field {
+    padding: 14px 14px;
+    min-height: 44px;
+  }
+  a {
+    min-height: 24px;
+  }
+  .shell {
+    padding: var(--s-3) var(--s-2);
+  }
+  .brand {
+    font-size: 16px;
+    gap: 8px;
+  }
+  .brand img {
+    width: 24px;
+    height: 24px;
+  }
+  .h-hero {
+    font-size: 40px;
+  }
+  .h-h1 {
+    font-size: 30px;
+  }
+  .h-h2 {
+    font-size: 22px;
+  }
+  .h-h3 {
+    font-size: 18px;
+  }
+  .widget-bigtext {
+    font-size: 44px;
+    padding: 16px 10px;
+  }
+  /* Skip the heavy footer at watch */
+  .big-footer {
+    display: none;
+  }
+}
+
+/* ---------- Phone tier (360–639px) ---------- */
+@media (min-width: 360px) and (max-width: 639px) {
+  .btn {
+    min-height: 44px;
+  }
+}
+
+/* ---------- Desktop tier (1600–2559px) ----------
+   More breathing room; type +10–15%. */
+@media (min-width: 1600px) and (max-width: 2559px) {
+  :root {
+    --fs-body: 19px;
+    --fs-small: 15px;
+    --fs-eyebrow: 13px;
+  }
+  .shell {
+    max-width: 1440px;
+    padding: var(--s-8) var(--s-6);
+  }
+}
+
+/* ---------- TV / billboard tier (≥2560px) ----------
+   Read-from-across-the-room scale. Generous whitespace,
+   simplified density. */
+@media (min-width: 2560px) {
+  :root {
+    --fs-marquee: 360px;
+    --fs-hero: 180px;
+    --fs-h1: 120px;
+    --fs-h2: 72px;
+    --fs-h3: 44px;
+    --fs-body: 26px;
+    --fs-small: 20px;
+    --fs-eyebrow: 16px;
+    --fs-tile: 52px;
+
+    --s-1: 12px;
+    --s-2: 24px;
+    --s-3: 36px;
+    --s-4: 48px;
+    --s-6: 72px;
+    --s-8: 104px;
+    --s-12: 160px;
+
+    --shadow-sm: 5px 5px 0 0 var(--ink);
+    --shadow-md: 10px 10px 0 0 var(--ink);
+    --shadow-lg: 16px 16px 0 0 var(--ink);
+    --border-thin: 6px solid var(--ink);
+    --border-thick: 10px solid var(--ink);
+  }
+  body {
+    line-height: 1.6;
+  }
+  .shell {
+    max-width: 2200px;
+    padding: var(--s-12) var(--s-8);
+  }
+  .btn {
+    padding: 22px 36px;
+    font-size: 22px;
+  }
+  .brand {
+    font-size: 36px;
+    gap: 18px;
+  }
+  .brand img {
+    width: 56px;
+    height: 56px;
+  }
+  .widget-bigtext {
+    font-size: 180px;
+    padding: 48px 32px;
+  }
+}
+
+/* ---------- Container-query opt-in ----------
+   Cards/tiles can react to their cell width independent of
+   viewport — useful for tiles in auto-fit grids. */
+.tile,
+.widget-cell,
+.essay-card,
+.service,
+.case-study {
+  container-type: inline-size;
+}
+
+/* =========================================================
+   EXTREME-RANGE — additive overrides for the named bands
+   that the existing tier system does not already handle.
+   Existing watch/phone/desktop/tv blocks above remain
+   load-bearing and are not removed.
+   ========================================================= */
+
+/* ---------- Wrist (≤280px) ----------
+   Goes further than the watch tier (<360). At wrist we strip
+   the riso textures (perf + legibility on tiny screens),
+   force overflow:hidden as a safety net, and zero-out
+   non-essential decoration. */
+@media (max-width: 280px) {
+  :root {
+    --riso: 0;
+    --shadow-sm: 2px 2px 0 0 var(--ink);
+    --shadow-md: 3px 3px 0 0 var(--ink);
+    --shadow-lg: 4px 4px 0 0 var(--ink);
+    --border-thin: 3px solid var(--ink);
+    --border-thick: 4px solid var(--ink);
+    --type-step-0: 12px;
+    --type-step-1: 14px;
+    --type-step-2: 16px;
+    --type-step-3: 22px;
+    --type-step-4: 28px;
+    --type-step-5: 36px;
+  }
+  html,
+  body {
+    overflow-x: hidden;
+  }
+  body {
+    font-size: 15px;
+  }
+  .tile {
+    min-height: 120px;
+    padding: 14px;
+  }
+  .tile-title {
+    font-size: 22px;
+  }
+  .tile-desc {
+    font-size: 13px;
+  }
+  .card,
+  .card-hero {
+    padding: 16px;
+  }
+  .btn {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .skip-link:focus {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* ---------- Wall (1600–2559px) ----------
+   Density + breathing room. The existing 1600–2559 desktop
+   block already bumps tokens; this layer adds container
+   max-widths and component-level polish. */
+@media (min-width: 1600px) and (max-width: 2559px) {
+  :root {
+    --type-step-0: 15px;
+    --type-step-1: 18px;
+    --type-step-2: 21px;
+    --type-step-3: 30px;
+    --type-step-4: 48px;
+    --type-step-5: 84px;
+  }
+  .tile {
+    min-height: 240px;
+    padding: 36px;
+  }
+  .card {
+    padding: 40px;
+  }
+  .card-hero {
+    padding: 56px;
+  }
+}
+
+/* ---------- Billboard (≥2560px) ----------
+   Read across the room. Massive type, generous spacing,
+   wider readable widths. The existing tv block bumps tokens
+   already — this adds component-level size growth. */
+@media (min-width: 2560px) {
+  :root {
+    --type-step-0: 20px;
+    --type-step-1: 24px;
+    --type-step-2: 28px;
+    --type-step-3: 44px;
+    --type-step-4: 72px;
+    --type-step-5: 132px;
+
+    --reading-narrow: 50ch;
+    --reading-default: 60ch;
+    --reading-wide: 72ch;
+  }
+  body {
+    letter-spacing: 0.005em;
+  }
+  .tile {
+    min-height: 360px;
+    padding: 56px;
+  }
+  .card {
+    padding: 64px;
+  }
+  .card-hero {
+    padding: 96px;
+  }
+  .btn {
+    padding: 28px 44px;
+  }
+  .label-tag {
+    padding: 8px 18px;
+    font-size: 18px;
+  }
+  .h-hero {
+    letter-spacing: -0.015em;
+  }
+  .h-h1,
+  .h-h2 {
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .brand:hover img {
+    animation: none;
+  }
+}
+
+/* ---------- Print ----------
+   Strip riso (ink-saver), drop big footer, force light bg. */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body::before,
+  body::after {
+    display: none !important;
+  }
+  .big-footer {
+    display: none !important;
+  }
+  .btn,
+  .tile,
+  .case-study,
+  .essay-card,
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+  .skip-link {
+    display: none;
+  }
+}

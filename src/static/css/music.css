@@ -1,0 +1,261 @@
+/* =========================================================
+   MUSIC — /music on aesv.io
+   Album-cover-as-the-design. Reuses listening.css for hero / now / tracks
+   primitives; this file adds the album grid + artist stack.
+   ========================================================= */
+
+.music {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(16px, 3vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vw, 80px);
+}
+
+/* Hero — terser than /listening: nouns, not paragraphs */
+.music-hero {
+  max-width: 60ch;
+}
+.music-hero .display {
+  letter-spacing: -0.03em;
+}
+.music-hero .lede {
+  max-width: 32ch;
+}
+
+/* ---------- ALBUMS GRID ---------- */
+/* Album art is the design. Hard ink shadow, no card chrome around the meta. */
+.album-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  /* fluid: 2 cols phone → 3 tablet → 4–6 desktop, governed by minmax */
+  grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
+  gap: clamp(16px, 2.4vw, 32px);
+}
+@media (max-width: 460px) {
+  /* Force 2-col on very small viewports — 1-col looks indulgent here. */
+  .album-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+@media (min-width: 1100px) {
+  .album-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.album-cell {
+  min-width: 0;
+}
+.album-link {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform var(--dur-press) var(--ease-press);
+}
+.album-link:hover {
+  transform: translate(-2px, -2px);
+  color: var(--ink);
+}
+.album-link:hover .album-art {
+  box-shadow: var(--shadow-lg);
+}
+.album-link:active .album-art {
+  transform: translate(6px, 6px);
+  box-shadow: var(--shadow-pressed);
+}
+
+.album-art {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  background: var(--ink);
+  overflow: hidden;
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    box-shadow var(--dur-press) var(--ease-press);
+}
+.album-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.album-meta {
+  min-width: 0;
+}
+.album-name {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1.15;
+  margin: 0 0 2px;
+  overflow-wrap: anywhere;
+}
+.album-artist {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.9vw, 13px);
+  letter-spacing: 0.02em;
+  color: var(--ink-mute);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- ARTIST STACK ---------- */
+/* Numbered list mirroring track-stack but with a thumbnail. */
+.artist-stack {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: var(--border-thin);
+}
+.artist-row {
+  display: grid;
+  grid-template-columns: clamp(40px, 4vw, 56px) clamp(48px, 5vw, 72px) 1fr;
+  gap: clamp(12px, 1.6vw, 24px);
+  align-items: center;
+  padding: clamp(12px, 1.6vw, 20px) clamp(8px, 1.6vw, 16px);
+  border-bottom: var(--border-thin);
+}
+.artist-num {
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 1.8vw, 28px);
+  font-weight: 700;
+  color: var(--lavender);
+}
+.artist-art {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 72px;
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  background: var(--cream);
+  overflow: hidden;
+  border-radius: 9999px;
+}
+.artist-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.artist-meta {
+  min-width: 0;
+}
+.artist-name {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 36px);
+  line-height: 1.05;
+  margin: 0 0 4px;
+  overflow-wrap: anywhere;
+}
+.artist-name a {
+  text-decoration: none;
+}
+.artist-name a:hover {
+  color: var(--lavender);
+  border-bottom: 3px solid var(--lavender);
+}
+.artist-stat {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.9vw, 13px);
+  color: var(--ink-mute);
+  margin: 0;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
+
+/* ---------- LEDGER (recent plays) ---------- */
+/* Compact numbered ledger: tighter than .track-stack, mono-led, ink rules. */
+.ledger {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: var(--border-thin);
+}
+.ledger-row {
+  display: grid;
+  grid-template-columns: clamp(36px, 3.6vw, 56px) 1fr auto;
+  gap: clamp(12px, 1.4vw, 20px);
+  align-items: baseline;
+  padding: clamp(10px, 1.2vw, 16px) clamp(8px, 1.4vw, 14px);
+  border-bottom: var(--border-thin);
+}
+.ledger-num {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.1vw, 15px);
+  font-weight: 700;
+  color: var(--lavender);
+  letter-spacing: 0.04em;
+}
+.ledger-meta {
+  min-width: 0;
+}
+.ledger-track {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.6vw, 22px);
+  line-height: 1.15;
+  margin: 0 0 2px;
+  overflow-wrap: anywhere;
+}
+.ledger-artist {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.9vw, 13px);
+  color: var(--ink-mute);
+  margin: 0;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+}
+.ledger-album {
+  color: var(--ink-mute);
+}
+.ledger-link {
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 1.2vw, 18px);
+  text-decoration: none;
+  color: var(--ink);
+  padding: 2px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 9999px;
+  transition:
+    background var(--dur-press) var(--ease-press),
+    color var(--dur-press) var(--ease-press);
+}
+.ledger-link:hover {
+  background: var(--lavender);
+  color: var(--offwhite);
+}
+
+/* Track stack inherits .track-stack from listening.css; only add album line styling */
+.track-album {
+  color: var(--ink-mute);
+  font-style: normal;
+}
+
+/* Watch-tiny safety: shrink hero gap, ensure footer cols don't burst */
+@media (max-width: 320px) {
+  .music {
+    gap: 24px;
+    padding: 12px;
+  }
+  .music-hero .display {
+    font-size: 40px;
+  }
+  .album-grid {
+    gap: 8px;
+  }
+  .album-art {
+    box-shadow: 3px 3px 0 0 var(--ink);
+  }
+  .ledger-row {
+    padding: 8px 6px;
+    gap: 8px;
+  }
+}

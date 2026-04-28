@@ -1,0 +1,733 @@
+/* =========================================================
+   GRDN — grdn.aesv.io garden
+   Reading-first prose, code, math, footnotes
+   ========================================================= */
+
+.grdn-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-4);
+  overflow-wrap: anywhere;
+}
+/* Discovery surface needs more horizontal room than reading prose. */
+.grdn-shell.garden-discovery {
+  max-width: 1200px;
+}
+.grdn-shell,
+.grdn-shell * {
+  min-width: 0;
+}
+.grdn-shell h1,
+.grdn-shell h2,
+.grdn-shell h3 {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .grdn-shell {
+    padding: var(--s-4) var(--s-2);
+  }
+}
+.prose pre {
+  white-space: pre;
+}
+.prose pre code {
+  white-space: pre;
+}
+.prose .katex-display {
+  max-width: 100%;
+}
+
+.grdn-hero {
+  margin-bottom: var(--s-8);
+}
+.grdn-hero .eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 16px;
+}
+.grdn-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 7vw, 72px);
+  line-height: 1;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+.grdn-hero p {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+  margin: 0;
+}
+
+/* =========================================================
+   GARDEN DISCOVERY — search + tag chips + note-card grid
+   Obsidian-style scattered notebook surface.
+   ========================================================= */
+
+.garden-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 0 var(--s-6);
+  padding: 16px;
+  background: var(--cream-deep);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+}
+.garden-search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.garden-search .field {
+  width: 100%;
+}
+.garden-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag-chip {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    box-shadow var(--dur-press) var(--ease-press),
+    background 120ms ease,
+    color 120ms ease;
+}
+.tag-chip:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-sm);
+}
+.tag-chip.is-active {
+  background: var(--ink);
+  color: var(--cream);
+}
+.tag-chip .count {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.garden-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: var(--s-3);
+}
+.garden-grid .empty {
+  font-family: var(--font-mono);
+  color: var(--ink-mute);
+  padding: 24px;
+  grid-column: 1 / -1;
+}
+
+.note-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: var(--s-4);
+  text-decoration: none;
+  color: var(--ink);
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    box-shadow var(--dur-press) var(--ease-press);
+}
+.note-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+  color: var(--ink);
+}
+.note-card:active {
+  transform: translate(6px, 6px);
+  box-shadow: var(--shadow-pressed);
+}
+.note-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+}
+.note-meta .tag {
+  padding: 2px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 9999px;
+  background: var(--cream);
+  color: var(--ink);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: var(--tracking-eyebrow);
+}
+.note-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.note-summary {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink-mute);
+  margin: 0;
+  line-height: 1.5;
+  flex: 1 1 auto;
+}
+.note-arrow {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  align-self: flex-end;
+  color: var(--ink);
+}
+.note-card:hover .note-arrow {
+  color: var(--lavender);
+}
+
+/* Single essay */
+.essay {
+  padding-top: var(--s-3);
+  max-width: 760px;
+}
+.essay-header {
+  margin-bottom: var(--s-6);
+}
+.essay-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+}
+.essay-meta .tag {
+  padding: 2px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 9999px;
+  background: var(--cream);
+  color: var(--ink);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: var(--tracking-eyebrow);
+}
+.essay-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 1.05;
+  margin: 12px 0 16px;
+  letter-spacing: -0.02em;
+}
+.essay-header .lede {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+  margin: 0;
+}
+
+/* Prose */
+.prose {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.prose > * + * {
+  margin-top: 1.4em;
+}
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+.prose h2 {
+  font-size: 32px;
+}
+.prose h3 {
+  font-size: 24px;
+}
+.prose p {
+  margin: 0;
+}
+.prose a {
+  color: var(--ink);
+  text-decoration-color: var(--lavender);
+}
+.prose a:hover {
+  color: var(--lavender);
+}
+.prose blockquote {
+  border-left: 4px solid var(--ink);
+  padding: 0 0 0 24px;
+  margin: 1.6em 0;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+.prose ul,
+.prose ol {
+  padding-left: 28px;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+.prose hr {
+  border: 0;
+  border-top: 2px dashed var(--ink-mute);
+  margin: 2em 0;
+}
+
+/* Inline + block code */
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 2px 6px;
+  border-radius: 0;
+}
+.prose pre {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 20px 24px;
+  overflow-x: auto;
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 1.6em 0;
+}
+.prose pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* KaTeX overrides on cream paper */
+.prose .katex {
+  font-size: 1.05em;
+  color: var(--ink);
+}
+.prose .katex-display {
+  margin: 1.6em 0;
+  padding: 16px;
+  background: var(--cream-deep);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+
+/* Footnotes */
+.prose .footnote-ref a {
+  text-decoration: none;
+  color: var(--lavender);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  vertical-align: super;
+}
+.prose .footnotes {
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 2px dashed var(--ink-mute);
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+.prose .footnotes hr {
+  display: none;
+}
+.prose .footnotes ol {
+  padding-left: 24px;
+}
+.prose .footnote-backref {
+  text-decoration: none;
+  margin-left: 6px;
+  color: var(--lavender);
+}
+
+/* Anchor link on headings */
+.prose .header-anchor {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* End nav */
+.essay-end {
+  margin-top: var(--s-8);
+  padding-top: var(--s-3);
+  border-top: 2px dashed var(--ink-mute);
+}
+.essay-end a {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+/* Footer */
+.grdn-footer {
+  margin-top: var(--s-8);
+  padding-top: var(--s-3);
+  border-top: 2px dashed var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.grdn-footer a {
+  color: var(--ink-mute);
+}
+
+/* =========================================================
+   GRDN — Tiered responsive layers
+   ========================================================= */
+
+/* ---------- Watch tier (<360px) ----------
+   Index: only the most recent essay. Essay: 28ch + system font. */
+@media (max-width: 359px) {
+  .grdn-shell {
+    padding: 12px;
+  }
+  .grdn-nav .nav-links {
+    font-size: 12px;
+    gap: 10px;
+  }
+  .grdn-hero {
+    margin-bottom: 20px;
+  }
+  .grdn-hero h1 {
+    font-size: 28px;
+  }
+  .grdn-hero p {
+    font-size: 14px;
+    /* Trim to a one-line teaser */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Index: only the first (most-recent) essay card */
+  .essay-list .essay-card:not(:first-of-type) {
+    display: none;
+  }
+  .essay-card {
+    padding: 14px;
+  }
+  .essay-card h2 {
+    font-size: 22px;
+    line-height: 1.1;
+  }
+  .essay-card p {
+    font-size: 14px;
+  }
+
+  /* Essay: linear, 28ch, system font fallback */
+  .essay-header h1 {
+    font-size: 26px;
+  }
+  .essay-header .lede {
+    font-size: 16px;
+  }
+  .prose {
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 28ch;
+  }
+  .prose h2 {
+    font-size: 22px;
+  }
+  .prose h3 {
+    font-size: 18px;
+  }
+  .prose pre {
+    font-size: 12px;
+    padding: 12px;
+  }
+  .grdn-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ---------- Wrist band (≤280px) ----------
+   Tighter than watch tier — used as an over-floor when the
+   viewport is genuinely sub-watch. */
+@media (max-width: 280px) {
+  .grdn-shell {
+    padding: 8px;
+  }
+  .grdn-nav {
+    margin-bottom: 16px;
+  }
+  .grdn-nav .nav-links {
+    font-size: 11px;
+    gap: 8px;
+  }
+  .grdn-hero h1 {
+    font-size: 22px;
+  }
+  .essay-card h2 {
+    font-size: 18px;
+  }
+  .essay-card p {
+    font-size: 13px;
+  }
+  .essay-meta {
+    font-size: 10px;
+    gap: 6px;
+  }
+  .essay-meta .tag {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+  .prose {
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: 26ch;
+  }
+}
+
+/* ---------- Phone tier (360–639px) ---------- */
+@media (min-width: 360px) and (max-width: 639px) {
+  .essay-card {
+    padding: 18px;
+  }
+  .grdn-nav .nav-links a {
+    padding: 8px 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* ---------- Tablet tier (640–1023px) ----------
+   2-col essay cards. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .essay-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ---------- Desktop tier (1600–2559px) ---------- */
+@media (min-width: 1600px) and (max-width: 2559px) {
+  .grdn-shell {
+    max-width: 880px;
+    padding: 80px 48px;
+  }
+  .prose {
+    font-size: 20px;
+    line-height: 1.75;
+  }
+  .prose h2 {
+    font-size: 36px;
+  }
+  .prose h3 {
+    font-size: 28px;
+  }
+  .essay-header h1 {
+    font-size: 72px;
+  }
+  /* Index pages get a 2-col essay grid at this band — the
+     prose reading width still wins on essay/:slug. */
+  body:has(.essay-list) .grdn-shell {
+    max-width: 1400px;
+  }
+  .essay-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .essay-card {
+    padding: 40px;
+  }
+  .essay-card h2 {
+    font-size: 40px;
+  }
+  .essay-card p {
+    font-size: 18px;
+  }
+}
+
+/* ---------- Per-card container queries ----------
+   When an essay card sits in a 3-col grid on billboard the
+   internal type follows the cell, not the viewport. */
+@container (min-width: 480px) {
+  .essay-card h2 {
+    font-size: clamp(28px, 6cqw, 56px);
+  }
+  .essay-card p {
+    font-size: clamp(15px, 2.4cqw, 22px);
+  }
+}
+
+/* ---------- TV / billboard tier (≥2560px) ----------
+   Index: 3-column essay cards, larger type.
+   Essay: ~80ch with massive line-height for distance reading. */
+@media (min-width: 2560px) {
+  .grdn-shell {
+    max-width: none;
+    padding: 120px 96px;
+  }
+
+  .grdn-nav {
+    margin-bottom: 96px;
+  }
+  .grdn-nav .brand {
+    font-size: 36px;
+    gap: 24px;
+  }
+  .grdn-nav .brand img {
+    width: 64px;
+    height: 64px;
+  }
+  .grdn-nav .nav-links {
+    font-size: 24px;
+    gap: 48px;
+  }
+
+  .grdn-hero {
+    margin-bottom: 120px;
+    max-width: 2200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .grdn-hero h1 {
+    font-size: 200px;
+    line-height: 0.95;
+    max-width: 14ch;
+  }
+  .grdn-hero p {
+    font-size: 36px;
+    max-width: 56ch;
+    line-height: 1.5;
+  }
+  .grdn-hero .eyebrow {
+    font-size: 22px;
+    margin-bottom: 32px;
+  }
+
+  /* Index: 3-column essay cards */
+  .essay-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    max-width: 3000px;
+    margin: 0 auto;
+  }
+  .essay-card {
+    padding: 56px;
+  }
+  .essay-card h2 {
+    font-size: 56px;
+    line-height: 1.05;
+  }
+  .essay-card p {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+  .essay-card .read-arrow {
+    font-size: 18px;
+    margin-top: 24px;
+  }
+  .essay-meta {
+    font-size: 16px;
+    gap: 16px;
+  }
+  .essay-meta .tag {
+    font-size: 14px;
+    padding: 4px 14px;
+  }
+
+  /* Single essay: ~80ch, big line-height, generous header */
+  .essay-header {
+    margin-bottom: 96px;
+    max-width: 80ch;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 48px;
+  }
+  .essay-header h1 {
+    font-size: 140px;
+    line-height: 1;
+  }
+  .essay-header .lede {
+    font-size: 36px;
+    line-height: 1.5;
+  }
+
+  .prose {
+    font-size: 32px;
+    line-height: 1.9;
+    max-width: 80ch;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 48px;
+  }
+  .prose h2 {
+    font-size: 64px;
+  }
+  .prose h3 {
+    font-size: 48px;
+  }
+  .prose pre {
+    font-size: 22px;
+    padding: 32px 40px;
+  }
+  .prose blockquote {
+    padding-left: 48px;
+    border-left-width: 8px;
+  }
+
+  .essay-end {
+    max-width: 80ch;
+    margin: 120px auto 0;
+    padding: 32px 48px 0;
+  }
+  .essay-end a {
+    font-size: 24px;
+  }
+  .grdn-footer {
+    font-size: 18px;
+    padding-top: 32px;
+    max-width: 80ch;
+    margin: 96px auto 0;
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}

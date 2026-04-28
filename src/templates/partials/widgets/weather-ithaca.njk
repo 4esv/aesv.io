@@ -1,0 +1,92 @@
+{# Three vertical line gauges, each filled bottom-up to its level.
+   Temp:    0–100°F
+   Pressure: 980–1040 hPa (typical surface range)
+   Precip:   0–100%
+   Server-renders the fill height so the gauge is correct at load. #}
+{% set tempF = weather.tempF if weather else null %}
+{% set pressureHpa = weather.pressureHpa if weather else null %}
+{% set precipPct = weather.precipPct if weather else null %}
+
+{% set tempPct = 0 %}
+{% if tempF != null %}
+  {% set tClamped = tempF %}
+  {% if tClamped < 0 %}{% set tClamped = 0 %}{% endif %}
+  {% if tClamped > 100 %}{% set tClamped = 100 %}{% endif %}
+  {% set tempPct = tClamped %}
+{% endif %}
+
+{% set pressPct = 0 %}
+{% if pressureHpa != null %}
+  {% set pNorm = ((pressureHpa - 980) / 60) * 100 %}
+  {% if pNorm < 0 %}{% set pNorm = 0 %}{% endif %}
+  {% if pNorm > 100 %}{% set pNorm = 100 %}{% endif %}
+  {% set pressPct = pNorm %}
+{% endif %}
+
+{% set precPct = 0 %}
+{% if precipPct != null %}{% set precPct = precipPct %}{% endif %}
+
+<div class="widget-info" aria-label="Time, date, location, weather for Ithaca">
+  {# TL — Analog clock #}
+  <div class="info-quad info-clock-quad">
+    <svg viewBox="0 0 60 60" class="mini-clock" role="img" aria-hidden="true">
+      <circle cx="30" cy="30" r="26" class="mini-bezel" />
+      <g class="mini-ticks">
+        {% for deg in [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330] %}
+          <line x1="30" y1="6" x2="30" y2="{% if deg % 90 == 0 %}11{% else %}9{% endif %}" transform="rotate({{ deg }} 30 30)" class="tick {% if deg % 90 == 0 %}tick-long{% endif %}" />
+        {% endfor %}
+      </g>
+      <g id="info-clock-hour" class="mini-hand" transform="rotate(0 30 30)">
+        <rect x="29" y="16" width="2" height="14" rx="1" />
+      </g>
+      <g id="info-clock-min" class="mini-hand" transform="rotate(0 30 30)">
+        <rect x="29.5" y="9" width="1" height="21" rx="0.5" />
+      </g>
+      <circle cx="30" cy="30" r="1.6" class="mini-pivot" />
+    </svg>
+  </div>
+
+  {# TR — Calendar page · month / weekday / day #}
+  <div class="info-quad info-cal-quad">
+    <div class="cal-card">
+      <div class="cal-month" id="info-month">—</div>
+      <div class="cal-weekday" id="info-weekday">—</div>
+      <div class="cal-day" id="info-day">—</div>
+    </div>
+  </div>
+
+  {# BL — Location #}
+  <div class="info-quad info-loc-quad">
+    <div class="loc-stack">
+      <span class="loc-city">Ithaca</span>
+      <span class="loc-state">NY</span>
+    </div>
+  </div>
+
+  {# BR — Weather: three vertical line gauges #}
+  <div class="info-quad info-weather-quad">
+    <div class="weather-gauges" role="img" aria-label="Temperature {{ tempF if tempF != null else '—' }} F, pressure {{ pressureHpa if pressureHpa != null else '—' }} hPa, precipitation {{ precipPct if precipPct != null else '—' }} percent">
+      <div class="gauge">
+        <div class="gauge-track">
+          <span class="gauge-fill" style="height: {{ tempPct }}%"></span>
+        </div>
+        <div class="gauge-value">{% if tempF != null %}{{ tempF }}°{% else %}—{% endif %}</div>
+        <div class="gauge-label">tmp</div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-track">
+          <span class="gauge-fill" style="height: {{ pressPct }}%"></span>
+        </div>
+        <div class="gauge-value">{% if pressureHpa != null %}{{ pressureHpa }}{% else %}—{% endif %}</div>
+        <div class="gauge-label">hPa</div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-track">
+          <span class="gauge-fill" style="height: {{ precPct }}%"></span>
+        </div>
+        <div class="gauge-value">{% if precipPct != null %}{{ precipPct }}%{% else %}—{% endif %}</div>
+        <div class="gauge-label">rain</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,19 +11,24 @@ import { registerErrorHandler } from './errors/handler.js'
 import { registerFilters, registerGlobals } from './lib/template-helpers.js'
 import { registerGridMiddleware } from './middleware/grid.js'
 import { apiRoutes, getPageData } from './routes/api.js'
+import { registerChessRoutes } from './routes/chess.js'
 import { registerGardenRoutes } from './routes/garden.js'
+import { registerGrdnRoutes } from './routes/grdn.js'
+import { registerMusicRoutes } from './routes/music.js'
 import { registerPageRoutes } from './routes/pages.js'
+import { registerWorkRoutes } from './routes/work.js'
 
 const TEMPLATES_DIR = join(import.meta.dirname, 'templates')
 const STATIC_DIR = join(import.meta.dirname, 'static')
 const CSP_HEADER = [
   "default-src 'none'",
   "script-src 'self'",
-  "style-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
-  "img-src 'self'",
+  "img-src 'self' data: https://i.scdn.co https://mosaic.scdn.co https://image-cdn-ak.spotifycdn.com https://image-cdn-fa.spotifycdn.com",
   "connect-src 'self'",
   "manifest-src 'self'",
+  "worker-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
 ].join('; ')
@@ -69,6 +74,9 @@ export async function build(opts = {}) {
     if (request.url.endsWith('.woff2')) {
       reply.header('cache-control', 'public, max-age=31536000, immutable')
     }
+    if (config.env === 'development' && /\.(css|js|njk|html)$/.test(request.url.split('?')[0])) {
+      reply.header('cache-control', 'no-store')
+    }
     reply.header('content-security-policy', CSP_HEADER)
   })
 
@@ -76,6 +84,10 @@ export async function build(opts = {}) {
   fastify.decorate('getPageData', getPageData)
 
   await registerGardenRoutes(fastify)
+  await registerWorkRoutes(fastify)
+  await registerGrdnRoutes(fastify)
+  await registerMusicRoutes(fastify)
+  await registerChessRoutes(fastify)
   await registerPageRoutes(fastify)
   registerErrorHandler(fastify)
 
