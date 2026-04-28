@@ -1,0 +1,11 @@
+{# Strava route polyline as an SVG. Caller provides `strava` with
+   `routePath`, `name`, `distance`. #}
+<svg viewBox="0 0 100 100" class="strava-route" role="img"
+     aria-label="Route map for {{ strava.name }}, {{ strava.distance }} miles" preserveAspectRatio="xMidYMid meet">
+  <path d="{{ strava.routePath }}"
+        fill="none"
+        stroke="#1A1A1A"
+        stroke-width="2.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>

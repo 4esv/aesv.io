@@ -1,53 +1,21 @@
-// /work — portfolio + hire-me
-//
-// Case studies are now markdown files in content/work/. Each .md has
-// frontmatter (year, tag, slug, summary, stack, impact) and a body
-// rendered through the same renderMarkdown chain the garden uses.
+// /work — portfolio + hire-me. Case studies are markdown files in
+// content/work/ with frontmatter (year, tag, slug, summary, stack, impact).
 
-import { readdir, readFile } from 'fs/promises'
-import { join, parse } from 'path'
+import { join } from 'path'
 
-import matter from 'gray-matter'
+import { loadMarkdownDir } from '../lib/content.js'
 
-import { renderMarkdown } from '../lib/markdown.js'
-
-const CASE_STUDIES_DIR = join(import.meta.dirname, '../../content/work')
-
-let cache = null
-const USE_CACHE = process.env.NODE_ENV === 'production'
-
-async function loadCaseStudies() {
-  if (cache && USE_CACHE) return cache
-  const entries = await readdir(CASE_STUDIES_DIR, { withFileTypes: true })
-  const studies = []
-  for (const entry of entries) {
-    if (!entry.isFile() || !entry.name.endsWith('.md')) continue
-    const slug = parse(entry.name).name
-    const raw = await readFile(join(CASE_STUDIES_DIR, entry.name), 'utf-8')
-    const { data, content } = matter(raw)
-    const date =
-      data.date instanceof Date
-        ? data.date.toISOString().slice(0, 10)
-        : typeof data.date === 'string'
-          ? data.date
-          : null
-    studies.push({
-      slug: data.slug || slug,
-      title: data.title || slug,
-      date,
-      year: data.year || (date ? date.slice(0, 4) : ''),
-      tag: data.tag || '',
-      summary: data.summary || '',
-      stack: data.stack || '',
-      impact: data.impact || '',
-      raw: content,
-    })
-  }
-  // Most recent first.
-  studies.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))
-  cache = studies
-  return studies
-}
+const loadCaseStudies = loadMarkdownDir(
+  join(import.meta.dirname, '../../content/work'),
+  (base, data) => ({
+    ...base,
+    slug: data.slug || base.slug,
+    year: data.year || (base.date ? base.date.slice(0, 4) : ''),
+    tag: data.tag || '',
+    stack: data.stack || '',
+    impact: data.impact || '',
+  })
+)
 
 const SERVICES = [
   {
@@ -87,12 +55,11 @@ export async function registerWorkRoutes(fastify) {
     const studies = await loadCaseStudies()
     const study = studies.find((s) => s.slug === req.params.slug)
     if (!study) return reply.redirect('/work')
-    const html = renderMarkdown(study.raw)
     return reply.view('work/case-study.njk', {
       site: { ...fastify.config.site, name: 'work', tagline: study.summary },
       route: `/work/${study.slug}`,
       study,
-      html,
+      html: study.html,
     })
   })
 }

@@ -1,14 +1,6 @@
-// /music — Spotify deep-dive on aesv.io
-//
-// Album-led landing page. Pulls recent plays, top tracks (medium-term)
-// and top artists in parallel, then derives a deduped album view from
-// the union of recent + top tracks. The dashboard widget on `/` and the
-// existing `/listening` page keep using the minimal getTopTracks /
-// getTopArtists shape; this route uses the *Full variants because it
-// needs album art + artist images to render.
-//
-// Caching: 5-minute TTL keyed per source function. Mirrors the
-// background refresh interval used by routes/api.js.
+// /music — Spotify deep-dive. Album-led landing page; pulls recent +
+// top tracks + top artists in parallel and derives a deduped album view.
+// 5-min TTL per source.
 
 import { getRecentTracks, getTopArtistsFull, getTopTracksFull } from '../services/spotify.js'
 
@@ -41,7 +33,6 @@ const MUSIC_TO_ME = [
 const CACHE_TTL_MS = 5 * 60 * 1000
 const NOW_PLAYING_WINDOW_MS = 10 * 60 * 1000
 
-// PERF: per-key in-memory cache, hydrates on demand. Three keys: recent, top, artists.
 const cache = new Map()
 
 async function cached(key, loader) {
@@ -53,15 +44,13 @@ async function cached(key, loader) {
     cache.set(key, { at: now, value })
     return value
   } catch {
-    // NOTE: on error, fall back to last known good value if any; otherwise empty.
+    // Fall back to last known good value on error to avoid blank UI.
     return hit?.value ?? null
   }
 }
 
-/**
- * Dedupe albums from a list of tracks. Albums missing art are dropped — the
- * page is art-led, a chrome-only tile is worse signal than a shorter grid.
- */
+// Albums missing art are dropped — page is art-led; chrome-only tile is
+// worse signal than a shorter grid.
 function deriveAlbums(tracks, max) {
   const seen = new Map()
   for (const t of tracks || []) {
@@ -91,15 +80,13 @@ function pickNow(recent) {
 }
 
 export async function registerMusicRoutes(fastify) {
-  // Old /listening URL collapses into /music — single canonical page now.
   fastify.get('/listening', async (_request, reply) => reply.redirect('/music', 301))
 
   fastify.get('/music', async (request, reply) => {
     const { grid } = request
     const cfg = fastify.config.spotify
 
-    // Each source wrapped — partial failures must still render. Auth
-    // expiry returns []/null from the service, so this is belt-and-braces.
+    // Each source wrapped — partial failures must still render.
     const [recent, top, topArtists] = await Promise.all([
       cached('recent', () => getRecentTracks(cfg, { limit: RECENT_LIMIT })).catch(() => []),
       cached('top', () => getTopTracksFull(cfg, { limit: TOP_TRACK_LIMIT })).catch(() => []),
@@ -110,12 +97,9 @@ export async function registerMusicRoutes(fastify) {
     const topList = Array.isArray(top) ? top : []
     const artistsList = Array.isArray(topArtists) ? topArtists : []
 
-    // Recents first (fresher signal); top tracks fill in for breadth.
     const albums = deriveAlbums([...recentList, ...topList], ALBUM_LIMIT)
-    // NOTE: keyed `nowPlaying` (not `now`) — `now` is a global Date in template-helpers.
+    // `nowPlaying` (not `now`) — `now` is a global Date in template-helpers.
     const nowPlaying = pickNow(recentList)
-    // Recent log: skip the lead track (already shown as last-played) and
-    // show the next RECENT_LOG_SIZE entries.
     const leadIndex = nowPlaying ? -1 : 0
     const recentLog = recentList.slice(leadIndex + 1, leadIndex + 1 + RECENT_LOG_SIZE)
 

@@ -37,6 +37,11 @@ export async function handleCallback(code, config) {
   return data.access_token
 }
 
+// Module-level access-token cache. Spotify access tokens live ~1h;
+// re-use until ~60s before expiry instead of disk-reading + POST per call.
+let tokenCache = { token: null, expiresAt: 0 }
+const TOKEN_REFRESH_MARGIN_MS = 60_000
+
 async function refreshAccessToken(config) {
   const tokens = await readTokens()
   const refreshToken = tokens.spotify_refresh_token
@@ -61,11 +66,21 @@ async function refreshAccessToken(config) {
   if (data.refresh_token) {
     await writeTokens({ spotify_refresh_token: data.refresh_token })
   }
+  const ttlMs = (data.expires_in || 3600) * 1000
+  tokenCache = {
+    token: data.access_token,
+    expiresAt: Date.now() + ttlMs - TOKEN_REFRESH_MARGIN_MS,
+  }
   return data.access_token
 }
 
+async function getAccessToken(config) {
+  if (tokenCache.token && Date.now() < tokenCache.expiresAt) return tokenCache.token
+  return refreshAccessToken(config)
+}
+
 async function fetchApi(path, config) {
-  const token = await refreshAccessToken(config)
+  const token = await getAccessToken(config)
   if (!token) return null
 
   const res = await fetch(`${API_BASE}${path}`, {

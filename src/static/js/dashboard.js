@@ -56,18 +56,23 @@
     return n < 10 ? '0' + n : '' + n
   }
 
+  // Cache last-rendered text per element so the per-second tick only
+  // touches the DOM when the value actually changed.
+  function setText(el, value) {
+    if (!el) return
+    if (el.__last === value) return
+    el.textContent = value
+    el.__last = value
+  }
+
   function tickInfo() {
     var p = nyParts()
     var hour12 = p.hour % 12 || 12
     var ampm = p.hour < 12 ? 'am' : 'pm'
-    var clockEl = document.getElementById('info-clock-text')
-    if (clockEl) clockEl.textContent = hour12 + ':' + pad(p.minute) + ampm
-    var mEl = document.getElementById('info-month')
-    var wEl = document.getElementById('info-weekday')
-    var dEl = document.getElementById('info-day')
-    if (mEl) mEl.textContent = p.month
-    if (wEl) wEl.textContent = p.weekday
-    if (dEl) dEl.textContent = p.day
+    setText(document.getElementById('info-clock-text'), hour12 + ':' + pad(p.minute) + ampm)
+    setText(document.getElementById('info-month'), p.month)
+    setText(document.getElementById('info-weekday'), p.weekday)
+    setText(document.getElementById('info-day'), p.day)
   }
   tickInfo()
   setInterval(tickInfo, 1000)

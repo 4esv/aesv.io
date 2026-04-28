@@ -38,6 +38,11 @@ export async function handleCallback(code, config) {
   return data.access_token
 }
 
+// Module-level access-token cache (Strava tokens live ~6h). Re-use until
+// ~60s before expiry instead of disk-reading + POST per call.
+let tokenCache = { token: null, expiresAt: 0 }
+const TOKEN_REFRESH_MARGIN_MS = 60_000
+
 async function refreshAccessToken(config) {
   const tokens = await readTokens()
   const refreshToken = tokens.strava_refresh_token
@@ -60,7 +65,18 @@ async function refreshAccessToken(config) {
   if (data.refresh_token) {
     await writeTokens({ strava_refresh_token: data.refresh_token })
   }
+  // Strava returns absolute expires_at (epoch seconds) and expires_in.
+  const expiresAtMs = data.expires_at ? data.expires_at * 1000 : Date.now() + (data.expires_in || 21600) * 1000
+  tokenCache = {
+    token: data.access_token,
+    expiresAt: expiresAtMs - TOKEN_REFRESH_MARGIN_MS,
+  }
   return data.access_token
+}
+
+async function getAccessToken(config) {
+  if (tokenCache.token && Date.now() < tokenCache.expiresAt) return tokenCache.token
+  return refreshAccessToken(config)
 }
 
 function formatDuration(seconds) {
@@ -141,24 +157,33 @@ function polylineToSvgPath(coords, { viewBox = 100, padding = 8 } = {}) {
   return d
 }
 
+// 5-minute TTL on the last-activity payload — same cadence as the
+// background refresh in routes/api.js.
+const LAST_ACTIVITY_TTL_MS = 5 * 60 * 1000
+let lastActivityCache = { value: null, at: 0 }
+
 export async function getLastActivity(config) {
-  const token = await refreshAccessToken(config)
-  if (!token) return null
+  if (lastActivityCache.value && Date.now() - lastActivityCache.at < LAST_ACTIVITY_TTL_MS) {
+    return lastActivityCache.value
+  }
+
+  const token = await getAccessToken(config)
+  if (!token) return lastActivityCache.value ?? null
 
   const res = await fetch(`${API_BASE}/athlete/activities?per_page=1`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 
-  if (!res.ok) return null
+  if (!res.ok) return lastActivityCache.value ?? null
 
   const [activity] = await res.json()
-  if (!activity) return null
+  if (!activity) return lastActivityCache.value ?? null
 
   const polyline = activity.map?.summary_polyline || activity.map?.polyline || ''
   const coords = decodePolyline(polyline)
   const routePath = polylineToSvgPath(coords)
 
-  return {
+  const value = {
     name: activity.name,
     type: activity.sport_type || activity.type,
     distance: metersToMiles(activity.distance),
@@ -167,4 +192,6 @@ export async function getLastActivity(config) {
     routePath,
     routePoints: coords.length,
   }
+  lastActivityCache = { value, at: Date.now() }
+  return value
 }

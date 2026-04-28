@@ -128,36 +128,16 @@
 }
 
 
-/* ---------- All widget cells share the same frame ----------
-   Border + cartoon shadow match the .tile rule below so every cell
-   on the dashboard reads as one family. Individual cells (spotify,
-   chess, hobbies) just opt in by adding their identifier class.
-   The bare modifier `widget-cell-bare` opts out (top-left info). */
+/* Cell variants share the .tile frame so every cell reads as one
+   family. Press behavior is in foundation's :where(.tile, ...) rule. */
 .widget-cell.spotify,
-.widget-cell.chess,
 .widget-cell.hobbies {
   background: var(--cream);
   border: var(--border-thin);
   box-shadow: var(--shadow-md);
   overflow: hidden;
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
 }
-.widget-cell.spotify:hover,
-.widget-cell.chess:hover,
-.widget-cell.hobbies:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-lg);
-}
-.widget-cell.spotify:active,
-.widget-cell.chess:active,
-.widget-cell.hobbies:active {
-  transform: translate(6px, 6px);
-  box-shadow: var(--shadow-pressed);
-}
-.widget-spotify,
-.widget-chess {
+.widget-spotify {
   width: 100%;
   height: 100%;
   background: var(--cream);
@@ -165,18 +145,7 @@
 .widget-spotify .widget-art {
   background: var(--ink);
 }
-.widget-chess .widget-art {
-  padding: 0;
-  background: var(--cream);
-}
-.widget-chess svg {
-  background: var(--cream);
-}
 
-/* ---------- Hover overlay for cell-link wrappers (chess) ----------
-   Same darken-and-show-label pattern as .widget-spotify .listen-overlay.
-   The cell-hover-label sits on top of the chess board and fades in
-   on hover/focus, matching the music widget's interaction. */
 .widget-cell-link {
   position: relative;
   overflow: hidden;
@@ -318,73 +287,6 @@
   color: var(--ink-mute);
 }
 
-/* ---------- Cube widget (replaces clock cell) ----------
-   Pure CSS 3D cube. Cream faces, ink edges. Auto-rotates with
-   damping; mousedown/touch drag rotates manually. JS lives in
-   /js/dashboard.js. No card frame, no shadow. */
-.widget-cube {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 1600px;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-}
-.widget-cube.is-dragging {
-  cursor: grabbing;
-}
-.widget-cube .cube {
-  position: relative;
-  width: 60%;
-  aspect-ratio: 1 / 1;
-  transform-style: preserve-3d;
-  transform: rotateX(-25deg) rotateY(-35deg);
-  /* --cube-half is set in px by /js/dashboard.js based on the
-     cube's actual rendered size; translateZ does not accept %. */
-  --cube-half: 80px;
-}
-.widget-cube .cube-face {
-  position: absolute;
-  inset: 0;
-  background: var(--cream);
-  box-sizing: border-box;
-  /* No border — borders on adjacent 3D faces z-fight at the cube
-     edges and produce visible flicker during rotation. The 3D
-     reads through face-direction shading instead (below). */
-  backface-visibility: hidden;
-  /* Outline at exactly 1px in ink to give a hairline edge without
-     adding box thickness that interferes with translateZ math. */
-  outline: 1px solid var(--ink);
-  outline-offset: -0.5px;
-}
-.widget-cube .cube-face-front  { transform: translateZ(var(--cube-half)); }
-.widget-cube .cube-face-back   { transform: rotateY(180deg) translateZ(var(--cube-half)); }
-.widget-cube .cube-face-right  { transform: rotateY(90deg) translateZ(var(--cube-half)); }
-.widget-cube .cube-face-left   { transform: rotateY(-90deg) translateZ(var(--cube-half)); }
-.widget-cube .cube-face-top    { transform: rotateX(90deg) translateZ(var(--cube-half)); }
-.widget-cube .cube-face-bottom { transform: rotateX(-90deg) translateZ(var(--cube-half)); }
-
-/* Stronger face-direction shading — without borders the differential
-   shading becomes the primary cue that this is 3D. */
-.widget-cube .cube-face-front  { background: var(--cream); }
-.widget-cube .cube-face-back   { background: color-mix(in srgb, var(--cream) 70%, var(--ink)); }
-.widget-cube .cube-face-left   { background: color-mix(in srgb, var(--cream) 82%, var(--ink)); }
-.widget-cube .cube-face-right  { background: color-mix(in srgb, var(--cream) 92%, var(--ink)); }
-.widget-cube .cube-face-bottom { background: color-mix(in srgb, var(--cream) 78%, var(--ink)); }
-.widget-cube .cube-face-top    { background: color-mix(in srgb, var(--cream) 96%, var(--ink)); }
-
-@media (prefers-reduced-motion: reduce) {
-  .widget-cube .cube { transition: none; }
-}
-
-/* (.widget-time legacy text styles removed — replaced by .widget-clock above) */
-
 /* Hobbies widget shares the unified .widget-cell frame above. */
 .widget-hobbies {
   position: relative;
@@ -486,9 +388,8 @@
   overflow-wrap: anywhere;
 }
 
-/* ---------- Tile (work · about · files) — single-word identifier
-   bottom-left, ↗ inline. No eyebrow, no description, no second arrow.
-   The label IS the tile. Lavender on the primary (work) variant. */
+/* Tile — single-word identifier bottom-left. Lavender on .tile-primary.
+   Press behavior comes from foundation's :where(.tile, ...) rule. */
 .tile {
   position: relative;
   display: block;
@@ -499,18 +400,9 @@
   color: var(--ink);
   width: 100%;
   height: 100%;
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
 }
 .tile:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-lg);
   color: var(--ink);
-}
-.tile:active {
-  transform: translate(6px, 6px);
-  box-shadow: var(--shadow-pressed);
 }
 
 /* Single label rule — applies to both .tile-label (work / about / files)
@@ -553,13 +445,9 @@
   color: var(--cream);
 }
 
-/* Big-footer styles moved to foundation.css so every page using
-   foundation can render the shared partial without pulling
-   dashboard.css. Brand styles also live in foundation.css. */
-
 /* =========================================================
    DASHBOARD — Per-mode chrome adjustments
-   Layout (column count) is set by the five-mode block at the top
+   Layout (column count) is set by the four-mode block at the top
    of this file. Rules below tune padding, type, and the footer
    shell at extreme viewport sizes; they do not override the grid
    layout itself.
@@ -591,15 +479,6 @@
   .dashboard-greeting {
     font-size: 14px;
   }
-  .widget-spotify .listen-overlay {
-    padding: 12px;
-  }
-  .widget-spotify .listen-overlay .label {
-    display: none;
-  }
-  .widget-spotify .listen-overlay .cta {
-    font-size: 18px;
-  }
 }
 
 /* ---------- Watch / tamagotchi chrome — header stacks, greeting
@@ -622,9 +501,6 @@
   }
   .dashboard-greeting .meta {
     display: none;
-  }
-  .widget-spotify .listen-overlay .cta {
-    font-size: 22px;
   }
 }
 

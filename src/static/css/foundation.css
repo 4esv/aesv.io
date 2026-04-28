@@ -348,13 +348,16 @@ a:hover {
   font-size: var(--fs-small);
 }
 
-.t-eyebrow {
+.t-eyebrow,
+.block-eyebrow {
   font-family: var(--font-mono);
   font-size: var(--fs-eyebrow);
-  font-weight: 700;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--ink-mute);
+}
+.block-eyebrow {
+  margin-bottom: 8px;
 }
 
 .t-mono {
@@ -528,30 +531,6 @@ a:hover {
   text-transform: uppercase;
 }
 
-/* Time / weather as text-stickers (no image) */
-.widget-bigtext {
-  font-family: var(--font-display);
-  font-size: 96px;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  padding: 24px 16px;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
-  text-align: center;
-  word-break: break-word;
-}
-.widget-bigtext.alt {
-  background: var(--lavender);
-  color: var(--offwhite);
-}
-@media (max-width: 640px) {
-  .widget-bigtext {
-    font-size: 64px;
-  }
-}
-
 /* ---------- Field ---------- */
 .field {
   font-family: var(--font-mono);
@@ -587,18 +566,47 @@ a:hover {
   font-weight: 700;
 }
 
-/* ---------- Layout ---------- */
-.shell {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: var(--s-6) var(--s-4);
+/* Press-tile interaction — the cartoon-card shadow + nudge that
+   every clickable tile/card on the site shares. Components carry the
+   base box-shadow (--shadow-md / --shadow-sm) themselves; this only
+   animates the press. :where() keeps specificity at 0 so components
+   can still override locally without breaking. */
+:where(
+    .surface-press,
+    .tile,
+    .widget-cell.spotify,
+    .widget-cell.hobbies,
+    .case-card,
+    .note-card
+  ) {
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    box-shadow var(--dur-press) var(--ease-press);
 }
-@media (max-width: 640px) {
-  .shell {
-    padding: var(--s-4) var(--s-2);
-  }
+:where(
+    .surface-press,
+    .tile,
+    .widget-cell.spotify,
+    .widget-cell.hobbies,
+    .case-card,
+    .note-card
+  ):hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+:where(
+    .surface-press,
+    .tile,
+    .widget-cell.spotify,
+    .widget-cell.hobbies,
+    .case-card,
+    .note-card
+  ):active {
+  transform: translate(6px, 6px);
+  box-shadow: var(--shadow-pressed);
 }
 
+/* ---------- Layout ---------- */
 .brand {
   display: inline-flex;
   align-items: center;
@@ -864,9 +872,6 @@ a:hover {
   a {
     min-height: 24px;
   }
-  .shell {
-    padding: var(--s-3) var(--s-2);
-  }
   .brand {
     font-size: 16px;
     gap: 8px;
@@ -886,10 +891,6 @@ a:hover {
   }
   .h-h3 {
     font-size: 18px;
-  }
-  .widget-bigtext {
-    font-size: 44px;
-    padding: 16px 10px;
   }
   /* Skip the heavy footer at watch */
   .big-footer {
@@ -911,10 +912,6 @@ a:hover {
     --fs-body: 19px;
     --fs-small: 15px;
     --fs-eyebrow: 13px;
-  }
-  .shell {
-    max-width: 1440px;
-    padding: var(--s-8) var(--s-6);
   }
 }
 
@@ -950,10 +947,6 @@ a:hover {
   body {
     line-height: 1.6;
   }
-  .shell {
-    max-width: 2200px;
-    padding: var(--s-12) var(--s-8);
-  }
   .btn {
     padding: 22px 36px;
     font-size: 22px;
@@ -966,10 +959,6 @@ a:hover {
     width: 56px;
     height: 56px;
   }
-  .widget-bigtext {
-    font-size: 180px;
-    padding: 48px 32px;
-  }
 }
 
 /* ---------- Container-query opt-in ----------
@@ -977,7 +966,6 @@ a:hover {
    viewport — useful for tiles in auto-fit grids. */
 .tile,
 .widget-cell,
-.essay-card,
 .service,
 .case-study {
   container-type: inline-size;
@@ -1020,12 +1008,6 @@ a:hover {
   .tile {
     min-height: 120px;
     padding: 14px;
-  }
-  .tile-title {
-    font-size: 22px;
-  }
-  .tile-desc {
-    font-size: 13px;
   }
   .card,
   .card-hero {
@@ -1145,7 +1127,6 @@ a:hover {
   .btn,
   .tile,
   .case-study,
-  .essay-card,
   .card {
     box-shadow: none !important;
     border: 1px solid #000 !important;

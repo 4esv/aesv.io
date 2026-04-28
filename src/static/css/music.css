@@ -87,7 +87,7 @@
   text-transform: uppercase;
   padding: 4px 10px;
   border: 2px solid var(--ink);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   background: var(--cream);
   color: var(--ink);
   align-self: center;
@@ -222,7 +222,7 @@
   box-shadow: var(--shadow-sm);
   background: var(--cream);
   overflow: hidden;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
 }
 .artist-art img {
   width: 100%;
@@ -307,7 +307,7 @@
   color: var(--ink);
   padding: 2px 8px;
   border: 2px solid var(--ink);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   transition:
     background var(--dur-press) var(--ease-press),
     color var(--dur-press) var(--ease-press);

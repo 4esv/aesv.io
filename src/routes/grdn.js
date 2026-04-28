@@ -1,53 +1,18 @@
-// /garden — writing garden (markdown-content)
-//
-// Mounted as a path on aesv.io. Was previously served from grdn.aesv.io
-// via host-constrained routing; collapsed to a single domain for simplicity.
-// File is still named grdn.js to match the source/templates folder naming
-// (templates/grdn/, content/grdn/); the user-facing path is /garden.
+// /garden — writing garden. Markdown files in content/grdn/ surfaced
+// at /garden (folder kept named grdn to match templates/grdn/).
 
-import { readdir, readFile } from 'fs/promises'
-import { join, parse } from 'path'
+import { join } from 'path'
 
-import matter from 'gray-matter'
-
-import { renderMarkdown } from '../lib/markdown.js'
+import { loadMarkdownDir } from '../lib/content.js'
 
 const BASE_PATH = '/garden'
 const CONTENT_DIR = join(import.meta.dirname, '../../content/grdn')
 
-let cache = null
-const USE_CACHE = process.env.NODE_ENV === 'production'
-
-async function loadEssays() {
-  if (cache && USE_CACHE) return cache
-  const entries = await readdir(CONTENT_DIR, { withFileTypes: true })
-  const essays = []
-  for (const entry of entries) {
-    if (!entry.isFile() || !entry.name.endsWith('.md')) continue
-    const slug = parse(entry.name).name
-    const raw = await readFile(join(CONTENT_DIR, entry.name), 'utf-8')
-    const { data, content } = matter(raw)
-    const date =
-      data.date instanceof Date
-        ? data.date.toISOString().slice(0, 10)
-        : typeof data.date === 'string'
-          ? data.date
-          : null
-    essays.push({
-      slug,
-      title: data.title || slug,
-      date,
-      summary: data.summary || '',
-      tags: data.tags || [],
-      hidden: data.hidden === true,
-      raw: content,
-    })
-  }
-  // most recent first
-  essays.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))
-  cache = essays
-  return essays
-}
+const loadEssays = loadMarkdownDir(CONTENT_DIR, (base, data) => ({
+  ...base,
+  tags: data.tags || [],
+  hidden: data.hidden === true,
+}))
 
 function siteShape(fastify) {
   return {
@@ -84,11 +49,10 @@ export async function registerGrdnRoutes(fastify) {
     const essays = await loadEssays()
     const essay = essays.find((e) => e.slug === req.params.slug)
     if (!essay) return reply.redirect(BASE_PATH)
-    const html = renderMarkdown(essay.raw)
     return reply.view('grdn/essay.njk', {
       site: siteShape(fastify),
       essay,
-      html,
+      html: essay.html,
       basePath: BASE_PATH,
     })
   })

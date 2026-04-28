@@ -11,7 +11,6 @@ I make system A talk to system B.
 work       /work
 files      /garden
 about      /about
-listening  /listening
 activities /activities
 music      /music
 
@@ -20,8 +19,6 @@ github     https://github.com/4esv
 gpg        https://aesv.io/api/gpg
 {% if recent %}
 last played: {{ recent.track }} — {{ recent.artist }}{% endif %}
-{% if chess %}
-last chess victory: {{ chess.white }} vs {{ chess.black }}{% endif %}
 {% if strava %}
 last activity: {{ strava.name }} ({{ strava.type }} · {{ strava.distance }} mi){% endif %}
 {% if weather %}
@@ -52,7 +49,7 @@ MIT License. {{ now | date('Y') }}.
 
     <div class="dashboard-grid">
       {# Top row: weather · about · work #}
-      <div class="widget-cell weather widget-cell-bare is-watch-primary">
+      <div class="widget-cell weather widget-cell-bare">
         {% include "partials/widgets/weather-ithaca.njk" %}
       </div>
 

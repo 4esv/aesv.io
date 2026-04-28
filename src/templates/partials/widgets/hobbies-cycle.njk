@@ -11,24 +11,11 @@
 
   <div class="hobby-pane" data-pane="strava">
     {% if strava and strava.routePath %}
-      <svg viewBox="0 0 100 100" class="strava-route" role="img"
-           aria-label="Route map for {{ strava.name }}, {{ strava.distance }} miles" preserveAspectRatio="xMidYMid meet">
-        <path d="{{ strava.routePath }}"
-              fill="none"
-              stroke="#1A1A1A"
-              stroke-width="2.6"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-      </svg>
+      {% include "partials/widgets/strava-route.njk" %}
     {% elif strava %}
       <div class="hobby-strava-stats">
         <p class="strava-name">{{ strava.name }}</p>
-        <dl class="strava-stats">
-          <div><dt>Type</dt><dd>{{ strava.type }}</dd></div>
-          <div><dt>Distance</dt><dd>{{ strava.distance }} mi</dd></div>
-          <div><dt>Time</dt><dd>{{ strava.duration }}</dd></div>
-          <div><dt>Gain</dt><dd>{{ strava.elevation }} ft</dd></div>
-        </dl>
+        {% include "partials/widgets/strava-stats.njk" %}
       </div>
     {% else %}
       <div class="hobby-empty">no activity</div>

@@ -89,27 +89,14 @@ MIT License. {{ now | date('Y') }}.
       <div class="lv-grid">
         <div class="lv-board strava-map">
           {% if strava.routePath %}
-          <svg viewBox="0 0 100 100" class="strava-route" role="img"
-               aria-label="Route map for {{ strava.name }}, {{ strava.distance }} miles" preserveAspectRatio="xMidYMid meet">
-            <path d="{{ strava.routePath }}"
-                  fill="none"
-                  stroke="#1A1A1A"
-                  stroke-width="2.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
-          </svg>
+          {% include "partials/widgets/strava-route.njk" %}
           {% else %}
           <div class="strava-empty">no map (indoor)</div>
           {% endif %}
         </div>
         <div class="lv-meta">
           <p class="lv-pair">{{ strava.name }}</p>
-          <dl class="strava-stats">
-            <div><dt>Type</dt><dd>{{ strava.type }}</dd></div>
-            <div><dt>Distance</dt><dd>{{ strava.distance }} mi</dd></div>
-            <div><dt>Time</dt><dd>{{ strava.duration }}</dd></div>
-            <div><dt>Gain</dt><dd>{{ strava.elevation }} ft</dd></div>
-          </dl>
+          {% include "partials/widgets/strava-stats.njk" %}
           <div class="page-cta-row">
             <a class="btn btn-sm" href="https://strava.com/athletes/51674641" rel="noopener">strava profile ↗</a>
           </div>

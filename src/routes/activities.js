@@ -1,11 +1,4 @@
-// /activities — what I do that has an API.
-//
-// Chess.com receipts (ratings, recent games, last-victory board with
-// highlighted winning move + replay frames) plus Strava (last activity
-// route polyline). Designed to grow: new APIs slot in as their own
-// section without touching the existing ones.
-//
-// Replaces the old /chess page; /chess now 301s here.
+// /activities — chess last-victory + strava last-activity.
 
 import { Chess } from 'chess.js'
 import { renderBoardSvg } from '../lib/chess-board-svg.js'
@@ -15,10 +8,6 @@ import { getLastActivity } from '../services/strava.js'
 
 const TEMPLATE = 'activities/index.njk'
 
-/**
- * Replay a PGN, returning [{ fen, from, to }, ...] one entry per ply.
- * Used to feed the client-side playthrough on the last-victory board.
- */
 function buildReplayFrames(pgn) {
   if (!pgn) return []
   try {
@@ -48,9 +37,8 @@ export async function registerActivitiesRoutes(fastify) {
       getLastActivity(fastify.config.strava).catch(() => null),
     ])
 
-    // Pre-render every ply's SVG frame for the last-victory replay.
-    // The final frame keeps the winning-move highlight; intermediate
-    // frames highlight the just-played move so the eye can track it.
+    // Final frame keeps the winning-move highlight; intermediate frames
+    // highlight the just-played move so the eye can track it.
     let replayFramesSvg = []
     if (lastVictory?.pgn) {
       const frames = buildReplayFrames(lastVictory.pgn)
@@ -80,6 +68,5 @@ export async function registerActivitiesRoutes(fastify) {
     return reply.view(TEMPLATE, payload)
   })
 
-  // 301 the old path so existing links keep working.
   fastify.get('/chess', async (_request, reply) => reply.redirect('/activities', 301))
 }

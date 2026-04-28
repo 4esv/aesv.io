@@ -18,13 +18,6 @@
   flex-direction: column;
   gap: 24px;
 }
-.work-section .section-eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-mute);
-}
 .work-section h2 {
   font-family: var(--font-display);
   font-size: clamp(28px, 4vw, 44px);
@@ -53,18 +46,9 @@
   text-decoration: none;
   color: var(--ink);
   height: 100%;
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
 }
 .case-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-lg);
   color: var(--ink);
-}
-.case-card:active {
-  transform: translate(6px, 6px);
-  box-shadow: var(--shadow-pressed);
 }
 .case-card-meta {
   display: flex;
