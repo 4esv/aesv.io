@@ -1,4 +1,5 @@
-{# Shared neobrutalist footer — used on every cream-paper page. #}
+{# Shared neobrutalist footer — every cream-paper page renders it.
+   It is the only nav surface on the site (top of page is footer-only). #}
 <footer class="big-footer">
   <div class="big-footer-inner">
     <p class="footer-marquee">aesv<span class="accent">·</span>io</p>
@@ -6,14 +7,14 @@
 
     <div class="footer-cols">
       <div class="footer-col">
-        <h4>Sites</h4>
+        <h4>Pages</h4>
         <ul>
           <li>{% if route == '/' %}<span aria-current="page">aesv.io</span>{% else %}<a href="/">aesv.io</a>{% endif %}</li>
-          <li>{% if route == '/work' %}<span aria-current="page">work</span>{% else %}<a href="/work">work</a>{% endif %}</li>
-          <li>{% if route and route.startsWith('/garden') %}<span aria-current="page">garden</span>{% else %}<a href="/garden">garden</a>{% endif %}</li>
+          <li>{% if route == '/work' or (route and route.startsWith('/work/')) %}<span aria-current="page">work</span>{% else %}<a href="/work">work</a>{% endif %}</li>
           <li>{% if route == '/music' %}<span aria-current="page">music</span>{% else %}<a href="/music">music</a>{% endif %}</li>
-          <li>{% if route == '/chess' %}<span aria-current="page">chess</span>{% else %}<a href="/chess">chess</a>{% endif %}</li>
-          <li>{% if route == '/listening' %}<span aria-current="page">listening</span>{% else %}<a href="/listening">listening</a>{% endif %}</li>
+          <li>{% if route == '/activities' %}<span aria-current="page">activities</span>{% else %}<a href="/activities">activities</a>{% endif %}</li>
+          <li>{% if route and route.startsWith('/garden') %}<span aria-current="page">files</span>{% else %}<a href="/garden">files</a>{% endif %}</li>
+          <li>{% if route == '/about' %}<span aria-current="page">about</span>{% else %}<a href="/about">about</a>{% endif %}</li>
         </ul>
       </div>
       <div class="footer-col">
@@ -21,8 +22,8 @@
         <ul>
           <li><a href="mailto:mail@aesv.io">mail@aesv.io</a></li>
           <li><a href="https://github.com/4esv" rel="noopener">github.com/4esv</a></li>
-          <li><a href="/api/gpg">GPG public key</a></li>
           <li><a href="https://linkedin.com/in/aesv" rel="noopener">LinkedIn</a></li>
+          <li><a href="/api/gpg">GPG public key</a></li>
         </ul>
       </div>
       <div class="footer-col">

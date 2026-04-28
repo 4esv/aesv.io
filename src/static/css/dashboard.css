@@ -4,27 +4,37 @@
    ========================================================= */
 
 .dashboard {
-  padding: clamp(16px, 3vw, 48px);
-  max-width: 1440px;
+  padding: var(--shell-pad-y) var(--shell-pad-x);
+  max-width: var(--shell-max);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(24px, 3vw, 48px);
-  /* Footer lives below the first viewport. Cap so very tall viewports don't blow this up. */
-  min-height: min(100svh, 1100px);
+  gap: clamp(20px, 2.4vw, 40px);
+  min-height: 100svh;
+  box-sizing: border-box;
 }
 
 /* Header layout + greeting live in foundation.css so every page
    that uses the shared site-header partial renders the same. */
 
+/* ---------- Four-mode responsive grid ----------
+   1 PORTRAIT    portrait orientation                → 2 cols × 3 rows
+   2 LANDSCAPE   landscape orientation               → 3 cols × 2 rows
+   3 TALL BAND   aspect-ratio < 1/2 OR very narrow   → 1 col  × 6 rows
+   4 WIDE BAND   aspect-ratio > 5/2 (very wide)      → 6 cols × 1 row
+
+   Modes 3–4 override 1–2 by source-order. Tiles stay 1:1; modes 1, 2
+   and 4 cap grid width by viewport height so all six fit without
+   scroll. Tall band scrolls vertically — same idiom for phone, watch,
+   and tamagotchi-sized viewports (no separate watch mode). */
+
 .dashboard-grid {
   display: grid;
-  /* Aggressive responsive: tiles fit between 220 and 1fr */
-  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
-  gap: clamp(16px, 1.6vw, 24px);
+  gap: clamp(12px, 1.4vw, 20px);
+  width: 100%;
+  margin: auto;
 }
 
-/* Every cell square. aspect-ratio + min-width:0 keeps text from blowing out */
 .dashboard-grid > * {
   aspect-ratio: 1 / 1;
   min-width: 0;
@@ -32,48 +42,43 @@
   position: relative;
 }
 
-/* Cap maximum cell size so super-wide viewports don't stretch tiles too tall */
-@media (min-width: 1100px) {
+/* MODE 1 — PORTRAIT (default for portrait orientation). 2 × 3.
+   gridW ≈ tileH × 2, where tileH ≈ (avail_h - gaps) / 3. The 180px
+   reservation covers shell padding, header, and the dashboard gap. */
+@media (orientation: portrait) {
   .dashboard-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media (min-width: 700px) and (max-width: 1099px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    max-width: calc((100svh - 180px) * 2 / 3);
   }
 }
 
-/* Fit-to-viewport — when both axes are big enough, all 6 SQUARE
-   tiles fit above the fold. Cap the grid width based on viewport
-   height so the 3-col 1fr split sizes each tile to (~half the
-   available height). Tiles stay 1:1 (base rule); only the grid
-   shrinks. The 220px subtrahend reserves room for the header,
-   the dashboard's vertical padding, and the inter-row gap. */
-@media (min-width: 1100px) and (min-height: 760px) {
-  .dashboard {
-    height: 100svh;
-    min-height: auto;
-  }
+/* MODE 2 — LANDSCAPE (default for landscape orientation). 3 × 2.
+   gridW ≈ tileH × 3, tileH ≈ (avail_h - gap) / 2. */
+@media (orientation: landscape) {
   .dashboard-grid {
-    width: 100%;
-    max-width: calc((100svh - 220px) * 1.5);
-    margin-left: auto;
-    margin-right: auto;
     grid-template-columns: repeat(3, 1fr);
-    /* Tighter gap at this tier — already-shrunken tiles benefit
-       from less air between them so the 3×2 reads as one unit. */
-    gap: 16px;
+    max-width: calc((100svh - 180px) * 3 / 2);
   }
 }
-@media (max-width: 699px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 460px) {
+
+/* MODE 3 — TALL BAND. Aspect-ratio < 1/2 (typical portrait phone) OR
+   any very small viewport (watch, tamagotchi). Stack into a single
+   column that fills the available width and scroll vertically. */
+@media (max-aspect-ratio: 1 / 2), (max-width: 480px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+}
+
+/* MODE 4 — WIDE BAND. Aspect-ratio > 5/2 — very wide short viewports
+   (split-screen, ultrawide, kiosk). Single horizontal row. Cap grid
+   width so all six 1:1 tiles fit the available height without
+   horizontal scroll. */
+@media (min-aspect-ratio: 5 / 2) {
+  .dashboard-grid {
+    grid-template-columns: repeat(6, 1fr);
+    max-width: calc((100svh - 140px) * 6);
   }
 }
 
@@ -82,8 +87,11 @@
 .widget-cell {
   width: 100%;
   height: 100%;
+  /* Containers so child labels (and the weather widget's interior
+     numerals) can scale with cqi against the cell, not the viewport. */
+  container-type: inline-size;
 }
-.widget-cell > * {
+.widget-cell > *:not(.cell-hover-label) {
   width: 100%;
   height: 100%;
   min-width: 0;
@@ -102,6 +110,11 @@
   min-width: 0;
   aspect-ratio: auto;
   position: relative;
+  /* The cell wrapper carries the border + cartoon shadow; zero out
+     the inner widget-art frame so the music tile doesn't double up
+     and read as a thicker border than the other tiles. */
+  border: none;
+  box-shadow: none;
 }
 .widget-art img,
 .widget-art svg {
@@ -114,141 +127,43 @@
   display: none;
 }
 
-/* Tile content (work + grdn) */
-.tile {
-  width: 100%;
-  height: 100%;
-}
-.tile > .tile-content {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  position: relative;
-  z-index: 2;
-}
 
-/* ---------- Tag cloud (top half of work + garden tiles) ----------
-   Small grey words filling the upper half. Each span carries a
-   --i (zero-based index) inline; opacity fades progressively as
-   --i grows so the cloud thins toward the title. On tile hover
-   the cloud "colors in" — opacity to 1, color to ink. */
-.tile-cloud {
-  position: absolute;
-  inset: 0 0 52% 0;
-  padding: clamp(20px, 2.2cqi, 36px);
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: clamp(8px, 1.1cqi, 14px) clamp(14px, 1.8cqi, 22px);
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
-}
-.tile-cloud span {
-  font-family: var(--font-mono);
-  font-size: clamp(11px, 1.2cqi, 14px);
-  color: var(--ink-mute);
-  letter-spacing: 0.01em;
-  text-transform: lowercase;
-  line-height: 1.2;
-  /* Progressive fade: tag 0 ~= 0.92, tag 30 ~= 0.17 */
-  opacity: max(0.12, calc(0.92 - var(--i, 0) * 0.025));
-  transition:
-    opacity 280ms ease,
-    color 280ms ease;
-}
-/* Hover state — tile fills its tags in. */
-.tile:hover .tile-cloud span,
-.tile:focus-visible .tile-cloud span {
-  opacity: 1;
-  color: var(--ink);
-}
-
-/* ---------- Spotify widget — hover overlay → /music ----------
-   Cartoon shadow matches weather/time. No border: the album art is
-   edge-to-edge, so a 4px ink border would read as a heavy frame
-   instead of the thin frame that wraps the padded text widgets. */
-.widget-spotify {
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
+/* ---------- All widget cells share the same frame ----------
+   Border + cartoon shadow match the .tile rule below so every cell
+   on the dashboard reads as one family. Individual cells (spotify,
+   chess, hobbies) just opt in by adding their identifier class.
+   The bare modifier `widget-cell-bare` opts out (top-left info). */
+.widget-cell.spotify,
+.widget-cell.chess,
+.widget-cell.hobbies {
   background: var(--cream);
-}
-.widget-spotify .widget-art {
-  background: var(--ink);
-}
-.widget-spotify .widget-art img,
-.widget-spotify .widget-art svg {
-  transition: filter 200ms ease;
-}
-.widget-spotify .listen-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 8px;
-  padding: 24px;
-  background: rgba(26, 26, 26, 0);
-  text-decoration: none;
-  color: var(--cream);
-  opacity: 0;
-  transition:
-    background 220ms ease,
-    opacity 220ms ease;
-  z-index: 3;
-  text-align: center;
-}
-.widget-spotify .listen-overlay .label {
-  font-family: var(--font-mono);
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-.widget-spotify .listen-overlay .cta {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 44px);
-  line-height: 1;
-  letter-spacing: -0.01em;
-}
-.widget-spotify:hover .listen-overlay,
-.widget-spotify:focus-within .listen-overlay {
-  opacity: 1;
-  background: rgba(26, 26, 26, 0.78);
-}
-.widget-spotify:hover .widget-art img {
-  filter: brightness(0.85);
-}
-.widget-spotify .listen-overlay:focus {
-  outline: 4px solid var(--lavender);
-  outline-offset: -4px;
-}
-
-/* ---------- Chess widget — cartoon shadow matches the spotify tile.
-   Shadow lives on the wrapping `.widget-cell.chess` (the <a>) so it
-   doesn't get clipped by the inner overflow:hidden. No border —
-   matches spotify's edge-to-edge media treatment so the dark squares
-   don't read against a heavy 4px ink frame. */
-.widget-cell.chess {
-  background: var(--cream);
+  border: var(--border-thin);
   box-shadow: var(--shadow-md);
+  overflow: hidden;
   transition:
     transform var(--dur-press) var(--ease-press),
     box-shadow var(--dur-press) var(--ease-press);
 }
-.widget-cell.chess:hover {
+.widget-cell.spotify:hover,
+.widget-cell.chess:hover,
+.widget-cell.hobbies:hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--shadow-lg);
 }
-.widget-cell.chess:active {
+.widget-cell.spotify:active,
+.widget-cell.chess:active,
+.widget-cell.hobbies:active {
   transform: translate(6px, 6px);
   box-shadow: var(--shadow-pressed);
 }
+.widget-spotify,
 .widget-chess {
   width: 100%;
   height: 100%;
   background: var(--cream);
+}
+.widget-spotify .widget-art {
+  background: var(--ink);
 }
 .widget-chess .widget-art {
   padding: 0;
@@ -268,230 +183,139 @@
   text-decoration: none;
   color: inherit;
 }
-.widget-cell-link .cell-hover-label {
+/* Bottom gradient on the cell itself (not the label) — keeps the
+   underlying visual visible while the cream label reads on top. The
+   gradient is decorative and sized to the full cell; the label is
+   positioned independently with the same offset as .tile-label so
+   the text lands in the same place across all six tiles. */
+.widget-cell-link::after {
+  content: '';
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(26, 26, 26, 0);
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0) 50%,
+    rgba(26, 26, 26, 0.6) 100%
+  );
+  z-index: 4;
+  pointer-events: none;
+  transition: background var(--dur-press) var(--ease-press);
+}
+.widget-cell-link:hover::after,
+.widget-cell-link:focus-visible::after {
+  background: rgba(26, 26, 26, 0.78);
+}
+.widget-cell-link .cell-hover-label {
   color: var(--cream);
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4cqi, 44px);
-  letter-spacing: -0.01em;
-  opacity: 0;
-  transition:
-    background 220ms ease,
-    opacity 220ms ease;
   z-index: 5;
   pointer-events: none;
 }
-.widget-cell-link:hover .cell-hover-label,
-.widget-cell-link:focus-visible .cell-hover-label {
-  opacity: 1;
-  background: rgba(26, 26, 26, 0.78);
+.widget-cell-link .cell-hover-label .tile-label-arrow {
+  color: var(--cream);
 }
 
-/* ---------- Bare-cell modifier — used by weather + clock cells.
-   Removes the cell's tile-style background/border/shadow so the
-   visual SVG inside sits directly on the page. The widget's own
-   SVG carries the cartoon shadow. */
+/* ---------- Bare-cell modifier — used by the top-left info cell.
+   Strips ALL chrome (border, background, shadow) on the cell AND
+   on its inner widget so the content sits directly on the page,
+   "implying the space" (the cell still occupies a grid slot for
+   layout). Higher specificity than the .widget-info defaults. */
 .widget-cell-bare {
-  background: transparent;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
-.widget-cell-bare > * {
+.widget-cell-bare .widget-info {
   background: transparent;
   border: none;
   box-shadow: none;
 }
 
-/* ---------- Info block widget (the weather cell) ----------
-   2×2 grid of analog visuals: clock, calendar page, thermostat,
-   and a text location stamp. Sits on a tile background with the
-   site's cartoon shadow, matching the chess/spotify cell style. */
+/* ---------- Info block widget (the top-left bare cell) ----------
+   2×2 grid: clock, calendar page, location, weather gauges. The
+   bare modifier strips its frame; the four quadrants read as
+   text-on-cream that fills the space allotted to a tile. */
 .widget-cell.weather {
   container-type: inline-size;
 }
 .widget-info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: clamp(6px, 1cqi, 12px);
-  padding: clamp(8px, 1.4cqi, 16px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+  gap: clamp(6px, 2cqi, 20px);
+  padding: clamp(6px, 2cqi, 20px) clamp(4px, 1cqi, 12px);
   height: 100%;
   width: 100%;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
   color: var(--ink);
   box-sizing: border-box;
-}
-.widget-info .info-quad {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-}
-
-/* ---------- Mini analog clock ---------- */
-.widget-info .mini-clock {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
-}
-.widget-info .mini-bezel {
-  fill: var(--cream);
-  stroke: var(--ink);
-  stroke-width: 1.6;
-}
-.widget-info .mini-ticks .tick {
-  stroke: var(--ink);
-  stroke-width: 0.8;
-  stroke-linecap: round;
-}
-.widget-info .mini-ticks .tick-long {
-  stroke-width: 1.6;
-}
-.widget-info .mini-hand rect {
-  fill: var(--ink);
-}
-.widget-info .mini-pivot {
-  fill: var(--ink);
-}
-
-/* ---------- Calendar page ---------- */
-.widget-info .cal-card {
-  display: flex;
-  flex-direction: column;
-  width: 92%;
-  height: 92%;
-  background: var(--cream);
-  border: 2px solid var(--ink);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.widget-info .cal-month {
-  background: var(--ink);
-  color: var(--cream);
-  font-family: var(--font-mono);
-  font-size: clamp(9px, 1.4cqi, 13px);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  text-align: center;
-  padding: clamp(2px, 0.5cqi, 5px) 0;
-  line-height: 1.1;
-  font-weight: 700;
-}
-.widget-info .cal-weekday {
-  border-bottom: 1.5px solid var(--ink);
-  font-family: var(--font-mono);
-  font-size: clamp(9px, 1.4cqi, 13px);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  text-align: center;
-  padding: clamp(2px, 0.4cqi, 4px) 0;
-  color: var(--ink-mute);
-  line-height: 1.1;
-}
-.widget-info .cal-day {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: var(--font-display);
-  font-size: clamp(26px, 7.4cqi, 60px);
   line-height: 1;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-}
-
-/* ---------- Weather gauges (BR quadrant) ----------
-   Three vertical line gauges. Each gauge is a thin track filled
-   bottom-up via a <span> child whose height % is set inline. The
-   value/label sit beneath. Server-renders correct on first paint. */
-.widget-info .weather-gauges {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(4px, 1cqi, 10px);
-  width: 92%;
-  height: 92%;
-  align-items: stretch;
-}
-.widget-info .gauge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: clamp(2px, 0.4cqi, 4px);
+  overflow: hidden;
   min-width: 0;
 }
-.widget-info .gauge-track {
-  flex: 1 1 auto;
-  width: clamp(4px, 1.2cqi, 10px);
-  background: var(--cream-deep);
-  border: 1.5px solid var(--ink);
-  position: relative;
-  overflow: hidden;
-  align-self: center;
-  min-height: 0;
-}
-.widget-info .gauge-fill {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--ink);
-  display: block;
-}
-.widget-info .gauge:nth-child(1) .gauge-fill {
-  background: var(--terracotta);
-}
-.widget-info .gauge:nth-child(2) .gauge-fill {
-  background: var(--ochre);
-}
-.widget-info .gauge:nth-child(3) .gauge-fill {
-  background: var(--lavender);
-}
-.widget-info .gauge-value {
-  font-family: var(--font-display);
-  font-size: clamp(10px, 1.9cqi, 18px);
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  line-height: 1;
-}
-.widget-info .gauge-label {
-  font-family: var(--font-mono);
-  font-size: clamp(8px, 1.1cqi, 11px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  line-height: 1;
-}
 
-/* ---------- Location stamp ---------- */
-.widget-info .loc-stack {
+.widget-info .info-time,
+.widget-info .info-loc,
+.widget-info .info-weather {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: clamp(2px, 0.6cqi, 6px);
+  min-width: 0;
+}
+.widget-info .info-time-meta {
   justify-content: center;
-  line-height: 0.95;
 }
-.widget-info .loc-city {
+
+/* Big numerals first row, mono meta second row — same pattern for each
+   block. Mins use cqi so tiles scale all the way down without overflow
+   (no fixed 28px min that would leak out of a small tile). */
+.widget-info .info-time-clock {
   font-family: var(--font-display);
-  font-size: clamp(16px, 4.4cqi, 36px);
-  letter-spacing: -0.02em;
+  font-size: clamp(16px, 9cqi, 72px);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
-.widget-info .loc-state {
+.widget-info .info-time-meta {
   font-family: var(--font-mono);
-  font-size: clamp(10px, 1.7cqi, 16px);
-  letter-spacing: 0.2em;
+  font-size: clamp(7px, 1.6cqi, 13px);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-mute);
-  margin-top: clamp(4px, 0.6cqi, 8px);
+  display: inline-flex;
+  justify-content: center;
+  gap: clamp(3px, 1cqi, 10px);
+  flex-wrap: wrap;
+}
+
+.widget-info .info-loc-city {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 6.4cqi, 48px);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.widget-info .info-loc-state {
+  font-family: var(--font-mono);
+  font-size: clamp(7px, 1.6cqi, 13px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.widget-info .info-weather-temp {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 6.4cqi, 48px);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.widget-info .info-weather-cond {
+  font-family: var(--font-mono);
+  font-size: clamp(7px, 1.6cqi, 13px);
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  color: var(--ink-mute);
 }
 
 /* ---------- Cube widget (replaces clock cell) ----------
@@ -561,49 +385,119 @@
 
 /* (.widget-time legacy text styles removed — replaced by .widget-clock above) */
 
-/* ---------- Tile (work, grdn) sizing inside square cell ---------- */
-.tile-eyebrow {
+/* Hobbies widget shares the unified .widget-cell frame above. */
+.widget-hobbies {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--cream);
+}
+.hobby-pane {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 600ms ease,
+    visibility 600ms ease;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+.hobby-pane.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+.hobby-pane svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.hobby-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--ink);
+  color: var(--cream);
   font-family: var(--font-mono);
-  font-size: var(--fs-eyebrow);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- Strava pane content — labels gone, hover label on the
+   wrapping cell carries the identifier. Track / time / distance / gain
+   read directly as Birdie text inside the square. */
+/* Strava route polyline — fills the cell ink-on-cream like the chess board.
+   The label sits on top via the cell-hover-label gradient. */
+.strava-route {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: var(--cream);
+}
+
+/* Fallback when no polyline (indoor activities, missing scope) — show stats. */
+.hobby-strava-stats {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: clamp(16px, 2.4cqi, 28px);
+  background: var(--cream);
+  container-type: inline-size;
+  gap: clamp(6px, 1cqi, 12px);
+}
+.hobby-strava-stats .strava-name {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 3.4cqi, 32px);
+  line-height: 1.05;
+  margin: 0 0 clamp(8px, 1.4cqi, 14px);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.hobby-strava-stats .strava-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(4px, 1cqi, 10px);
+  margin: 0;
+  margin-top: auto;
+}
+.hobby-strava-stats .strava-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hobby-strava-stats dt {
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 1cqi, 11px);
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
-  margin-bottom: 12px;
 }
-.tile-title {
+.hobby-strava-stats dd {
   font-family: var(--font-display);
-  font-size: var(--fs-tile);
-  line-height: 0.95;
-  margin: 0 0 10px;
-  overflow-wrap: anywhere;
-}
-.tile-desc {
-  font-family: var(--font-body);
-  font-size: clamp(14px, 1.05vw, 16px);
+  font-size: clamp(15px, 2.4cqi, 22px);
+  line-height: 1;
   color: var(--ink);
-  line-height: 1.4;
+  margin: 0;
   overflow-wrap: anywhere;
 }
-.tile-arrow {
-  font-family: var(--font-mono);
-  font-size: clamp(20px, 2vw, 28px);
-  align-self: flex-end;
-  margin-top: auto;
-  display: block;
-  padding-top: 16px;
-}
+
+/* ---------- Tile (work · about · files) — single-word identifier
+   bottom-left, ↗ inline. No eyebrow, no description, no second arrow.
+   The label IS the tile. Lavender on the primary (work) variant. */
 .tile {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   position: relative;
-  overflow: hidden;
+  display: block;
   background: var(--cream);
   border: var(--border-thin);
   box-shadow: var(--shadow-md);
-  padding: clamp(20px, 2.4vw, 32px);
   text-decoration: none;
   color: var(--ink);
+  width: 100%;
   height: 100%;
   transition:
     transform var(--dur-press) var(--ease-press),
@@ -618,20 +512,45 @@
   transform: translate(6px, 6px);
   box-shadow: var(--shadow-pressed);
 }
-.tile:hover .tile-arrow {
-  color: var(--lavender);
+
+/* Single label rule — applies to both .tile-label (work / about / files)
+   and .cell-hover-label (music / activities). Both are positioned the
+   same way so labels line up across all six tiles regardless of which
+   variant the tile uses. The sizing reads cqi against the cell, which
+   has no padding affecting container-inline-size — tile-label and
+   cell-hover-label therefore measure identically. */
+.tile-label,
+.widget-cell-link .cell-hover-label {
+  position: absolute;
+  bottom: clamp(8px, 6cqi, 32px);
+  left: clamp(8px, 6cqi, 32px);
+  right: clamp(8px, 6cqi, 32px);
+  font-family: var(--font-display);
+  font-size: clamp(10px, 10cqi, 56px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(3px, 2cqi, 16px);
+  color: inherit;
+}
+.tile-label-arrow {
+  font-family: var(--font-mono);
+  font-size: clamp(7px, 6cqi, 32px);
+  line-height: 1;
 }
 .tile-primary {
   background: var(--lavender);
   color: var(--offwhite);
 }
-.tile-primary .tile-eyebrow,
-.tile-primary .tile-desc,
-.tile-primary .tile-arrow {
-  color: var(--offwhite);
-}
-.tile-primary .tile-title {
-  color: var(--offwhite);
+.tile-primary .tile-label,
+.tile-primary .tile-label-arrow { color: var(--offwhite); }
+
+/* Music + activities labels read cream against the gradient overlay so
+   they stay legible over album art / chess board / strava polyline. */
+.widget-cell-link .cell-hover-label,
+.widget-cell-link .cell-hover-label .tile-label-arrow {
+  color: var(--cream);
 }
 
 /* Big-footer styles moved to foundation.css so every page using
@@ -639,71 +558,19 @@
    dashboard.css. Brand styles also live in foundation.css. */
 
 /* =========================================================
-   DASHBOARD — Tiered responsive layers
-   Tiers: watch <360 · phone 360–639 · tablet 640–1023
-        · laptop 1024–1599 · desktop 1600–2559 · tv ≥2560
+   DASHBOARD — Per-mode chrome adjustments
+   Layout (column count) is set by the five-mode block at the top
+   of this file. Rules below tune padding, type, and the footer
+   shell at extreme viewport sizes; they do not override the grid
+   layout itself.
    ========================================================= */
 
-/* ---------- Watch tier (<360px) ----------
-   Only one live data point. No grid. No greeting subtext. */
-@media (max-width: 359px) {
+/* ---------- Tall band & narrow phones — tighter shell. Footer
+   collapses to a single column so it doesn't blow out. */
+@media (max-width: 699px) {
   .dashboard {
-    gap: 16px;
     padding: 12px;
-    min-height: auto;
-  }
-  .site-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .dashboard-greeting {
-    font-size: 18px;
-    text-align: left;
-    line-height: 1.2;
-  }
-  .dashboard-greeting .meta {
-    display: none;
-  }
-
-  /* Stack to single column. Show only the .is-watch-primary cell
-     (weather — always renders) plus the spotify hero when present.
-     Everything else hides. .is-watch-primary on the weather cell
-     guarantees the screen is never blank, even without Spotify.
-     User constraint: cards stay 1:1 no matter what — keep the
-     aspect-ratio rule from the base instead of overriding it. */
-  .dashboard-grid {
-    display: flex;
-    flex-direction: column;
     gap: 12px;
-  }
-  .dashboard-grid > * {
-    aspect-ratio: 1 / 1;
-    width: 100%;
-  }
-  .dashboard-grid > :not(.is-watch-primary):not(.spotify) {
-    display: none;
-  }
-  .widget-spotify .listen-overlay .cta {
-    font-size: 22px;
-  }
-  /* Big-footer hidden globally on watch via foundation.css */
-}
-
-/* ---------- Phone tier (360–639px) ----------
-   Tighter 1-col stack. Footer keeps but compact. Cards stay 1:1
-   per the user's strict "no matter what" constraint. */
-@media (min-width: 360px) and (max-width: 639px) {
-  .dashboard {
-    padding: 16px;
-    gap: 20px;
-  }
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  .dashboard-grid > * {
-    aspect-ratio: 1 / 1;
   }
   .footer-cols {
     grid-template-columns: 1fr;
@@ -715,32 +582,7 @@
   }
 }
 
-/* ---------- Tablet tier (640–1023px) ----------
-   2-col compact grid (overrides existing 700–1099 3-col). */
-@media (min-width: 640px) and (max-width: 1023px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .dashboard-grid > * {
-    aspect-ratio: 1 / 1;
-  }
-}
-
-/* ---------- Lap band (768–1099px) ----------
-   Brief mandates 2-col here. Default rule above puts this
-   range at 3-col (cramped on a small laptop). Override. */
-@media (min-width: 768px) and (max-width: 1099px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ---------- Wrist band (≤280px) ----------
-   Tighter than the watch tier at this width. The watch tier
-   above hides everything except .spotify. At wrist we keep
-   that AND restore the spotify cell with shrunken chrome.
-   The watch rule's hide-list applies; we don't need to
-   re-hide anything. */
+/* ---------- Wrist band (≤280px) — extra-tight type and padding. */
 @media (max-width: 280px) {
   .dashboard {
     padding: 8px;
@@ -760,8 +602,33 @@
   }
 }
 
-/* ---------- Desktop tier (1600–2559px) ----------
-   Same 3-col but with more air. */
+/* ---------- Watch / tamagotchi chrome — header stacks, greeting
+   shrinks, meta strips out. Layout (single column) is handled by
+   MODE 3 above; this is just chrome compression. */
+@media (max-width: 480px) and (max-height: 600px) {
+  .dashboard {
+    gap: 16px;
+    padding: 12px;
+  }
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .dashboard-greeting {
+    font-size: 18px;
+    text-align: left;
+    line-height: 1.2;
+  }
+  .dashboard-greeting .meta {
+    display: none;
+  }
+  .widget-spotify .listen-overlay .cta {
+    font-size: 22px;
+  }
+}
+
+/* ---------- Desktop tier (1600–2559px) — more air, type +. */
 @media (min-width: 1600px) and (max-width: 2559px) {
   .dashboard {
     max-width: 1800px;
@@ -770,19 +637,16 @@
   }
   .dashboard-grid {
     gap: 32px;
-    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* ---------- TV / billboard tier (≥2560px) ----------
-   4-column grid. Type and tiles dramatically up. Spotify and
-   chess at full-card size — readable from across the room. */
+/* ---------- TV / billboard (≥2560px) — type ramps for far-away
+   reading. Layout still resolves through MODE 1/2/4. */
 @media (min-width: 2560px) {
   .dashboard {
     max-width: 3200px;
     padding: 120px 96px;
     gap: 96px;
-    min-height: auto;
   }
   .site-header {
     gap: 32px;
@@ -803,31 +667,10 @@
     font-size: 18px;
     margin-top: 16px;
   }
-
   .dashboard-grid {
-    grid-template-columns: repeat(4, 1fr);
     gap: 48px;
   }
-  /* No col-span overrides at TV — cards stay 1:1 per the user's
-     strict aspect-ratio constraint. */
 
-  .widget-weather .temp {
-    font-size: 220px;
-  }
-  .widget-weather .condition {
-    font-size: 44px;
-  }
-  .widget-weather .city {
-    font-size: 18px;
-    margin-top: 16px;
-  }
-  .widget-time .clock {
-    font-size: 200px;
-  }
-  .widget-time .city {
-    font-size: 36px;
-    margin-top: 24px;
-  }
   .widget-spotify .listen-overlay .cta {
     font-size: 96px;
   }
@@ -835,23 +678,7 @@
   .tile {
     padding: 56px;
   }
-  .tile-eyebrow {
-    font-size: 18px;
-    margin-bottom: 24px;
-  }
-  .tile-title {
-    font-size: 96px;
-  }
-  .tile-desc {
-    font-size: 26px;
-    max-width: 28ch;
-  }
-  .tile-arrow {
-    font-size: 56px;
-    padding-top: 32px;
-  }
 
-  /* Big footer scales up */
   .big-footer {
     padding: 160px 96px 80px;
     margin-top: 200px;
@@ -872,9 +699,7 @@
     font-size: 18px;
     margin-bottom: 28px;
   }
-  .footer-col a {
-    font-size: 22px;
-  }
+  .footer-col a,
   .footer-col p {
     font-size: 22px;
   }
@@ -884,25 +709,3 @@
   }
 }
 
-/* ---------- Tile container queries ----------
-   When a tile is narrow regardless of viewport (tablet 2-col),
-   reduce internal padding/type so it doesn't spill. */
-@container (max-width: 240px) {
-  .tile-title {
-    font-size: clamp(20px, 14cqi, 32px);
-  }
-  .tile-desc {
-    display: none;
-  }
-  .tile-arrow {
-    font-size: 18px;
-  }
-}
-@container (min-width: 600px) {
-  .tile-title {
-    font-size: clamp(36px, 8cqi, 96px);
-  }
-  .tile-desc {
-    font-size: clamp(15px, 2.2cqi, 24px);
-  }
-}

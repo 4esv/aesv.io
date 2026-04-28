@@ -1,23 +1,10 @@
 /* =========================================================
-   WORK — work.aesv.io portfolio
+   WORK — /work on aesv.io
+   Inherits .subpage shell from foundation.css.
    ========================================================= */
 
 .work-shell {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: var(--s-6) var(--s-4);
   overflow-wrap: anywhere;
-}
-
-@media (max-width: 640px) {
-  .work-shell {
-    padding: var(--s-4) var(--s-2);
-  }
-}
-
-.work-shell,
-.work-shell * {
-  min-width: 0;
 }
 .work-shell h1,
 .work-shell h2,
@@ -25,65 +12,11 @@
   overflow-wrap: anywhere;
 }
 
-/* Subnav under the shared site-header — anchor links only. */
-.work-subnav {
-  display: flex;
-  gap: clamp(12px, 1.6vw, 24px);
-  flex-wrap: wrap;
-  margin: 0 0 var(--s-6);
-  padding: 8px 0;
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
-  font-family: var(--font-mono);
-  font-size: clamp(12px, 1vw, 14px);
-  letter-spacing: 0.04em;
-  text-transform: lowercase;
-}
-.work-subnav a {
-  text-decoration: none;
-  color: var(--ink);
-}
-.work-subnav a:hover {
-  color: var(--lavender);
-}
-
-/* Hero */
-.work-hero {
-  margin-bottom: var(--s-8);
-}
-.work-hero .eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  margin-bottom: 16px;
-}
-.work-hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(48px, 8vw, 96px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  margin: 0 0 24px;
-  max-width: 18ch;
-}
-.work-hero p {
-  font-family: var(--font-body);
-  font-size: 22px;
-  line-height: 1.5;
-  max-width: 56ch;
-  color: var(--ink);
-  margin: 0 0 32px;
-}
-.work-hero .cta-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
 /* Section header */
 .work-section {
-  margin-bottom: var(--s-8);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 .work-section .section-eyebrow {
   font-family: var(--font-mono);
@@ -91,21 +24,141 @@
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
-  margin-bottom: 8px;
 }
 .work-section h2 {
   font-family: var(--font-display);
-  font-size: clamp(32px, 5vw, 48px);
+  font-size: clamp(28px, 4vw, 44px);
   line-height: 1.1;
-  margin: 0 0 32px;
+  margin: 0;
   letter-spacing: -0.01em;
 }
 
-/* Services list */
+/* ---------- Case-study cards (new) ---------- */
+.case-card-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: clamp(16px, 1.6vw, 24px);
+}
+.case-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(20px, 2vw, 28px);
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: var(--ink);
+  height: 100%;
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    box-shadow var(--dur-press) var(--ease-press);
+}
+.case-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+  color: var(--ink);
+}
+.case-card:active {
+  transform: translate(6px, 6px);
+  box-shadow: var(--shadow-pressed);
+}
+.case-card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.case-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.case-card-summary {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+  margin: 0;
+  flex: 1 1 auto;
+}
+.case-card-impact {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--lavender);
+  background: var(--cream-deep);
+}
+.case-card-arrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  align-self: flex-end;
+  color: var(--ink);
+}
+.case-card:hover .case-card-arrow {
+  color: var(--lavender);
+}
+
+/* ---------- Case-study detail page ---------- */
+.case-study-detail .case-fact-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(16px, 2vw, 24px);
+}
+.case-study-detail .case-fact {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: clamp(16px, 2vw, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.case-study-detail .case-fact-impact {
+  background: var(--lavender);
+  color: var(--offwhite);
+}
+.case-study-detail .case-fact-impact .block-eyebrow {
+  color: rgba(244, 236, 216, 0.7);
+}
+.case-study-detail .case-fact p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+}
+.case-study-detail .case-fact-stack p {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+@media (max-width: 640px) {
+  .case-study-detail .case-fact-row {
+    grid-template-columns: 1fr;
+  }
+}
+.case-prose {
+  max-width: var(--reading-default);
+}
+
+/* ---------- Services ---------- */
 .services {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--s-4);
+  gap: var(--s-3);
 }
 .service {
   background: var(--cream);
@@ -138,105 +191,9 @@
   .services {
     grid-template-columns: 1fr;
   }
-  .work-subnav {
-    gap: 16px;
-    font-size: 13px;
-  }
-}
-@media (max-width: 480px) {
-  .work-subnav {
-    gap: 12px;
-    font-size: 12px;
-  }
 }
 
-/* Case studies */
-.case-study {
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
-  padding: var(--s-6);
-  margin-bottom: var(--s-4);
-  position: relative;
-}
-.case-study .meta-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-.case-study h3 {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 36px);
-  line-height: 1.1;
-  margin: 0 0 24px;
-}
-.case-study .blocks {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-bottom: 24px;
-}
-.case-study .blocks .label {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--ink-mute);
-}
-.case-study .blocks p {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.5;
-}
-.case-study .impact {
-  background: var(--lavender);
-  color: var(--offwhite);
-  padding: 16px 20px;
-  margin: 0 -8px 24px;
-  border: 4px solid var(--ink);
-  font-family: var(--font-display);
-  font-size: 20px;
-  line-height: 1.3;
-}
-.case-study .impact .label {
-  display: block;
-  color: var(--offwhite);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  opacity: 0.8;
-}
-.case-study .stack {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--ink-mute);
-  line-height: 1.6;
-}
-.case-study .stack .label {
-  display: inline-block;
-  margin-right: 8px;
-  color: var(--ink);
-}
-
-@media (max-width: 720px) {
-  .case-study {
-    padding: var(--s-4);
-  }
-  .case-study .blocks {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-/* Client profile */
+/* ---------- Client profile + contact ---------- */
 .client-profile {
   background: var(--cream);
   border: var(--border-thick);
@@ -245,365 +202,24 @@
 }
 .client-profile p {
   font-family: var(--font-display);
-  font-size: clamp(22px, 3vw, 32px);
+  font-size: clamp(20px, 2.6vw, 28px);
   line-height: 1.3;
   margin: 0 0 16px;
 }
+.client-profile p:last-child {
+  margin-bottom: 0;
+}
 
-/* Contact */
 .contact-block {
   text-align: center;
-  padding: var(--s-8) var(--s-4);
+  padding: var(--s-6) var(--s-4);
 }
 .contact-block h2 {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 .contact-block p {
   font-family: var(--font-body);
   font-size: 18px;
   max-width: 50ch;
-  margin: 0 auto 32px;
-}
-.contact-block .contact-links {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  letter-spacing: 0.04em;
-}
-
-/* Footer is now the shared big-footer partial; no per-page footer. */
-
-/* =========================================================
-   WORK — Tiered responsive layers
-   ========================================================= */
-
-/* ---------- Watch tier (<360px) ----------
-   CTA + hire-me + first case study only. No services list,
-   no client-profile, no extra case studies. */
-@media (max-width: 359px) {
-  .work-shell {
-    padding: 12px;
-  }
-  .work-subnav {
-    display: none;
-  }
-  .work-hero {
-    margin-bottom: 24px;
-  }
-  .work-hero h1 {
-    font-size: 32px;
-    line-height: 1.05;
-  }
-  .work-hero p {
-    font-size: 15px;
-    line-height: 1.45;
-  }
-  .work-hero .cta-row {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .work-hero .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  /* Hide everything but hero + first case study + contact */
-  #services {
-    display: none;
-  }
-  .case-study:not(:first-of-type) {
-    display: none;
-  }
-  .work-section h2 {
-    font-size: 22px;
-    margin-bottom: 16px;
-  }
-  .case-study {
-    padding: 16px;
-    margin-bottom: 16px;
-  }
-  .case-study .blocks {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .case-study .blocks p {
-    font-size: 15px;
-  }
-  .case-study .impact {
-    font-size: 16px;
-    padding: 12px;
-    margin: 0 0 16px;
-  }
-  .client-profile {
-    display: none;
-  }
-  .contact-block {
-    padding: 32px 0;
-  }
-  .contact-block .btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* ---------- Wrist band (≤280px) ----------
-   Tighter than watch (<360). Compact paddings; truncate the
-   work-hero subheading. */
-@media (max-width: 280px) {
-  .work-shell {
-    padding: 8px;
-  }
-  .work-subnav {
-    margin-bottom: 14px;
-    font-size: 11px;
-    gap: 6px;
-  }
-  .work-hero h1 {
-    font-size: 26px;
-  }
-  .work-hero p {
-    font-size: 13px;
-    line-height: 1.4;
-  }
-  .work-hero .btn {
-    padding: 10px 12px;
-    font-size: 12px;
-  }
-  .case-study {
-    padding: 12px;
-  }
-  .case-study h3 {
-    font-size: 20px;
-    margin-bottom: 12px;
-  }
-  .case-study .blocks p {
-    font-size: 13px;
-  }
-  .case-study .impact {
-    font-size: 14px;
-    padding: 10px;
-  }
-  .case-study .stack {
-    font-size: 11px;
-  }
-}
-
-/* ---------- Phone tier (360–639px) ---------- */
-@media (min-width: 360px) and (max-width: 639px) {
-  .work-shell {
-    padding: 20px 16px;
-  }
-  .work-subnav {
-    font-size: 13px;
-    gap: 12px;
-  }
-  .services {
-    grid-template-columns: 1fr;
-  }
-  .case-study .blocks {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .work-hero .cta-row .btn {
-    min-height: 44px;
-  }
-}
-
-/* ---------- Lap band (768–1099px) ----------
-   Default is fine but services at 2-col can crowd at the
-   low end of this band. Keep 2-col but bump padding. */
-@media (min-width: 768px) and (max-width: 1099px) {
-  .services {
-    gap: var(--s-3);
-  }
-}
-
-/* ---------- Desktop tier (1600–2559px) ---------- */
-@media (min-width: 1600px) and (max-width: 2559px) {
-  .work-shell {
-    max-width: 1320px;
-    padding: 80px 64px;
-  }
-  .work-hero h1 {
-    font-size: 112px;
-  }
-  .work-hero p {
-    font-size: 24px;
-    max-width: 60ch;
-  }
-  .case-study {
-    padding: 56px;
-  }
-  .case-study .blocks p {
-    font-size: 19px;
-  }
-}
-
-/* ---------- TV / billboard tier (≥2560px) ----------
-   Case studies as full-bleed bands. The portfolio reads
-   from across the room. */
-@media (min-width: 2560px) {
-  .work-shell {
-    max-width: none;
-    padding: 96px 0 0;
-    overflow-wrap: anywhere;
-  }
-  .work-subnav,
-  .work-hero,
-  #services,
-  .work-section.contact-block,
-  .work-section:has(.client-profile) {
-    max-width: 2200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 96px;
-    padding-right: 96px;
-  }
-  .work-hero {
-    margin-bottom: 200px;
-  }
-  .work-hero h1 {
-    font-size: 220px;
-    line-height: 0.95;
-    max-width: 14ch;
-  }
-  .work-hero p {
-    font-size: 36px;
-    max-width: 50ch;
-    line-height: 1.45;
-  }
-  .work-hero .cta-row {
-    gap: 32px;
-  }
-
-  .work-section h2 {
-    font-size: 96px;
-    margin-bottom: 64px;
-  }
-  .work-section .section-eyebrow {
-    font-size: 20px;
-    margin-bottom: 24px;
-  }
-
-  .services {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 48px;
-  }
-  .service {
-    padding: 56px;
-  }
-  .service h3 {
-    font-size: 44px;
-  }
-  .service p {
-    font-size: 24px;
-  }
-
-  /* Full-bleed case study bands */
-  #case-studies {
-    background: transparent;
-    padding: 0;
-  }
-  #case-studies > .section-eyebrow,
-  #case-studies > h2 {
-    max-width: 2200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 96px;
-    padding-right: 96px;
-  }
-  .case-study {
-    width: 100%;
-    max-width: none;
-    margin: 0 0 0 0;
-    padding: 120px max(96px, calc((100vw - 2200px) / 2 + 96px));
-    box-shadow: none;
-    border-left: 0;
-    border-right: 0;
-    border-top: var(--border-thick);
-    border-bottom: var(--border-thick);
-    background: var(--cream);
-  }
-  .case-study:nth-of-type(even) {
-    background: var(--cream-deep);
-  }
-  .case-study h3 {
-    font-size: 96px;
-    margin-bottom: 48px;
-    max-width: 18ch;
-  }
-  .case-study .meta-row {
-    font-size: 20px;
-    margin-bottom: 32px;
-  }
-  .case-study .blocks {
-    grid-template-columns: 1fr 1fr;
-    gap: 96px;
-    margin-bottom: 64px;
-  }
-  .case-study .blocks p {
-    font-size: 28px;
-    line-height: 1.5;
-  }
-  .case-study .blocks .label {
-    font-size: 18px;
-    margin-bottom: 12px;
-  }
-  .case-study .impact {
-    font-size: 44px;
-    padding: 32px 40px;
-    margin-bottom: 48px;
-  }
-  .case-study .impact .label {
-    font-size: 18px;
-    margin-bottom: 12px;
-  }
-  .case-study .stack {
-    font-size: 22px;
-    line-height: 1.7;
-  }
-
-  .client-profile {
-    padding: 72px;
-  }
-  .client-profile p {
-    font-size: 48px;
-  }
-
-  .contact-block {
-    padding: 200px 96px;
-    text-align: center;
-  }
-  .contact-block p {
-    font-size: 28px;
-    max-width: 60ch;
-  }
-  .contact-block .contact-links {
-    font-size: 24px;
-    gap: 48px;
-  }
-}
-
-/* ---------- Container queries: services + case-studies ----------
-   When a service or case-study card is independently wide
-   (e.g. spans more space than the viewport rule expects),
-   internal type tracks the cell. */
-@container (min-width: 360px) {
-  .service h3 {
-    font-size: clamp(22px, 6cqw, 44px);
-  }
-  .service p {
-    font-size: clamp(15px, 2.4cqw, 22px);
-  }
-}
-@container (min-width: 720px) {
-  .case-study h3 {
-    font-size: clamp(28px, 5cqw, 80px);
-  }
-  .case-study .blocks p {
-    font-size: clamp(16px, 2cqw, 24px);
-  }
+  margin: 0 auto 24px;
 }

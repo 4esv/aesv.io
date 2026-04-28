@@ -1,5 +1,5 @@
 ;(function () {
-  // ---------- info block: live time + date ----------
+  // ---------- Weather widget: live time + date ----------
   var TIMEZONE = 'America/New_York'
 
   function nyParts() {
@@ -52,14 +52,16 @@
     }
   }
 
+  function pad(n) {
+    return n < 10 ? '0' + n : '' + n
+  }
+
   function tickInfo() {
     var p = nyParts()
-    var hourDeg = ((p.hour % 12) + p.minute / 60) * 30
-    var minDeg = (p.minute + p.second / 60) * 6
-    var hourEl = document.getElementById('info-clock-hour')
-    var minEl = document.getElementById('info-clock-min')
-    if (hourEl) hourEl.setAttribute('transform', 'rotate(' + hourDeg + ' 30 30)')
-    if (minEl) minEl.setAttribute('transform', 'rotate(' + minDeg + ' 30 30)')
+    var hour12 = p.hour % 12 || 12
+    var ampm = p.hour < 12 ? 'am' : 'pm'
+    var clockEl = document.getElementById('info-clock-text')
+    if (clockEl) clockEl.textContent = hour12 + ':' + pad(p.minute) + ampm
     var mEl = document.getElementById('info-month')
     var wEl = document.getElementById('info-weekday')
     var dEl = document.getElementById('info-day')
@@ -70,92 +72,36 @@
   tickInfo()
   setInterval(tickInfo, 1000)
 
-  // ---------- interactive 3D cube (CSS transforms + drag) ----------
-  var stage = document.getElementById('cube-stage')
-  var cube = document.getElementById('cube')
-  if (!stage || !cube) return
+  // ---------- Hobbies tile: cycle between chess + strava panes ----------
+  // Pauses on hover so a visitor can read whichever pane caught their eye.
+  document.querySelectorAll('[data-cycle-interval]').forEach(function (el) {
+    var panes = el.querySelectorAll('.hobby-pane')
+    if (panes.length < 2) return
+    var interval = parseInt(el.getAttribute('data-cycle-interval'), 10) || 6000
+    var idx = 0
+    var paused = false
 
-  // Initial pose: a corner-isometric view that shows 3 faces clearly.
-  // Auto-rotates gently; drag spins it faster; release lets damping
-  // carry the momentum back toward the gentle baseline.
-  var rotX = -22
-  var rotY = -34
-  var velX = 0.04
-  var velY = 0.08
-  var dragging = false
-  var lastPx = 0
-  var lastPy = 0
-  var damping = 0.985
-
-  function syncCubeSize() {
-    var rect = cube.getBoundingClientRect()
-    var half = Math.max(8, Math.round(rect.width / 2))
-    cube.style.setProperty('--cube-half', half + 'px')
-  }
-  syncCubeSize()
-  if (typeof ResizeObserver !== 'undefined') {
-    new ResizeObserver(syncCubeSize).observe(cube)
-  } else {
-    window.addEventListener('resize', syncCubeSize)
-  }
-
-  function apply() {
-    cube.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)'
-  }
-
-  function frame() {
-    if (!dragging) {
-      rotX += velX
-      rotY += velY
-      velX *= damping
-      velY *= damping
+    function advance() {
+      if (paused) return
+      panes[idx].classList.remove('is-active')
+      idx = (idx + 1) % panes.length
+      panes[idx].classList.add('is-active')
     }
-    apply()
-    requestAnimationFrame(frame)
-  }
 
-  function pointerXY(e) {
-    if (e.touches && e.touches[0]) return { x: e.touches[0].clientX, y: e.touches[0].clientY }
-    return { x: e.clientX, y: e.clientY }
-  }
+    setInterval(advance, interval)
 
-  function onDown(e) {
-    dragging = true
-    var p = pointerXY(e)
-    lastPx = p.x
-    lastPy = p.y
-    velX = 0
-    velY = 0
-    stage.classList.add('is-dragging')
-    e.preventDefault()
-  }
-
-  function onMove(e) {
-    if (!dragging) return
-    var p = pointerXY(e)
-    var dx = p.x - lastPx
-    var dy = p.y - lastPy
-    lastPx = p.x
-    lastPy = p.y
-    rotY += dx * 0.5
-    rotX -= dy * 0.5
-    velX = -dy * 0.4
-    velY = dx * 0.4
-    apply()
-  }
-
-  function onUp() {
-    dragging = false
-    stage.classList.remove('is-dragging')
-  }
-
-  stage.addEventListener('mousedown', onDown)
-  stage.addEventListener('touchstart', onDown, { passive: false })
-  window.addEventListener('mousemove', onMove)
-  window.addEventListener('touchmove', onMove, { passive: false })
-  window.addEventListener('mouseup', onUp)
-  window.addEventListener('touchend', onUp)
-
-  apply()
-  requestAnimationFrame(frame)
+    var host = el.closest('.widget-cell-link') || el
+    host.addEventListener('mouseenter', function () {
+      paused = true
+    })
+    host.addEventListener('mouseleave', function () {
+      paused = false
+    })
+    host.addEventListener('focusin', function () {
+      paused = true
+    })
+    host.addEventListener('focusout', function () {
+      paused = false
+    })
+  })
 })()

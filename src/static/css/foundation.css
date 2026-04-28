@@ -150,6 +150,12 @@
   --reading-narrow: 60ch;
   --reading-default: 72ch;
   --reading-wide: 84ch;
+
+  /* Unified outer shell — every page uses this so the brand/back-link
+     line up across home, music, work, activities, garden, about. */
+  --shell-max: 1200px;
+  --shell-pad-x: clamp(16px, 3vw, 48px);
+  --shell-pad-y: clamp(16px, 3vw, 48px);
 }
 
 /* ---------- Reset / base ---------- */
@@ -162,6 +168,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  overscroll-behavior: none;
 }
 html {
   background-color: var(--cream);
@@ -406,6 +413,61 @@ a:hover {
   border-radius: var(--radius-pill);
   padding: 12px 24px;
 }
+/* Small variant — used as the "go to <service>" CTA under page titles.
+   Same cartoon shadow, smaller padding/type so it sits under an h1 as a
+   secondary action rather than a hero button. */
+.btn-sm {
+  font-size: 12px;
+  padding: 8px 14px;
+  gap: 8px;
+  letter-spacing: 0.06em;
+  box-shadow: var(--shadow-sm);
+}
+.btn-sm:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Unified subpage shell — every cream-paper subpage uses this so the
+   brand/back-link line up across pages. Width: --shell-max (1200px),
+   horizontal padding: --shell-pad-x. Reading-prose pages still cap
+   their inner column with --reading-default. */
+.subpage {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: var(--shell-pad-y) var(--shell-pad-x);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 5vw, 64px);
+}
+
+/* Page hero block — title + small CTA card under it. Used on every
+   subpage for visual consistency. */
+.page-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.page-head h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.page-head .lede {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.55;
+  color: var(--ink-mute);
+  margin: 0;
+  max-width: 60ch;
+}
+.page-head .page-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
 
 .card {
   background: var(--cream);
@@ -421,74 +483,7 @@ a:hover {
   padding: var(--s-6);
 }
 
-/* ---------- Tile (link tiles on dashboard) ---------- */
-.tile {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
-  padding: var(--s-4);
-  text-decoration: none;
-  color: var(--ink);
-  border-radius: var(--radius-square);
-  position: relative;
-  cursor: pointer;
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
-  min-height: 200px;
-}
-.tile:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-lg);
-  color: var(--ink);
-}
-.tile:active {
-  transform: translate(6px, 6px);
-  box-shadow: var(--shadow-pressed);
-}
-.tile-eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-mute);
-}
-.tile-title {
-  font-family: var(--font-display);
-  font-size: clamp(24px, 3vw, 36px);
-  line-height: 1.05;
-  margin: 12px 0 8px;
-  overflow-wrap: anywhere;
-}
-.tile-desc {
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--ink);
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-.tile-arrow {
-  font-family: var(--font-mono);
-  font-size: 24px;
-  align-self: flex-end;
-  margin-top: 16px;
-}
-.tile-primary {
-  background: var(--lavender);
-  color: var(--offwhite);
-}
-.tile-primary .tile-eyebrow,
-.tile-primary .tile-desc,
-.tile-primary .tile-arrow {
-  color: var(--offwhite);
-}
-.tile:hover .tile-arrow {
-  transform: translate(2px, -2px);
-  transition: transform var(--dur-press) var(--ease-press);
-}
+/* Tile styles live in dashboard.css — single rule, single label. */
 
 /* ---------- Widget sticker (no card chrome — just shadow on the visual) ---------- */
 .widget {
@@ -631,7 +626,7 @@ a:hover {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  margin: 0 0 var(--s-4);
+  margin: 0;
 }
 .site-nav {
   display: flex;
@@ -663,6 +658,20 @@ a:hover {
   margin: 0;
   text-align: right;
   max-width: 60ch;
+}
+.back-link {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 1px;
+}
+.back-link:hover {
+  color: var(--lavender);
+  border-bottom-color: var(--lavender);
 }
 .dashboard-greeting strong {
   font-weight: 400;

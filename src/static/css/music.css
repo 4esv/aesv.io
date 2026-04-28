@@ -4,24 +4,108 @@
    primitives; this file adds the album grid + artist stack.
    ========================================================= */
 
-.music {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: clamp(16px, 3vw, 48px);
+/* Music page extends the shared .subpage shell — no width / padding
+   here so brand + back-link line up with every other subpage. */
+.music .block {
   display: flex;
   flex-direction: column;
-  gap: clamp(40px, 6vw, 80px);
+  gap: 12px;
 }
 
-/* Hero — terser than /listening: nouns, not paragraphs */
-.music-hero {
+/* Smaller now-playing card — the original full-bleed hero is too loud
+   on a page where last-played is supposed to be a quick glance. */
+.now-playing-compact .now-grid {
+  grid-template-columns: minmax(140px, 0.35fr) 1fr;
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: clamp(16px, 1.6vw, 22px);
+  gap: clamp(16px, 2vw, 28px);
+  align-items: center;
+}
+.now-playing-compact .now-art {
+  max-width: 200px;
+}
+.now-playing-compact .now-track {
+  font-size: clamp(20px, 2.4vw, 32px);
+}
+.now-playing-compact .now-artist {
+  font-size: clamp(15px, 1.4vw, 19px);
+}
+.now-playing-compact .now-album {
+  font-size: clamp(12px, 1vw, 14px);
+  margin-bottom: 8px;
+}
+@media (max-width: 460px) {
+  .now-playing-compact .now-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* What I play — same row pattern as ledger but with a tag chip. */
+.play-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: var(--border-thin);
+}
+.play-row {
+  display: grid;
+  grid-template-columns: clamp(36px, 3.6vw, 56px) 1fr auto;
+  gap: clamp(12px, 1.6vw, 24px);
+  align-items: baseline;
+  padding: clamp(12px, 1.4vw, 18px) clamp(8px, 1.4vw, 14px);
+  border-bottom: var(--border-thin);
+}
+.play-num {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.1vw, 15px);
+  font-weight: 700;
+  color: var(--lavender);
+  letter-spacing: 0.04em;
+}
+.play-meta {
+  min-width: 0;
+}
+.play-name {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1.05;
+  margin: 0 0 4px;
+}
+.play-note {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1vw, 14px);
+  color: var(--ink-mute);
+  margin: 0;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+}
+.play-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 9999px;
+  background: var(--cream);
+  color: var(--ink);
+  align-self: center;
+}
+
+/* Music-to-me — short paragraphs, prose-narrow column. */
+.music-to-me {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   max-width: 60ch;
 }
-.music-hero .display {
-  letter-spacing: -0.03em;
-}
-.music-hero .lede {
-  max-width: 32ch;
+.music-to-me p {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
 }
 
 /* ---------- ALBUMS GRID ---------- */

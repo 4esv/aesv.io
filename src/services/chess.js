@@ -78,6 +78,21 @@ function getFen(pgn) {
   }
 }
 
+// Replays the PGN and returns the last move's {from, to} squares —
+// used to highlight the winning move on the rendered board.
+function getLastMoveSquares(pgn) {
+  try {
+    const chess = new Chess()
+    chess.loadPgn(pgn)
+    const history = chess.history({ verbose: true })
+    if (!history.length) return null
+    const last = history[history.length - 1]
+    return { from: last.from, to: last.to }
+  } catch {
+    return null
+  }
+}
+
 // NOTE: Opening URLs look like
 // https://www.chess.com/openings/Nimzowitsch-Defense-Scandinavian-Bogoljubov-Variation
 // We strip the path tail and rehumanize the slug.
@@ -256,6 +271,7 @@ export async function getLastVictory(username) {
         const fen = game.fen || getFen(game.pgn)
         if (!fen) continue
 
+        const lastMove = getLastMoveSquares(game.pgn || '')
         return {
           white: getUsername(game.white),
           black: getUsername(game.black),
@@ -267,7 +283,8 @@ export async function getLastVictory(username) {
           timeControl: fmtTimeControl(game),
           timeClass: game.time_class || 'unknown',
           playerColor: color,
-          svg: renderBoardSvg(fen),
+          lastMove,
+          svg: renderBoardSvg(fen, { highlight: lastMove }),
         }
       }
     }

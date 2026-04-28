@@ -1,68 +1,31 @@
-/* CHESS — /chess on aesv.io. Cream paper, ink borders, cartoon shadows. */
+/* ACTIVITIES — /activities on aesv.io.
+   Chess + Strava receipts. Inherits .subpage shell from foundation.css. */
 
-.chess {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: clamp(16px, 3vw, 48px);
+.activities {
+  overflow-wrap: anywhere;
+}
+
+/* Section header — same idiom as the work page. */
+.act-section {
   display: flex;
   flex-direction: column;
-  gap: clamp(40px, 6vw, 72px);
-}
-
-/* Header / hero */
-.chess-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
   gap: 16px;
 }
-.chess-header .brand {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.2vw, 28px);
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--ink);
-  text-decoration: none;
-}
-.chess-header .brand img {
-  width: clamp(28px, 2.4vw, 36px);
-  height: auto;
-}
-.chess-nav {
-  display: flex;
-  gap: clamp(12px, 1.6vw, 24px);
-  font-family: var(--font-mono);
-  font-size: clamp(12px, 1vw, 14px);
-  letter-spacing: 0.04em;
-  text-transform: lowercase;
-}
-.chess-nav a {
-  text-decoration: none;
-}
-.chess-nav a:hover {
-  color: var(--lavender);
-}
-
-.chess-hero {
-  max-width: 60ch;
-}
-.chess-hero .eyebrow {
+.act-section .section-eyebrow {
   font-family: var(--font-mono);
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--ink-mute);
-  margin-bottom: 12px;
 }
-.chess-hero .display {
+.act-section h2 {
   font-family: var(--font-display);
-  font-size: var(--fs-h1);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  margin: 0 0 18px;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -0.01em;
 }
+
 .hero-record {
   font-family: var(--font-mono);
   font-size: clamp(14px, 1.2vw, 18px);
@@ -93,11 +56,11 @@
   text-transform: lowercase;
 }
 
-/* Blocks */
-.chess-block {
+/* Sub-blocks (rating strip, ledger, last-victory) */
+.act-block {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 .block-eyebrow {
   font-family: var(--font-mono);
@@ -116,7 +79,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Rating cards */
+/* ---------- Rating cards ---------- */
 .rating-strip {
   list-style: none;
   padding: 0;
@@ -183,125 +146,7 @@
   opacity: 0.7;
 }
 
-.puzzle-strip {
-  list-style: none;
-  padding: 0;
-  margin: 8px 0 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: clamp(16px, 1.6vw, 24px);
-}
-.puzzle-card {
-  background: var(--lavender);
-  color: var(--offwhite);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
-  padding: clamp(12px, 1.4vw, 18px);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-family: var(--font-mono);
-}
-.pc-label {
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-.pc-value {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 3vw, 40px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.pc-meta {
-  font-size: 12px;
-  opacity: 0.75;
-  text-transform: lowercase;
-  letter-spacing: 0.04em;
-}
-
-/* Featured board pair */
-.board-pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(20px, 2.4vw, 36px);
-}
-@media (max-width: 720px) {
-  .board-pair {
-    grid-template-columns: 1fr;
-  }
-}
-.board-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  text-decoration: none;
-  color: var(--ink);
-  transition: transform var(--dur-press) var(--ease-press);
-}
-.board-card:hover {
-  transform: translate(-2px, -2px);
-  color: var(--ink);
-}
-.bc-art {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  border: var(--border-thick);
-  box-shadow: var(--shadow-lg);
-  background: var(--cream);
-  overflow: hidden;
-}
-.bc-art svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--cream);
-}
-.bc-meta {
-  font-family: var(--font-mono);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.bc-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  font-weight: 700;
-  font-size: 14px;
-  border: 2px solid var(--ink);
-  align-self: flex-start;
-}
-.bc-badge.badge-win {
-  background: var(--sage);
-  color: var(--offwhite);
-}
-.bc-badge.badge-loss {
-  background: var(--brick);
-  color: var(--offwhite);
-}
-.bc-opp {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.4vw, 32px);
-  line-height: 1.05;
-  overflow-wrap: anywhere;
-}
-.bc-line {
-  color: var(--ink-mute);
-  font-size: clamp(12px, 1vw, 14px);
-  text-transform: lowercase;
-  letter-spacing: 0.04em;
-}
-.bc-eco {
-  color: var(--ink-mute);
-  font-size: clamp(11px, 0.9vw, 13px);
-  text-transform: lowercase;
-}
-
-/* Ledger */
+/* ---------- Ledger (recent games) ---------- */
 .ledger {
   list-style: none;
   padding: 0;
@@ -417,7 +262,6 @@
   color: var(--offwhite);
 }
 
-/* Watch / narrow widths */
 @media (max-width: 720px) {
   .ledger-head {
     display: none;
@@ -454,7 +298,7 @@
   }
 }
 
-/* Last victory */
+/* ---------- Last victory + playthrough ---------- */
 .lv-grid {
   display: grid;
   grid-template-columns: minmax(220px, 0.55fr) 1fr;
@@ -485,7 +329,7 @@
 }
 .lv-pair {
   font-family: var(--font-display);
-  font-size: clamp(26px, 3.6vw, 48px);
+  font-size: clamp(24px, 3.2vw, 40px);
   line-height: 1;
   letter-spacing: -0.02em;
   margin: 0;
@@ -499,11 +343,67 @@
   text-transform: lowercase;
   letter-spacing: 0.04em;
 }
-.lv-meta .btn {
-  align-self: flex-start;
+.lv-line strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.lv-replay-status {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  margin: 0;
+  min-height: 1em;
 }
 @media (max-width: 720px) {
   .lv-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------- Strava — same chess-tile shape (.lv-grid). The map sits
+   in the .lv-board square on the left; stats + profile CTA sit in
+   .lv-meta on the right. .strava-stats is a small dl grid. */
+.strava-map {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.strava-route {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.strava-empty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.strava-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 0;
+}
+.strava-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.strava-stats dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0;
+}
+.strava-stats dd {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1;
+  color: var(--ink);
+  margin: 0;
 }

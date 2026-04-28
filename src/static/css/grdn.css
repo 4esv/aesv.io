@@ -3,15 +3,11 @@
    Reading-first prose, code, math, footnotes
    ========================================================= */
 
+/* Garden / files page inherits .subpage's width and padding from
+   foundation.css so the brand and back-link line up with every other
+   subpage. The narrow reading column lives on .essay .prose. */
 .grdn-shell {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: var(--s-6) var(--s-4);
   overflow-wrap: anywhere;
-}
-/* Discovery surface needs more horizontal room than reading prose. */
-.grdn-shell.garden-discovery {
-  max-width: 1200px;
 }
 .grdn-shell,
 .grdn-shell * {
@@ -21,11 +17,6 @@
 .grdn-shell h2,
 .grdn-shell h3 {
   overflow-wrap: anywhere;
-}
-@media (max-width: 640px) {
-  .grdn-shell {
-    padding: var(--s-4) var(--s-2);
-  }
 }
 .prose pre {
   white-space: pre;
@@ -204,10 +195,14 @@
   color: var(--lavender);
 }
 
-/* Single essay */
-.essay {
-  padding-top: var(--s-3);
-  max-width: 760px;
+/* Reading-prose pages narrow the prose column inside the unified shell.
+   Outer shell width stays at --shell-max so the header lines up with
+   every other subpage. */
+.essay .prose,
+.essay .page-head,
+.about .prose,
+.about .page-head {
+  max-width: var(--reading-default);
 }
 .essay-header {
   margin-bottom: var(--s-6);
@@ -544,12 +539,10 @@
   }
 }
 
-/* ---------- Desktop tier (1600–2559px) ---------- */
+/* ---------- Desktop tier (1600–2559px) ----------
+   Outer shell width is owned by .subpage in foundation.css; only
+   prose-internal sizes grow here. */
 @media (min-width: 1600px) and (max-width: 2559px) {
-  .grdn-shell {
-    max-width: 880px;
-    padding: 80px 48px;
-  }
   .prose {
     font-size: 20px;
     line-height: 1.75;
@@ -562,25 +555,6 @@
   }
   .essay-header h1 {
     font-size: 72px;
-  }
-  /* Index pages get a 2-col essay grid at this band — the
-     prose reading width still wins on essay/:slug. */
-  body:has(.essay-list) .grdn-shell {
-    max-width: 1400px;
-  }
-  .essay-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
-  .essay-card {
-    padding: 40px;
-  }
-  .essay-card h2 {
-    font-size: 40px;
-  }
-  .essay-card p {
-    font-size: 18px;
   }
 }
 
@@ -597,36 +571,8 @@
 }
 
 /* ---------- TV / billboard tier (≥2560px) ----------
-   Index: 3-column essay cards, larger type.
-   Essay: ~80ch with massive line-height for distance reading. */
+   Outer shell width owned by .subpage; only prose grows here. */
 @media (min-width: 2560px) {
-  .grdn-shell {
-    max-width: none;
-    padding: 120px 96px;
-  }
-
-  .grdn-nav {
-    margin-bottom: 96px;
-  }
-  .grdn-nav .brand {
-    font-size: 36px;
-    gap: 24px;
-  }
-  .grdn-nav .brand img {
-    width: 64px;
-    height: 64px;
-  }
-  .grdn-nav .nav-links {
-    font-size: 24px;
-    gap: 48px;
-  }
-
-  .grdn-hero {
-    margin-bottom: 120px;
-    max-width: 2200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
   .grdn-hero h1 {
     font-size: 200px;
     line-height: 0.95;

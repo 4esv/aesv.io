@@ -1,16 +1,15 @@
-{# Shared header for the cream-paper system (home, work, garden,
-   chess). Pages pass `pageEyebrow` to print a right-aligned label
-   matching the bento page's "Axel Stevens" greeting position. #}
+{# Shared header — brand on the left, page-aware right slot.
+   Home (route='/' or no route): greeting "Axel Stevens".
+   Every subpage: "← back" link to the dashboard.
+   Nav lives in the footer only — no top-of-page nav anywhere. #}
 <header class="site-header">
   <a class="brand" href="/" aria-label="aesv.io home">
     <img src="/logo.png" alt="" width="36" height="36">
     <span>aesv.io</span>
   </a>
-  <nav class="site-nav" aria-label="Primary">
-    <a href="/work"{% if route == '/work' %} aria-current="page"{% endif %}>work</a>
-    <a href="/garden"{% if route and route.startsWith('/garden') %} aria-current="page"{% endif %}>garden</a>
-    <a href="/chess"{% if route == '/chess' %} aria-current="page"{% endif %}>chess</a>
-    <a href="/listening"{% if route == '/listening' %} aria-current="page"{% endif %}>listening</a>
-  </nav>
-  {% if pageEyebrow %}<p class="dashboard-greeting"><strong>{{ pageEyebrow }}</strong></p>{% else %}<p class="dashboard-greeting"><strong>Axel Stevens</strong></p>{% endif %}
+  {% if route and route != '/' %}
+    <a class="back-link" href="/" aria-label="Back to the dashboard">← back</a>
+  {% else %}
+    <p class="dashboard-greeting"><strong>{{ pageEyebrow or 'Axel Stevens' }}</strong></p>
+  {% endif %}
 </header>

@@ -11,6 +11,18 @@ last played: {{ recent[0].name | safe }} — {{ recent[0].artist | safe }} ({{ r
 {% else -%}
 no recent activity.
 {% endif %}
+{% if recentLog and recentLog.length %}
+recent (top 5)
+--------------
+{% for r in recentLog -%}
+{{ loop.index }}. {{ r.name | safe }} — {{ r.artist | safe }}
+{% endfor %}{% endif %}
+{% if instruments and instruments.length %}
+what i play
+-----------
+{% for i in instruments -%}
+- {{ i.name }} — {{ i.note }}
+{% endfor %}{% endif %}
 {% if albums and albums.length %}
 albums
 ------
@@ -21,19 +33,13 @@ albums
 artists
 -------
 {% for a in topArtists -%}
-{{ loop.index }}. {{ a.name | safe }}{% if a.followers %} ({{ a.followers }} followers){% endif %}
-{% endfor %}{% endif %}
-{% if recent and recent.length %}
-recent
-------
-{% for r in recent -%}
-- {{ r.name | safe }} — {{ r.artist | safe }}
+{{ loop.index }}. {{ a.name | safe }}
 {% endfor %}{% endif %}
 
 aesv.io   /
 work      /work
-garden    /garden
-chess     /chess
+files     /garden
+chess     /activities
 listening /listening
 
 mail   mail@aesv.io
@@ -46,7 +52,7 @@ github https://github.com/4esv
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>music — aesv.io</title>
-  <meta name="description" content="What I'm listening to. Albums, artists, tracks. Pulled live from Spotify.">
+  <meta name="description" content="What I'm listening to and what I play. Albums, artists, tracks. Pulled live from Spotify.">
   <link rel="icon" href="/logo-pixel.png" type="image/png">
   <meta name="theme-color" content="#F4ECD8">
   <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -56,23 +62,16 @@ github https://github.com/4esv
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
-  <main id="main" class="music">
-    <header class="listen-header">
-      <a class="brand" href="/">
-        <img src="/logo.png" alt="" width="36" height="36">
-        <span>aesv.io</span>
-      </a>
-      <nav class="nav-links">
-        <a href="/">← dashboard</a>
-        <a href="/listening">listening</a>
-        <a href="https://open.spotify.com/user/4esv" rel="noopener">Spotify ↗</a>
-      </nav>
-    </header>
+  <main id="main" class="subpage music">
+    {% include "partials/site-header.njk" %}
 
-    <section class="hero music-hero">
-      <div class="eyebrow">music</div>
-      <h1 class="display">albums for everything.</h1>
-    </section>
+    <header class="page-head">
+      <h1>music.</h1>
+      <p class="lede">What I'm listening to, what I play, what I'd like back on cassette.</p>
+      <div class="page-cta-row">
+        <a class="btn btn-sm" href="https://open.spotify.com/user/4esv" rel="noopener">Open in Spotify ↗</a>
+      </div>
+    </header>
 
     {% if not hasData %}
     <section class="block empty-state">
@@ -83,7 +82,7 @@ github https://github.com/4esv
 
     {% set lead = nowPlaying or (recent[0] if recent and recent.length else null) %}
     {% if lead %}
-    <section class="block now-playing">
+    <section class="block now-playing now-playing-compact">
       <div class="block-eyebrow">{% if nowPlaying %}now playing{% else %}last played{% endif %}</div>
       <div class="now-grid">
         <div class="now-art">
@@ -95,8 +94,53 @@ github https://github.com/4esv
           <p class="now-track">{{ lead.name }}</p>
           <p class="now-artist">{{ lead.artist }}</p>
           <p class="now-album">{{ lead.album.name }}</p>
-          {% if lead.url %}<a class="btn" href="{{ lead.url }}" rel="noopener">Open in Spotify ↗</a>{% endif %}
+          {% if lead.url %}<a class="btn btn-sm" href="{{ lead.url }}" rel="noopener">Open in Spotify ↗</a>{% endif %}
         </div>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if recentLog and recentLog.length %}
+    <section class="block">
+      <div class="block-eyebrow">recent · top {{ recentLog.length }}</div>
+      <ol class="ledger">
+        {% for r in recentLog %}
+          <li class="ledger-row">
+            <span class="ledger-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
+            <div class="ledger-meta">
+              <p class="ledger-track">{{ r.name }}</p>
+              <p class="ledger-artist">{{ r.artist }}{% if r.album.name %} · <span class="ledger-album">{{ r.album.name }}</span>{% endif %}</p>
+            </div>
+            {% if r.url %}<a class="ledger-link" href="{{ r.url }}" rel="noopener" aria-label="Open {{ r.name }} on Spotify">↗</a>{% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+    {% endif %}
+
+    {% if instruments and instruments.length %}
+    <section class="block">
+      <div class="block-eyebrow">what i play · {{ instruments.length }}</div>
+      <ul class="play-list">
+        {% for i in instruments %}
+          <li class="play-row">
+            <span class="play-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
+            <div class="play-meta">
+              <p class="play-name">{{ i.name }}</p>
+              <p class="play-note">{{ i.note }}</p>
+            </div>
+            {% if i.tag %}<span class="play-tag">{{ i.tag }}</span>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    {% if musicToMe %}
+    <section class="block">
+      <div class="block-eyebrow">music to me</div>
+      <div class="music-to-me">
+        {% for line in musicToMe %}<p>{{ line }}</p>{% endfor %}
       </div>
     </section>
     {% endif %}
@@ -147,60 +191,9 @@ github https://github.com/4esv
       </ol>
     </section>
     {% endif %}
-
-    {% if recent and recent.length %}
-    <section class="block">
-      <div class="block-eyebrow">recent · {{ recent.length }}</div>
-      <ol class="ledger">
-        {% for r in recent %}
-          <li class="ledger-row">
-            <span class="ledger-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
-            <div class="ledger-meta">
-              <p class="ledger-track">{{ r.name }}</p>
-              <p class="ledger-artist">{{ r.artist }}{% if r.album.name %} · <span class="ledger-album">{{ r.album.name }}</span>{% endif %}</p>
-            </div>
-            {% if r.url %}<a class="ledger-link" href="{{ r.url }}" rel="noopener" aria-label="Open {{ r.name }} on Spotify">↗</a>{% endif %}
-          </li>
-        {% endfor %}
-      </ol>
-    </section>
-    {% endif %}
   </main>
 
-  <footer class="big-footer">
-    <div class="big-footer-inner">
-      <p class="footer-marquee">aesv<span class="accent">·</span>io</p>
-      <p class="footer-tagline">Mexican American sentient flesh pile. Pianist, bassist, emergency drummer. I make system A talk to system B.</p>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <h4>Sites</h4>
-          <ul>
-            <li><a href="/">aesv.io</a></li>
-            <li><a href="/work">work</a></li>
-            <li><a href="/garden">garden</a></li>
-            <li><a href="/music" aria-current="page">music</a></li>
-            <li><a href="/chess">chess</a></li>
-            <li><a href="/listening">listening</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Reach me</h4>
-          <ul>
-            <li><a href="mailto:mail@aesv.io">mail@aesv.io</a></li>
-            <li><a href="https://github.com/4esv" rel="noopener">github.com/4esv</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Colophon</h4>
-          <p>Spotify data cached 5 minutes server-side. No client tracking.</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>© {{ now | date('Y') }} Axel Stevens · MIT</span>
-        <span>Built in Ithaca, New York</span>
-      </div>
-    </div>
-  </footer>
+  {% include "partials/big-footer.njk" %}
 </body>
 </html>
 {%- endif -%}

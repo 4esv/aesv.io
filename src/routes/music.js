@@ -18,6 +18,25 @@ const ALBUM_LIMIT = 16
 const ARTIST_LIMIT = 10
 const RECENT_LIMIT = 20
 const TOP_TRACK_LIMIT = 20
+// Recent log on /music: skip the lead (last-played) and show the next 5.
+const RECENT_LOG_SIZE = 5
+
+// What I play — kept here (not in CMS / config) so the page renders even
+// when every external API is down. Order is intentional: primary first.
+const INSTRUMENTS = [
+  { name: 'piano', note: 'classical roots, comfortable improvising over changes', tag: 'primary' },
+  { name: 'electric bass', note: 'pocket player, fingerstyle, occasional pick', tag: 'primary' },
+  { name: 'drum kit', note: 'emergency drummer — keep time, stay out of the way', tag: 'rescue' },
+  { name: 'classical guitar', note: 'fingerstyle, slow doughs only', tag: 'casual' },
+  { name: 'voice', note: 'low baritone, used sparingly and never first', tag: 'casual' },
+]
+
+// "Music to me" — short paragraphs in my voice. Survives API outages.
+const MUSIC_TO_ME = [
+  'Music is the closest thing I have to a daily practice. I play to think — sit with a chord that\'s bothering me until it stops.',
+  'No through-line in what I listen to. Corridos, Norwegian death metal, Vince Guaraldi, Rosalía. The connecting thread is "I want to hear that again right now."',
+  'I prefer a room with one good speaker over a soundbar with surround. Recordings are written for two ears.',
+]
 
 const CACHE_TTL_MS = 5 * 60 * 1000
 const NOW_PLAYING_WINDOW_MS = 10 * 60 * 1000
@@ -72,6 +91,9 @@ function pickNow(recent) {
 }
 
 export async function registerMusicRoutes(fastify) {
+  // Old /listening URL collapses into /music — single canonical page now.
+  fastify.get('/listening', async (_request, reply) => reply.redirect('/music', 301))
+
   fastify.get('/music', async (request, reply) => {
     const { grid } = request
     const cfg = fastify.config.spotify
@@ -92,6 +114,10 @@ export async function registerMusicRoutes(fastify) {
     const albums = deriveAlbums([...recentList, ...topList], ALBUM_LIMIT)
     // NOTE: keyed `nowPlaying` (not `now`) — `now` is a global Date in template-helpers.
     const nowPlaying = pickNow(recentList)
+    // Recent log: skip the lead track (already shown as last-played) and
+    // show the next RECENT_LOG_SIZE entries.
+    const leadIndex = nowPlaying ? -1 : 0
+    const recentLog = recentList.slice(leadIndex + 1, leadIndex + 1 + RECENT_LOG_SIZE)
 
     const payload = {
       site: fastify.config.site,
@@ -99,8 +125,11 @@ export async function registerMusicRoutes(fastify) {
       route: '/music',
       nowPlaying,
       recent: recentList,
+      recentLog,
       albums,
       topArtists: artistsList,
+      instruments: INSTRUMENTS,
+      musicToMe: MUSIC_TO_ME,
       hasData: Boolean(recentList.length || albums.length || artistsList.length),
     }
 

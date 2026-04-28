@@ -1,0 +1,132 @@
+{%- if grid.isTerminal -%}
+{% extends "base-text.njk" %}
+{% block content %}
+activities.
+===========
+{% if lastVictory -%}
+last victory
+------------
+{{ lastVictory.white }} vs {{ lastVictory.black }} — {{ lastVictory.result }}
+{% if lastVictory.lastMove %}winning move: {{ lastVictory.lastMove.from }} → {{ lastVictory.lastMove.to }}
+{% endif %}{{ lastVictory.url }}
+{% else -%}no recent chess data.
+{% endif %}
+{% if strava %}
+strava — last activity
+----------------------
+{{ strava.name }} ({{ strava.type }})
+{{ strava.distance }} mi · {{ strava.duration }} · {{ strava.elevation }} ft elevation
+{% endif %}
+---
+aesv.io     /
+work        /work
+files       /garden
+music       /music
+activities  /activities (current)
+
+email       mail@aesv.io
+github      https://github.com/4esv
+
+MIT License. {{ now | date('Y') }}.
+{% endblock %}
+{%- else -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>activities — aesv.io</title>
+  <meta name="description" content="What I'm up to. Chess.com receipts and the last Strava activity.">
+  <link rel="icon" href="/logo-pixel.png" type="image/png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <meta name="theme-color" content="#F4ECD8">
+  <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/foundation.css">
+  <link rel="stylesheet" href="/css/activities.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <main id="main" class="subpage activities">
+    {% include "partials/site-header.njk" %}
+
+    <header class="page-head">
+      <h1>activities.</h1>
+      <div class="page-cta-row">
+        <a class="btn btn-sm" href="https://chess.com/member/4esv" rel="noopener">chess.com ↗</a>
+        <a class="btn btn-sm" href="https://strava.com/athletes/51674641" rel="noopener">strava ↗</a>
+      </div>
+    </header>
+
+    {# Chess — last-match widget only. #}
+    {% if lastVictory %}
+    <section class="act-section">
+      <h2>Won this one.</h2>
+      <div class="lv-grid">
+        <div class="lv-board" id="lv-board">{{ lastVictory.svg | safe }}</div>
+        <div class="lv-meta">
+          <p class="lv-pair"><strong>{{ lastVictory.white }}</strong> vs <strong>{{ lastVictory.black }}</strong></p>
+          <p class="lv-line">{{ lastVictory.result }}{% if lastVictory.eco %} · {{ lastVictory.eco }}{% endif %}{% if lastVictory.timeControl %} · {{ lastVictory.timeControl }}{% endif %}</p>
+          {% if lastVictory.lastMove %}
+          <p class="lv-line">winning move: <strong>{{ lastVictory.lastMove.from }} → {{ lastVictory.lastMove.to }}</strong></p>
+          {% endif %}
+          <div class="page-cta-row">
+            {% if replayFramesSvg and replayFramesSvg.length %}
+            <button class="btn btn-sm" type="button" id="lv-play" data-frame-count="{{ replayFramesSvg.length }}">▶ play through</button>
+            <button class="btn btn-sm" type="button" id="lv-reset" hidden>↺ reset</button>
+            {% endif %}
+            <a class="btn btn-sm" href="{{ lastVictory.url }}" rel="noopener">chess.com ↗</a>
+          </div>
+          <p class="lv-replay-status" id="lv-status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    {# Strava — same two-column shape as the chess widget. Map left, meta right. #}
+    <section class="act-section">
+      <h2>Activity.</h2>
+      {% if strava %}
+      <div class="lv-grid">
+        <div class="lv-board strava-map">
+          {% if strava.routePath %}
+          <svg viewBox="0 0 100 100" class="strava-route" role="img"
+               aria-label="Route map for {{ strava.name }}, {{ strava.distance }} miles" preserveAspectRatio="xMidYMid meet">
+            <path d="{{ strava.routePath }}"
+                  fill="none"
+                  stroke="#1A1A1A"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+          {% else %}
+          <div class="strava-empty">no map (indoor)</div>
+          {% endif %}
+        </div>
+        <div class="lv-meta">
+          <p class="lv-pair">{{ strava.name }}</p>
+          <dl class="strava-stats">
+            <div><dt>Type</dt><dd>{{ strava.type }}</dd></div>
+            <div><dt>Distance</dt><dd>{{ strava.distance }} mi</dd></div>
+            <div><dt>Time</dt><dd>{{ strava.duration }}</dd></div>
+            <div><dt>Gain</dt><dd>{{ strava.elevation }} ft</dd></div>
+          </dl>
+          <div class="page-cta-row">
+            <a class="btn btn-sm" href="https://strava.com/athletes/51674641" rel="noopener">strava profile ↗</a>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p class="empty">No recent activity. <a href="/api/auth/strava">Authorize Strava</a>.</p>
+      {% endif %}
+    </section>
+  </main>
+
+  {% if replayFramesSvg and replayFramesSvg.length %}
+  <script id="lv-frames" type="application/json">{{ replayFramesSvg | safeJson | safe }}</script>
+  <script src="/js/activities.js"></script>
+  {% endif %}
+
+  {% include "partials/big-footer.njk" %}
+</body>
+</html>
+{%- endif -%}

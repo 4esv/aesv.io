@@ -1,78 +1,9 @@
-{% set caseStudies = [
-  {
-    slug: 'interfolio',
-    year: '2024',
-    tag: 'Faculty workflow',
-    title: 'Interfolio Dossier Builder',
-    problem: 'Tenure and promotion packets took days to assemble by hand, during the highest-stakes review window of the year.',
-    solution: 'React/Vite UI → Node/Express API → BullMQ on Redis → Python worker. Pulls documents from Interfolio, classifies them, merges PDFs, pushes the packet back.',
-    impact: 'Days became 5 minutes. 23,000 lines, 127 files, six languages.',
-    stack: 'Node.js · Express · React · Vite · Python · BullMQ · Redis · PyPDF2 · Interfolio API (HMAC-SHA1) · MSSQL · Shibboleth/SAML · systemd'
-  },
-  {
-    slug: 'app-security',
-    year: '2023',
-    tag: 'RBAC · directory',
-    title: 'App Security Manager',
-    problem: 'Application access lived in a decade-old ColdFusion system with no API. Permissions tracked in spreadsheets. A change took phone calls and days.',
-    solution: 'Node.js + MSSQL, three-tier roles, live LDAP search with drag-and-drop, Shibboleth/SAML SSO, transactional SQL. One interface, two colleges.',
-    impact: 'Days to under a minute. Replaced 10+ years of production ColdFusion.',
-    stack: 'Node.js · Express · MSSQL · LDAP · Shibboleth/SAML'
-  },
-  {
-    slug: 'frevvo',
-    year: '2023—now',
-    tag: 'Workflow platform',
-    title: 'Frevvo Workflow Platform',
-    problem: 'Multi-college workflow platform. No docs, no version control, no tests, no backup maintainer. Ownership transferred when the supervising admin retired.',
-    solution: 'Sole maintainer. 806 JavaScript business rules (8,592 active lines), 37 API endpoints, 16 LDAP groups. UUID-named XML refactored into a documented platform.',
-    impact: '53 forms, 45 workflows, 2 colleges, 4 orgs. $258K COCOMO.',
-    stack: 'JavaScript · MSSQL · LDAP · REST · PDF generation'
-  },
-  {
-    slug: 'asset-sync',
-    year: '2023',
-    tag: 'MDM · CMDB',
-    title: 'Device Asset Sync',
-    problem: '1,300 devices, two inventory systems — Jamf for Macs, Snipe-IT for the rest. Reconciliation was quarterly, late, never complete.',
-    solution: 'PowerShell OOP class (AssetManager). Exponential backoff, OAuth refresh for Jamf\'s 15-minute tokens, request throttling, bi-directional sync. Mac agent via Jamf, Windows via Group Policy.',
-    impact: 'Audits itself nightly. 95%+ accuracy across 1,300 endpoints. Zero manual reconciliation.',
-    stack: 'PowerShell OOP · Jamf Pro API · Snipe-IT API · Group Policy · OAuth'
-  },
-  {
-    slug: 'nao',
-    year: '2022',
-    tag: 'AI · research',
-    title: 'NAO Bot AI Integration',
-    problem: 'Faculty researcher needed a conversational humanoid robot for an NSF study. NAO\'s built-in speech recognition was keyword-matching only.',
-    solution: 'NAO mic → OpenAI Whisper → GPT → NAO\'s animated speech via NAOqi SDK. Independent test modes per layer to keep a 14-year-old SDK debuggable.',
-    impact: 'Proof-of-concept delivered for the NSF proposal. SDK predates the API it now speaks through.',
-    stack: 'Python · NAOqi SDK · OpenAI Whisper · OpenAI API'
-  },
-  {
-    slug: 'genome',
-    year: '2024',
-    tag: 'Personal · pipeline',
-    title: 'Genome Self-Analysis',
-    problem: 'No trusted bridge between raw consumer genotype data and actionable analysis. Vendor reports over-interpreted or refused to engage.',
-    solution: 'Raw 23andMe export → admixture against population calculators → PCA projection onto 1000 Genomes (50K SNPs, 26 groups) → polygenic risk scores from published GWAS.',
-    impact: 'Pipeline I understand end-to-end instead of a black-box result.',
-    stack: 'Python · population genetics calculators · 1000 Genomes reference · PCA · PRS scoring'
-  }
-] %}
-{% set services = [
-  { title: 'Forms & workflows', body: 'Frevvo or otherwise. Multi-stage approvals, role-based routing, LDAP, real databases. End-to-end.' },
-  { title: 'Automation scripts', body: 'PowerShell, Python, Node. API sync between systems that don\'t want to talk. Scheduled jobs, Group Policy, OAuth lifecycle.' },
-  { title: 'AI for researchers', body: 'Whisper, GPT, Azure OpenAI wired into research hardware. NSF-ready proofs of concept that run.' },
-  { title: 'Asset management plumbing', body: 'Jamf, Snipe-IT, MDM-to-CMDB sync. Hostname-pattern classification. Nightly audits.' },
-  { title: 'SSO & directory', body: 'LDAP, Active Directory, Shibboleth, SAML. RBAC dashboards. The boring infrastructure that has to be exactly right.' }
-] %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>work.aesv.io — Axel Stevens</title>
+  <title>work — aesv.io</title>
   <meta name="description" content="Axel Stevens — systems integrator. Six case studies. Available for contract work.">
   <link rel="icon" href="/logo-pixel.png" type="image/png">
   <link rel="apple-touch-icon" href="/logo.png">
@@ -83,70 +14,66 @@
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
-  <main id="main" class="work-shell">
-    {% set route = '/work' %}
-    {% set pageEyebrow = 'work / hire me' %}
+  <main id="main" class="subpage work-shell">
     {% include "partials/site-header.njk" %}
-    <nav class="work-subnav" aria-label="Work sections">
-      <a href="#services">Services</a>
-      <a href="#case-studies">Case studies</a>
-      <a href="#contact">Hire me</a>
-    </nav>
-      <header class="work-hero">
-        <div class="eyebrow">Available for contract & full-time</div>
-        <h1>I make system A talk to system B.</h1>
-        <p>Systems integrator at Cornell's College of Human Ecology. Plumbing between APIs that were never designed for each other — workflow platforms, MDMs, directory services, AI pipelines, legacy that has to keep running. 46,000 lines, 19 repos, six languages in production.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#contact">Hire me →</a>
-          <a class="btn" href="#case-studies">See the work</a>
-        </div>
-      </header>
 
-      <section class="work-section" id="services">
-        <div class="section-eyebrow">Menu · 5 services</div>
-        <h2>What I build.</h2>
-        <div class="services">
-          {% for s in services %}
-          <div class="service">
-            <span class="num">{{ '%02d' | format(loop.index) if false else (loop.index < 10 and '0' + (loop.index|string) or loop.index|string) }}</span>
-            <h3>{{ s.title }}</h3>
-            <p>{{ s.body }}</p>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
+    <header class="page-head">
+      <h1>work.</h1>
+      <p class="lede">Systems integrator at Cornell's College of Human Ecology. I make system A talk to system B — workflow platforms, MDMs, directory services, AI pipelines, the legacy stack that has to keep running.</p>
+      <div class="page-cta-row">
+        <a class="btn btn-sm btn-primary" href="mailto:mail@aesv.io">hire me ↗</a>
+        <a class="btn btn-sm" href="https://github.com/4esv" rel="noopener">github ↗</a>
+      </div>
+    </header>
 
-      <section class="work-section" id="case-studies">
-        <div class="section-eyebrow">Six case studies</div>
-        <h2>Things I've shipped.</h2>
+    <section class="work-section" id="case-studies">
+      <h2>Things I've done.</h2>
+      <ul class="case-card-grid">
         {% for cs in caseStudies %}
-          {% set cs = cs %}
-          {% include "work/_case-study.njk" %}
+        <li>
+          <a class="case-card" href="/work/{{ cs.slug }}">
+            <div class="case-card-meta">
+              <span>{{ cs.year }}</span>
+              <span>{{ cs.tag }}</span>
+            </div>
+            <h3 class="case-card-title">{{ cs.title }}</h3>
+            <p class="case-card-summary">{{ cs.summary }}</p>
+            {% if cs.impact %}<p class="case-card-impact">{{ cs.impact }}</p>{% endif %}
+            <span class="case-card-arrow" aria-hidden="true">read ↗</span>
+          </a>
+        </li>
         {% endfor %}
-      </section>
+      </ul>
+    </section>
 
-      <section class="work-section">
-        <div class="section-eyebrow">Who I work with</div>
-        <h2>The right fit.</h2>
-        <div class="client-profile">
-          <p>Small businesses, nonprofits, and higher-ed-adjacent shops that need engineering, not a vendor demo.</p>
-          <p>Vague reaches cost money. I scope tightly, quote concretely. Two systems that don't talk? Tell me.</p>
+    <section class="work-section" id="services">
+      <h2>Things I do.</h2>
+      <div class="services">
+        {% for s in services %}
+        <div class="service">
+          <span class="num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index|string }}</span>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.body }}</p>
         </div>
-      </section>
+        {% endfor %}
+      </div>
+    </section>
 
-      <section class="work-section contact-block" id="contact">
-        <div class="section-eyebrow">Contact</div>
-        <h2>Let's talk.</h2>
-        <p>Email me what you're trying to connect. Scope and quote back within two business days.</p>
-        <div class="cta-row" style="justify-content: center;">
-          <a class="btn btn-primary" href="mailto:mail@aesv.io">mail@aesv.io →</a>
-        </div>
-        <div class="contact-links" style="margin-top: 32px;">
-          <a href="https://github.com/4esv">github.com/4esv</a>
-          <a href="https://aesv.io">aesv.io</a>
-          <a href="https://linkedin.com/in/aesv">LinkedIn</a>
-        </div>
-      </section>
+    <section class="work-section">
+      <h2>Who I do it for.</h2>
+      <div class="client-profile">
+        <p>Small businesses, nonprofits, and higher-ed-adjacent shops that need engineering, not a vendor demo.</p>
+        <p>Vague reaches cost money. I scope tightly, quote concretely. Two systems that don't talk? Tell me.</p>
+      </div>
+    </section>
+
+    <section class="work-section contact-block" id="contact">
+      <h2>Let's talk.</h2>
+      <p>Email me what you're trying to connect. Scope and quote back within two business days.</p>
+      <div class="page-cta-row" style="justify-content: center;">
+        <a class="btn btn-primary" href="mailto:mail@aesv.io">mail@aesv.io →</a>
+      </div>
+    </section>
   </main>
 
   {% include "partials/big-footer.njk" %}

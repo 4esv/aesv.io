@@ -1,5 +1,7 @@
 {# Music widget — album art of the top track (short term).
-   Updates roughly weekly via the Spotify "short_term" window. #}
+   Updates roughly weekly via the Spotify "short_term" window.
+   The wrapping <a> + .cell-hover-label live in home.njk so the
+   hover/press interactions match every other tile. #}
 <div class="widget widget-spotify">
   <div class="widget-art">
     {% if topShort and topShort.album.artUrl %}
@@ -8,8 +10,4 @@
       <div class="widget-spotify-empty">no signal</div>
     {% endif %}
   </div>
-  <a class="listen-overlay" href="/music" aria-label="Open the music page">
-    <span class="label">{% if topShort %}{{ topShort.name }} · {{ topShort.artist }}{% else %}top track{% endif %}</span>
-    <span class="cta">music →</span>
-  </a>
 </div>

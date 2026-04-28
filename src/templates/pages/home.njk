@@ -9,9 +9,10 @@ Casual pianist, bassist and emergency drummer.
 I make system A talk to system B.
 
 work       /work
-garden     /garden
+files      /garden
+about      /about
 listening  /listening
-chess      /chess
+activities /activities
 music      /music
 
 email      mail@aesv.io
@@ -21,6 +22,8 @@ gpg        https://aesv.io/api/gpg
 last played: {{ recent.track }} — {{ recent.artist }}{% endif %}
 {% if chess %}
 last chess victory: {{ chess.white }} vs {{ chess.black }}{% endif %}
+{% if strava %}
+last activity: {{ strava.name }} ({{ strava.type }} · {{ strava.distance }} mi){% endif %}
 {% if weather %}
 weather: {{ weather.tempF }}F {{ weather.condition }} (Ithaca){% endif %}
 
@@ -48,55 +51,32 @@ MIT License. {{ now | date('Y') }}.
     {% include "partials/site-header.njk" %}
 
     <div class="dashboard-grid">
-      {# Top row: weather · music · time #}
+      {# Top row: weather · about · work #}
       <div class="widget-cell weather widget-cell-bare is-watch-primary">
         {% include "partials/widgets/weather-ithaca.njk" %}
       </div>
 
-      <div class="widget-cell spotify">
-        {% include "partials/widgets/spotify-album.njk" %}
-      </div>
+      <a class="tile tile-link about" href="/about">
+        <span class="tile-label">about <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
+      </a>
 
-      <div class="widget-cell time widget-cell-bare">
-        {% include "partials/widgets/time-ithaca.njk" %}
-      </div>
-
-      {# Bottom row: portfolio · chess · garden #}
-      {% set workTags = [
-        'react','node','python','powershell','bqn','fastify','vite','mssql',
-        'ldap','saml','shibboleth','oauth','redis','bullmq','frevvo','jamf',
-        'snipe','interfolio','azure','whisper','gpt','nunjucks','automation',
-        'integration','rbac','sso','cron','mdm','cms','devops'
-      ] %}
       <a class="tile tile-link work tile-primary" href="/work">
-        <div class="tile-cloud" aria-hidden="true">
-          {% for tag in workTags %}<span style="--i:{{ loop.index0 }}">{{ tag }}</span>{% endfor %}
-        </div>
-        <div class="tile-content">
-          <div class="tile-desc">Six case studies. Services. Hire me.</div>
-          <div class="tile-title">work ↗</div>
-        </div>
+        <span class="tile-label">work <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
       </a>
 
-      <a class="widget-cell chess widget-cell-link" href="/chess" aria-label="Open the chess page">
-        {% include "partials/widgets/chess-match.njk" %}
-        <span class="cell-hover-label">chess →</span>
+      {# Bottom row: music · activities (chess + strava cycle) · files #}
+      <a class="widget-cell spotify widget-cell-link" href="/music" aria-label="Open the music page">
+        {% include "partials/widgets/spotify-album.njk" %}
+        <span class="cell-hover-label">music <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
       </a>
 
-      {% set grdnTags = [
-        'fiction','essays','music','chess','genetics','philosophy','identity',
-        'language','code','diy','automotive','baking','cooking','observation',
-        'prose','notes','reading','memory','place','history','tools',
-        'process','craft','health','finance','sketches','interviews','book notes'
-      ] %}
+      <a class="widget-cell hobbies widget-cell-link" href="/activities" aria-label="Activities — chess and Strava">
+        {% include "partials/widgets/hobbies-cycle.njk" %}
+        <span class="cell-hover-label">activities <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
+      </a>
+
       <a class="tile tile-link grdn" href="/garden">
-        <div class="tile-cloud" aria-hidden="true">
-          {% for tag in grdnTags %}<span style="--i:{{ loop.index0 }}">{{ tag }}</span>{% endfor %}
-        </div>
-        <div class="tile-content">
-          <div class="tile-desc">Writing, code, essays.</div>
-          <div class="tile-title">garden ↗</div>
-        </div>
+        <span class="tile-label">files <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
       </a>
     </div>
 
