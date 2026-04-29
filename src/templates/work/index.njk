@@ -32,10 +32,6 @@
         {% for cs in caseStudies %}
         <li>
           <a class="case-card" href="/work/{{ cs.slug }}">
-            <div class="case-card-meta">
-              <span>{{ cs.year }}</span>
-              <span>{{ cs.tag }}</span>
-            </div>
             <h3 class="case-card-title">{{ cs.title }}</h3>
             <p class="case-card-summary">{{ cs.summary }}</p>
             {% if cs.impact %}<p class="case-card-impact">{{ cs.impact }}</p>{% endif %}

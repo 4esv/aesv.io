@@ -313,31 +313,98 @@
   overflow-x: auto;
 }
 
-/* Footnotes */
+/* ---------- Footnotes — first-class citation style ----------
+   Inline ref renders as a small lavender pill; the endnotes block
+   at the bottom of an essay sits behind a labelled "Notes" header
+   with a subtle dashed top rule. The backref arrow gets a hover
+   bump so readers can tab through references.
+   markdown-it-footnote emits:
+     inline:    <sup class="footnote-ref"><a id="fnref1" href="#fn1">[1]</a></sup>
+     block:     <hr class="footnotes-sep">
+                <section class="footnotes">
+                  <ol class="footnotes-list">
+                    <li id="fn1" class="footnote-item">
+                      <p>… <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+                    </li>
+                  </ol>
+                </section> */
+.prose .footnote-ref {
+  font-size: 0.65em;
+  vertical-align: super;
+  line-height: 0;
+  margin: 0 1px 0 2px;
+}
 .prose .footnote-ref a {
   text-decoration: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
   color: var(--lavender);
-  font-family: var(--font-display);
-  font-size: 0.8em;
-  vertical-align: super;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--lavender) 12%, transparent);
+  transition:
+    background var(--dur-press) var(--ease-press),
+    color var(--dur-press) var(--ease-press);
+}
+.prose .footnote-ref a:hover,
+.prose .footnote-ref a:focus-visible {
+  background: var(--lavender);
+  color: var(--offwhite);
+}
+/* Highlight the target footnote when the reader jumps to it. */
+.prose .footnote-item:target {
+  background: color-mix(in srgb, var(--lavender) 12%, transparent);
+  border-left: 3px solid var(--lavender);
+  padding-left: 12px;
+  margin-left: -15px;
+  transition: background 600ms ease;
+}
+
+.prose .footnotes-sep {
+  display: none;
 }
 .prose .footnotes {
   margin-top: 3em;
-  padding-top: 1em;
+  padding-top: 1.5em;
   border-top: 2px dashed var(--ink-mute);
-  font-size: 14px;
-  color: var(--ink-mute);
+  font-size: 0.9em;
+  line-height: 1.55;
+  color: var(--ink);
+  position: relative;
 }
-.prose .footnotes hr {
-  display: none;
+.prose .footnotes::before {
+  content: 'Notes';
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 1em;
 }
-.prose .footnotes ol {
-  padding-left: 24px;
+.prose .footnotes ol,
+.prose .footnotes-list {
+  padding-left: 1.5em;
+  margin: 0;
+  counter-reset: footnote;
+}
+.prose .footnote-item {
+  margin: 0 0 1em 0;
+  padding: 0.25em 0;
+}
+.prose .footnote-item p {
+  margin: 0;
 }
 .prose .footnote-backref {
   text-decoration: none;
-  margin-left: 6px;
+  display: inline-block;
+  margin-left: 8px;
   color: var(--lavender);
+  font-family: var(--font-mono);
+  transition: transform var(--dur-press) var(--ease-press);
+}
+.prose .footnote-backref:hover,
+.prose .footnote-backref:focus-visible {
+  transform: translate(-1px, -1px);
 }
 
 /* Anchor link on headings */
