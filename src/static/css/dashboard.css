@@ -206,11 +206,11 @@
    family of typography. */
 /* The paragraph stays a block so inline spans + <br> flow as text;
    the parent cell becomes a flex container so the whole block sits
-   vertically centered against the right edge. */
+   vertically centered against the left edge. */
 .widget-cell.weather {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .widget-cell.weather > .widget-info {
   height: auto;
@@ -218,6 +218,7 @@
 .widget-info {
   margin: 0;
   padding: clamp(8px, 6cqi, 32px);
+  padding-left: 15px;
   width: 100%;
   box-sizing: border-box;
   color: var(--ink);
@@ -225,7 +226,7 @@
   font-size: clamp(10px, 6cqi, 36px);
   line-height: 1.25;
   letter-spacing: -0.01em;
-  text-align: right;
+  text-align: left;
   display: block;
   overflow: hidden;
 }
