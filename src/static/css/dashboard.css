@@ -223,7 +223,7 @@
   box-sizing: border-box;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(10px, 6cqi, 36px);
+  font-size: clamp(11px, 6.6cqi, 40px);
   line-height: 1.25;
   letter-spacing: -0.01em;
   text-align: left;
