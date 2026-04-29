@@ -226,9 +226,20 @@
   font-size: clamp(12px, 7.3cqi, 44px);
   line-height: 1.25;
   letter-spacing: -0.01em;
-  text-align: left;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   overflow: hidden;
+}
+.widget-info .info-when,
+.widget-info .info-weather {
+  margin: 0;
+}
+.widget-info .info-when {
+  text-align: left;
+}
+.widget-info .info-weather {
+  text-align: right;
 }
 
 /* Hobbies widget shares the unified .widget-cell frame above. */
