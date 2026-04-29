@@ -5,12 +5,12 @@
 
     <nav class="footer-row footer-row-pages" aria-label="Site pages">
       <ul>
-        <li>{% if route == '/' %}<span aria-current="page">aesv.io</span>{% else %}<a href="/">aesv.io</a>{% endif %}</li>
-        <li>{% if route == '/work' or (route and route.startsWith('/work/')) %}<span aria-current="page">work</span>{% else %}<a href="/work">work</a>{% endif %}</li>
-        <li>{% if route == '/music' %}<span aria-current="page">music</span>{% else %}<a href="/music">music</a>{% endif %}</li>
-        <li>{% if route == '/activities' %}<span aria-current="page">activities</span>{% else %}<a href="/activities">activities</a>{% endif %}</li>
-        <li>{% if route and route.startsWith('/garden') %}<span aria-current="page">files</span>{% else %}<a href="/garden">files</a>{% endif %}</li>
-        <li>{% if route == '/about' %}<span aria-current="page">about</span>{% else %}<a href="/about">about</a>{% endif %}</li>
+        <li>{% if route == '/' %}<span aria-current="page">aesv.io/</span>{% else %}<a href="/">aesv.io/</a>{% endif %}</li>
+        <li>{% if route == '/work' or (route and route.startsWith('/work/')) %}<span aria-current="page">/work</span>{% else %}<a href="/work">/work</a>{% endif %}</li>
+        <li>{% if route == '/music' %}<span aria-current="page">/music</span>{% else %}<a href="/music">/music</a>{% endif %}</li>
+        <li>{% if route == '/activities' %}<span aria-current="page">/activities</span>{% else %}<a href="/activities">/activities</a>{% endif %}</li>
+        <li>{% if route and route.startsWith('/garden') %}<span aria-current="page">/files</span>{% else %}<a href="/garden">/files</a>{% endif %}</li>
+        <li>{% if route == '/about' %}<span aria-current="page">/about</span>{% else %}<a href="/about">/about</a>{% endif %}</li>
       </ul>
     </nav>
 
