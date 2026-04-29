@@ -1,24 +1,23 @@
 {# Shared neobrutalist footer — only nav surface on the site. #}
 <footer class="big-footer">
   <div class="big-footer-inner">
-    <p class="footer-marquee">aesv<span class="accent">·</span>io</p>
+    <p class="footer-marquee">aesv<span class="accent">·</span>io <img class="footer-logo" src="/logo.png" alt="" aria-hidden="true"></p>
 
-    <div class="footer-cols">
-      <nav class="footer-col" aria-label="Site pages">
-        <h4>Pages</h4>
-        <ul>
-          <li>{% if route == '/' %}<span aria-current="page">aesv.io</span>{% else %}<a href="/">aesv.io</a>{% endif %}</li>
-          <li>{% if route == '/work' or (route and route.startsWith('/work/')) %}<span aria-current="page">work</span>{% else %}<a href="/work">work</a>{% endif %}</li>
-          <li>{% if route == '/music' %}<span aria-current="page">music</span>{% else %}<a href="/music">music</a>{% endif %}</li>
-          <li>{% if route == '/activities' %}<span aria-current="page">activities</span>{% else %}<a href="/activities">activities</a>{% endif %}</li>
-          <li>{% if route and route.startsWith('/garden') %}<span aria-current="page">files</span>{% else %}<a href="/garden">files</a>{% endif %}</li>
-          <li>{% if route == '/about' %}<span aria-current="page">about</span>{% else %}<a href="/about">about</a>{% endif %}</li>
-        </ul>
-      </nav>
+    <nav class="footer-row footer-row-pages" aria-label="Site pages">
+      <h4>Pages</h4>
+      <ul>
+        <li>{% if route == '/' %}<span aria-current="page">aesv.io</span>{% else %}<a href="/">aesv.io</a>{% endif %}</li>
+        <li>{% if route == '/work' or (route and route.startsWith('/work/')) %}<span aria-current="page">work</span>{% else %}<a href="/work">work</a>{% endif %}</li>
+        <li>{% if route == '/music' %}<span aria-current="page">music</span>{% else %}<a href="/music">music</a>{% endif %}</li>
+        <li>{% if route == '/activities' %}<span aria-current="page">activities</span>{% else %}<a href="/activities">activities</a>{% endif %}</li>
+        <li>{% if route and route.startsWith('/garden') %}<span aria-current="page">files</span>{% else %}<a href="/garden">files</a>{% endif %}</li>
+        <li>{% if route == '/about' %}<span aria-current="page">about</span>{% else %}<a href="/about">about</a>{% endif %}</li>
+      </ul>
+    </nav>
 
-      <div class="footer-col footer-col-reach">
-        <h4>Reach me</h4>
-        <ul class="footer-icon-list">
+    <div class="footer-row footer-row-reach">
+      <h4>Reach me</h4>
+      <ul class="footer-icon-list">
           <li>
             <a href="mailto:mail@aesv.io" aria-label="Email mail@aesv.io">
               <svg class="footer-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -56,7 +55,6 @@
             </a>
           </li>
         </ul>
-      </div>
     </div>
 
     <div class="footer-bottom">

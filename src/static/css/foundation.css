@@ -796,9 +796,18 @@ a:hover {
   color: var(--cream);
   margin: 0;
   overflow-wrap: anywhere;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 48px);
+  flex-wrap: wrap;
 }
 .footer-marquee .accent {
   color: var(--lavender);
+}
+.footer-logo {
+  width: clamp(48px, 6vw, 96px);
+  height: auto;
+  flex: 0 0 auto;
 }
 .footer-tagline {
   font-family: var(--font-display);
@@ -808,28 +817,34 @@ a:hover {
   max-width: 36ch;
   color: var(--cream);
 }
-.footer-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 8vw, 120px);
-  padding-top: clamp(24px, 3vw, 40px);
+/* Footer rows — Pages and Reach me each become a full-width row with
+   their items spread across via justify-content: space-between. The
+   eyebrow ("Pages" / "Reach me") sits on its own line above the row
+   so the items use the entire width. */
+.footer-row {
+  padding-top: clamp(20px, 2vw, 32px);
   border-top: 2px dashed rgba(244, 236, 216, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.6vw, 22px);
 }
-@media (max-width: 640px) {
-  .footer-cols {
-    grid-template-columns: 1fr;
-    gap: clamp(24px, 5vw, 40px);
-  }
+.footer-row h4 {
+  margin: 0;
 }
-.footer-col-reach {
-  justify-self: end;
+.footer-row > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: clamp(16px, 2.4vw, 40px);
 }
-@media (max-width: 640px) {
-  .footer-col-reach {
-    justify-self: start;
-  }
+.footer-icon-list > li {
+  flex: 1 1 auto;
 }
-
 .footer-icon-list a {
   display: inline-flex;
   align-items: center;
@@ -841,24 +856,22 @@ a:hover {
   flex: 0 0 auto;
   color: currentColor;
 }
-.footer-col h4 {
+@media (max-width: 640px) {
+  .footer-row > ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+.footer-row h4 {
   font-family: var(--font-display);
   font-size: var(--fs-eyebrow);
   font-weight: 400;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: rgba(244, 236, 216, 0.6);
-  margin: 0 0 14px;
 }
-.footer-col ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.footer-col a {
+.footer-row a {
   font-family: var(--font-display);
   font-size: clamp(15px, 1.15vw, 17px);
   color: var(--cream);
@@ -866,21 +879,14 @@ a:hover {
   border-bottom: 2px solid transparent;
   padding-bottom: 1px;
 }
-.footer-col a:hover {
+.footer-row a:hover {
   border-bottom-color: var(--lavender);
   color: var(--lavender);
 }
-.footer-col li > [aria-current='page'] {
+.footer-row li > [aria-current='page'] {
   color: rgba(244, 236, 216, 0.55);
   font-family: var(--font-display);
   font-size: clamp(15px, 1.15vw, 17px);
-}
-.footer-col p {
-  font-family: var(--font-display);
-  font-size: clamp(14px, 1.1vw, 16px);
-  color: rgba(244, 236, 216, 0.75);
-  line-height: 1.5;
-  margin: 0;
 }
 .footer-bottom {
   display: flex;
