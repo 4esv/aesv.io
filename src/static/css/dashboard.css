@@ -248,7 +248,7 @@
   font-variant-numeric: tabular-nums;
 }
 .widget-info .info-time-meta {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: clamp(7px, 1.6cqi, 13px);
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -266,7 +266,7 @@
   line-height: 1;
 }
 .widget-info .info-loc-state {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: clamp(7px, 1.6cqi, 13px);
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -280,7 +280,7 @@
   line-height: 1;
 }
 .widget-info .info-weather-cond {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: clamp(7px, 1.6cqi, 13px);
   letter-spacing: 0.14em;
   text-transform: lowercase;
@@ -323,7 +323,7 @@
   height: 100%;
   background: var(--ink);
   color: var(--cream);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -373,7 +373,7 @@
   gap: 2px;
 }
 .hobby-strava-stats dt {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: clamp(9px, 1cqi, 11px);
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
@@ -427,7 +427,7 @@
   color: inherit;
 }
 .tile-label-arrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: clamp(7px, 6cqi, 32px);
   line-height: 1;
 }

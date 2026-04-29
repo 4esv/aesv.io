@@ -54,7 +54,7 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
@@ -76,7 +76,7 @@
   flex: 1 1 auto;
 }
 .case-card-impact {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 12px;
   color: var(--ink);
   margin: 0;
@@ -85,7 +85,7 @@
   background: var(--cream-deep);
 }
 .case-card-arrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: lowercase;
@@ -125,7 +125,7 @@
   margin: 0;
 }
 .case-study-detail .case-fact-stack p {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 13px;
   color: var(--ink-mute);
 }
@@ -151,7 +151,7 @@
   padding: var(--s-4);
 }
 .service .num {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 12px;
   letter-spacing: var(--tracking-eyebrow);
   color: var(--ink-mute);

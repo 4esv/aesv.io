@@ -1,126 +1,125 @@
 /* =========================================================
    MUSIC — /music on aesv.io
-   Album-cover-as-the-design. Reuses listening.css for hero / now / tracks
-   primitives; this file adds the album grid + artist stack.
+   Album-cover-as-the-design. Mirrors the section idiom on /work and
+   /activities: <h2> heading, content below, no per-section eyebrow.
    ========================================================= */
 
-/* Music page extends the shared .subpage shell — no width / padding
-   here so brand + back-link line up with every other subpage. */
-.music .block {
+.music-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+}
+.music-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -0.01em;
 }
 
-/* Smaller now-playing card — the original full-bleed hero is too loud
-   on a page where last-played is supposed to be a quick glance. */
-.now-playing-compact .now-grid {
-  grid-template-columns: minmax(140px, 0.35fr) 1fr;
+/* ---------- Just heard. — one big card + recent ledger below.
+   The card and the ledger sit inside one container so the section
+   reads as a single block of "what I last played + what came before". */
+.just-heard {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2vw, 28px);
+}
+.just-heard .now-grid {
+  grid-template-columns: minmax(160px, 0.4fr) 1fr;
   border: var(--border-thin);
   box-shadow: var(--shadow-md);
-  padding: clamp(16px, 1.6vw, 22px);
-  gap: clamp(16px, 2vw, 28px);
+  padding: clamp(18px, 2vw, 28px);
+  gap: clamp(20px, 2vw, 32px);
   align-items: center;
 }
-.now-playing-compact .now-art {
-  max-width: 200px;
+.just-heard .now-art {
+  max-width: 220px;
 }
-.now-playing-compact .now-track {
-  font-size: clamp(20px, 2.4vw, 32px);
+.just-heard .now-track {
+  font-size: clamp(24px, 2.8vw, 40px);
 }
-.now-playing-compact .now-artist {
-  font-size: clamp(15px, 1.4vw, 19px);
+.just-heard .now-artist {
+  font-size: clamp(16px, 1.5vw, 22px);
 }
-.now-playing-compact .now-album {
-  font-size: clamp(12px, 1vw, 14px);
-  margin-bottom: 8px;
+.just-heard .now-album {
+  font-size: clamp(13px, 1.05vw, 16px);
+  margin-bottom: 12px;
 }
 @media (max-width: 460px) {
-  .now-playing-compact .now-grid {
+  .just-heard .now-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* What I play — same row pattern as ledger but with a tag chip. */
-.play-list {
+/* ---------- I play. — show, don't tell. SVGs in /instruments/. */
+.instrument-strip {
   list-style: none;
   padding: 0;
   margin: 0;
-  border-top: var(--border-thin);
-}
-.play-row {
   display: grid;
-  grid-template-columns: clamp(36px, 3.6vw, 56px) 1fr auto;
-  gap: clamp(12px, 1.6vw, 24px);
-  align-items: baseline;
-  padding: clamp(12px, 1.4vw, 18px) clamp(8px, 1.4vw, 14px);
-  border-bottom: var(--border-thin);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(16px, 2vw, 32px);
 }
-.play-num {
-  font-family: var(--font-mono);
-  font-size: clamp(13px, 1.1vw, 15px);
-  font-weight: 700;
-  color: var(--lavender);
-  letter-spacing: 0.04em;
-}
-.play-meta {
-  min-width: 0;
-}
-.play-name {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.4vw, 32px);
-  line-height: 1.05;
-  margin: 0 0 4px;
-}
-.play-note {
-  font-family: var(--font-mono);
-  font-size: clamp(12px, 1vw, 14px);
-  color: var(--ink-mute);
-  margin: 0;
-  letter-spacing: 0.02em;
-  overflow-wrap: anywhere;
-}
-.play-tag {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border: 2px solid var(--ink);
-  border-radius: var(--radius-pill);
+.instrument-strip li {
+  aspect-ratio: 1 / 1;
   background: var(--cream);
-  color: var(--ink);
-  align-self: center;
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 2vw, 24px);
+}
+.instrument-strip img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-/* Music-to-me — short paragraphs, prose-narrow column. */
+/* ---------- Music to me. — three short statements arranged as
+   a staggered three-column composition. Each block descends a step
+   so the eye drops through them like a quote ladder. */
 .music-to-me {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 60ch;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 2.4vw, 36px);
 }
 .music-to-me p {
-  font-family: var(--font-body);
-  font-size: clamp(16px, 1.4vw, 20px);
-  line-height: 1.55;
+  font-family: var(--font-display);
+  font-size: clamp(17px, 1.6vw, 22px);
+  line-height: 1.4;
+  letter-spacing: -0.005em;
   color: var(--ink);
   margin: 0;
 }
+.music-to-me p:nth-child(2) {
+  margin-top: clamp(20px, 4vw, 56px);
+}
+.music-to-me p:nth-child(3) {
+  margin-top: clamp(40px, 8vw, 112px);
+}
+@media (max-width: 720px) {
+  .music-to-me {
+    grid-template-columns: 1fr;
+  }
+  .music-to-me p:nth-child(n) {
+    margin-top: 0;
+  }
+}
 
-/* ---------- ALBUMS GRID ---------- */
-/* Album art is the design. Hard ink shadow, no card chrome around the meta. */
+/* ---------- Albums I've been enjoying. — art-led grid.
+   2 cols on phone → 3 tablet → 4 desktop. Album art is the design;
+   no card chrome around the meta below it. */
 .album-grid {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  /* fluid: 2 cols phone → 3 tablet → 4–6 desktop, governed by minmax */
   grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
   gap: clamp(16px, 2.4vw, 32px);
 }
 @media (max-width: 460px) {
-  /* Force 2-col on very small viewports — 1-col looks indulgent here. */
   .album-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -154,7 +153,6 @@
   transform: translate(6px, 6px);
   box-shadow: var(--shadow-pressed);
 }
-
 .album-art {
   aspect-ratio: 1 / 1;
   width: 100%;
@@ -172,7 +170,6 @@
   object-fit: cover;
   display: block;
 }
-
 .album-meta {
   min-width: 0;
 }
@@ -184,80 +181,53 @@
   overflow-wrap: anywhere;
 }
 .album-artist {
-  font-family: var(--font-mono);
-  font-size: clamp(11px, 0.9vw, 13px);
+  font-family: var(--font-display);
+  font-size: clamp(12px, 1vw, 14px);
   letter-spacing: 0.02em;
   color: var(--ink-mute);
   margin: 0;
   overflow-wrap: anywhere;
 }
 
-/* ---------- ARTIST STACK ---------- */
-/* Numbered list mirroring track-stack but with a thumbnail. */
-.artist-stack {
+/* ---------- Artists in my rotation. — typographic cloud.
+   Different sizes via nth-child rotation give the wall a varied
+   density without strict ordering. Top artist (first) lands biggest. */
+.artist-cloud {
   list-style: none;
   padding: 0;
   margin: 0;
-  border-top: var(--border-thin);
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(14px, 1.8vw, 28px);
+  align-items: baseline;
 }
-.artist-row {
-  display: grid;
-  grid-template-columns: clamp(40px, 4vw, 56px) clamp(48px, 5vw, 72px) 1fr;
-  gap: clamp(12px, 1.6vw, 24px);
-  align-items: center;
-  padding: clamp(12px, 1.6vw, 20px) clamp(8px, 1.6vw, 16px);
-  border-bottom: var(--border-thin);
-}
-.artist-num {
-  font-family: var(--font-mono);
-  font-size: clamp(18px, 1.8vw, 28px);
-  font-weight: 700;
-  color: var(--lavender);
-}
-.artist-art {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  max-width: 72px;
-  border: 3px solid var(--ink);
-  box-shadow: var(--shadow-sm);
-  background: var(--cream);
-  overflow: hidden;
-  border-radius: var(--radius-pill);
-}
-.artist-art img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.artist-meta {
-  min-width: 0;
-}
-.artist-name {
+.artist-cloud li {
   font-family: var(--font-display);
-  font-size: clamp(20px, 2.4vw, 36px);
-  line-height: 1.05;
-  margin: 0 0 4px;
-  overflow-wrap: anywhere;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-size: clamp(22px, 3.2vw, 40px);
 }
-.artist-name a {
+.artist-cloud li:first-child {
+  font-size: clamp(36px, 5.6vw, 80px);
+}
+.artist-cloud li:nth-child(3n) {
+  font-size: clamp(28px, 4.4vw, 56px);
+}
+.artist-cloud li:nth-child(5n) {
+  font-size: clamp(20px, 2.6vw, 32px);
+}
+.artist-cloud li a {
   text-decoration: none;
+  color: var(--ink);
+  border-bottom: 3px solid transparent;
 }
-.artist-name a:hover {
+.artist-cloud li a:hover {
   color: var(--lavender);
-  border-bottom: 3px solid var(--lavender);
-}
-.artist-stat {
-  font-family: var(--font-mono);
-  font-size: clamp(11px, 0.9vw, 13px);
-  color: var(--ink-mute);
-  margin: 0;
-  letter-spacing: 0.02em;
-  text-transform: lowercase;
+  border-bottom-color: var(--lavender);
 }
 
-/* ---------- LEDGER (recent plays) ---------- */
-/* Compact numbered ledger: tighter than .track-stack, mono-led, ink rules. */
+/* ---------- Recent ledger (inside .just-heard).
+   Compact numbered list; ink rules between rows. */
 .ledger {
   list-style: none;
   padding: 0;
@@ -273,7 +243,7 @@
   border-bottom: var(--border-thin);
 }
 .ledger-num {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: clamp(13px, 1.1vw, 15px);
   font-weight: 700;
   color: var(--lavender);
@@ -290,8 +260,8 @@
   overflow-wrap: anywhere;
 }
 .ledger-artist {
-  font-family: var(--font-mono);
-  font-size: clamp(11px, 0.9vw, 13px);
+  font-family: var(--font-display);
+  font-size: clamp(12px, 1vw, 14px);
   color: var(--ink-mute);
   margin: 0;
   letter-spacing: 0.02em;
@@ -301,7 +271,7 @@
   color: var(--ink-mute);
 }
 .ledger-link {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: clamp(14px, 1.2vw, 18px);
   text-decoration: none;
   color: var(--ink);
@@ -315,31 +285,4 @@
 .ledger-link:hover {
   background: var(--lavender);
   color: var(--offwhite);
-}
-
-/* Track stack inherits .track-stack from listening.css; only add album line styling */
-.track-album {
-  color: var(--ink-mute);
-  font-style: normal;
-}
-
-/* Watch-tiny safety: shrink hero gap, ensure footer cols don't burst */
-@media (max-width: 320px) {
-  .music {
-    gap: 24px;
-    padding: 12px;
-  }
-  .music-hero .display {
-    font-size: 40px;
-  }
-  .album-grid {
-    gap: 8px;
-  }
-  .album-art {
-    box-shadow: 3px 3px 0 0 var(--ink);
-  }
-  .ledger-row {
-    padding: 8px 6px;
-    gap: 8px;
-  }
 }

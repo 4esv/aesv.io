@@ -74,71 +74,64 @@ github https://github.com/4esv
     </header>
 
     {% if not hasData %}
-    <section class="block empty-state">
-      <div class="block-eyebrow">no signal</div>
+    <section class="music-section empty-state">
       <p>Nothing yet. <a href="/api/auth/spotify">Authorize Spotify</a>.</p>
     </section>
     {% endif %}
 
     {% set lead = nowPlaying or (recent[0] if recent and recent.length else null) %}
     {% if lead %}
-    <section class="block now-playing now-playing-compact">
-      <div class="block-eyebrow">{% if nowPlaying %}now playing{% else %}last played{% endif %}</div>
-      <div class="now-grid">
-        <div class="now-art">
-          {% if lead.album.artUrl %}
-            <img src="{{ lead.album.artUrl }}" alt="Album art for {{ lead.album.name }}" loading="eager">
-          {% endif %}
+    <section class="music-section">
+      <h2>Just heard.</h2>
+      <div class="just-heard">
+        <div class="now-grid">
+          <div class="now-art">
+            {% if lead.album.artUrl %}
+              <img src="{{ lead.album.artUrl }}" alt="Album art for {{ lead.album.name }}" loading="eager">
+            {% endif %}
+          </div>
+          <div class="now-meta">
+            <p class="now-track">{{ lead.name }}</p>
+            <p class="now-artist">{{ lead.artist }}</p>
+            <p class="now-album">{{ lead.album.name }}</p>
+            {% if lead.url %}<a class="btn btn-sm" href="{{ lead.url }}" rel="noopener">open in spotify ↗</a>{% endif %}
+          </div>
         </div>
-        <div class="now-meta">
-          <p class="now-track">{{ lead.name }}</p>
-          <p class="now-artist">{{ lead.artist }}</p>
-          <p class="now-album">{{ lead.album.name }}</p>
-          {% if lead.url %}<a class="btn btn-sm" href="{{ lead.url }}" rel="noopener">Open in Spotify ↗</a>{% endif %}
-        </div>
+        {% if recentLog and recentLog.length %}
+        <ol class="ledger">
+          {% for r in recentLog %}
+            <li class="ledger-row">
+              <span class="ledger-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
+              <div class="ledger-meta">
+                <p class="ledger-track">{{ r.name }}</p>
+                <p class="ledger-artist">{{ r.artist }}{% if r.album.name %} · <span class="ledger-album">{{ r.album.name }}</span>{% endif %}</p>
+              </div>
+              {% if r.url %}<a class="ledger-link" href="{{ r.url }}" rel="noopener" aria-label="Open {{ r.name }} on Spotify">↗</a>{% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+        {% endif %}
       </div>
     </section>
     {% endif %}
 
-    {% if recentLog and recentLog.length %}
-    <section class="block">
-      <div class="block-eyebrow">recent · top {{ recentLog.length }}</div>
-      <ol class="ledger">
-        {% for r in recentLog %}
-          <li class="ledger-row">
-            <span class="ledger-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
-            <div class="ledger-meta">
-              <p class="ledger-track">{{ r.name }}</p>
-              <p class="ledger-artist">{{ r.artist }}{% if r.album.name %} · <span class="ledger-album">{{ r.album.name }}</span>{% endif %}</p>
-            </div>
-            {% if r.url %}<a class="ledger-link" href="{{ r.url }}" rel="noopener" aria-label="Open {{ r.name }} on Spotify">↗</a>{% endif %}
-          </li>
-        {% endfor %}
-      </ol>
-    </section>
-    {% endif %}
-
     {% if instruments and instruments.length %}
-    <section class="block">
-      <div class="block-eyebrow">what i play · {{ instruments.length }}</div>
-      <ul class="play-list">
-        {% for i in instruments %}
-          <li class="play-row">
-            <span class="play-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
-            <div class="play-meta">
-              <p class="play-name">{{ i.name }}</p>
-              <p class="play-note">{{ i.note }}</p>
-            </div>
-            {% if i.tag %}<span class="play-tag">{{ i.tag }}</span>{% endif %}
-          </li>
-        {% endfor %}
+    <section class="music-section">
+      <h2>I play.</h2>
+      <ul class="instrument-strip">
+        <li><img src="/instruments/piano.svg" alt="piano"></li>
+        <li><img src="/instruments/electric-bass.svg" alt="electric bass"></li>
+        <li><img src="/instruments/drumkit.svg" alt="drum kit"></li>
+        <li><img src="/instruments/acoustic.svg" alt="classical guitar"></li>
+        <li><img src="/instruments/ukelele.svg" alt="ukelele"></li>
+        <li><img src="/instruments/amp.svg" alt="amp"></li>
       </ul>
     </section>
     {% endif %}
 
     {% if musicToMe %}
-    <section class="block">
-      <div class="block-eyebrow">music to me</div>
+    <section class="music-section">
+      <h2>Music to me.</h2>
       <div class="music-to-me">
         {% for line in musicToMe %}<p>{{ line }}</p>{% endfor %}
       </div>
@@ -146,8 +139,8 @@ github https://github.com/4esv
     {% endif %}
 
     {% if albums and albums.length %}
-    <section class="block">
-      <div class="block-eyebrow">albums · {{ albums.length }}</div>
+    <section class="music-section">
+      <h2>Albums I've been enjoying.</h2>
       <ul class="album-grid">
         {% for a in albums %}
           <li class="album-cell">
@@ -167,28 +160,15 @@ github https://github.com/4esv
     {% endif %}
 
     {% if topArtists and topArtists.length %}
-    <section class="block">
-      <div class="block-eyebrow">artists · {{ topArtists.length }}</div>
-      <ol class="artist-stack">
+    <section class="music-section">
+      <h2>Artists in my rotation.</h2>
+      <ul class="artist-cloud">
         {% for a in topArtists %}
-          <li class="artist-row">
-            <span class="artist-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
-            <div class="artist-art">
-              {% if a.imageUrl %}<img src="{{ a.imageUrl }}" alt="" loading="lazy">{% endif %}
-            </div>
-            <div class="artist-meta">
-              <p class="artist-name">
-                {% if a.url %}<a href="{{ a.url }}" rel="noopener">{{ a.name }}</a>{% else %}{{ a.name }}{% endif %}
-              </p>
-              {% if a.followers %}
-                <p class="artist-stat">{{ a.followers }} followers</p>
-              {% elif a.genres and a.genres.length %}
-                <p class="artist-stat">{{ a.genres | join(' · ') }}</p>
-              {% endif %}
-            </div>
+          <li>
+            {% if a.url %}<a href="{{ a.url }}" rel="noopener">{{ a.name }}</a>{% else %}<span>{{ a.name }}</span>{% endif %}
           </li>
         {% endfor %}
-      </ol>
+      </ul>
     </section>
     {% endif %}
   </main>

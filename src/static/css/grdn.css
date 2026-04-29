@@ -32,7 +32,7 @@
   margin-bottom: var(--s-8);
 }
 .grdn-hero .eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
@@ -83,7 +83,7 @@
   gap: 8px;
 }
 .tag-chip {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 12px;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
@@ -120,7 +120,7 @@
   gap: var(--s-3);
 }
 .garden-grid .empty {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   color: var(--ink-mute);
   padding: 24px;
   grid-column: 1 / -1;
@@ -146,7 +146,7 @@
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: 0.04em;
   color: var(--ink-mute);
@@ -177,7 +177,7 @@
   flex: 1 1 auto;
 }
 .note-arrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 18px;
   align-self: flex-end;
   color: var(--ink);
@@ -200,7 +200,7 @@
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--ink-mute);
@@ -271,7 +271,7 @@
   margin: 2em 0;
 }
 
-/* Inline + block code */
+/* Inline + block code — monospace stays for code-alignment fidelity. */
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.9em;
@@ -317,7 +317,7 @@
 .prose .footnote-ref a {
   text-decoration: none;
   color: var(--lavender);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.8em;
   vertical-align: super;
 }
@@ -353,7 +353,7 @@
   border-top: 2px dashed var(--ink-mute);
 }
 .essay-end a {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 14px;
   text-decoration: none;
 }
@@ -363,7 +363,7 @@
   margin-top: var(--s-8);
   padding-top: var(--s-3);
   border-top: 2px dashed var(--ink-mute);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 12px;
   color: var(--ink-mute);
   letter-spacing: 0.04em;
