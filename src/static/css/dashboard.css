@@ -227,10 +227,10 @@
 .widget-info .info-weather {
   margin: 0;
 }
-.widget-info .info-weather {
+.widget-info .info-when {
   text-align: left;
 }
-.widget-info .info-when {
+.widget-info .info-weather {
   text-align: right;
 }
 
