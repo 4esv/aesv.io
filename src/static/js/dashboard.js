@@ -27,21 +27,17 @@
       10
     )
     var weekday = new Intl.DateTimeFormat('en-US', {
-      weekday: 'short',
+      weekday: 'long',
       timeZone: TIMEZONE,
-    })
-      .format(now)
-      .toLowerCase()
+    }).format(now)
     var day = new Intl.DateTimeFormat('en-US', {
       day: 'numeric',
       timeZone: TIMEZONE,
     }).format(now)
     var month = new Intl.DateTimeFormat('en-US', {
-      month: 'short',
+      month: 'long',
       timeZone: TIMEZONE,
-    })
-      .format(now)
-      .toLowerCase()
+    }).format(now)
     return {
       hour: hour,
       minute: minute,

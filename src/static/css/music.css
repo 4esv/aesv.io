@@ -4,18 +4,7 @@
    /activities: <h2> heading, content below, no per-section eyebrow.
    ========================================================= */
 
-.music-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.music-section h2 {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 44px);
-  line-height: 1.1;
-  margin: 0;
-  letter-spacing: -0.01em;
-}
+/* Section + h2 styles live in foundation under :where(.work-section, ...). */
 
 /* ---------- Just heard. — one big card + recent ledger below.
    The card and the ledger sit inside one container so the section
@@ -189,37 +178,48 @@
   overflow-wrap: anywhere;
 }
 
-/* ---------- Artists in my rotation. — typographic cloud.
-   Different sizes via nth-child rotation give the wall a varied
-   density without strict ordering. Top artist (first) lands biggest. */
+/* ---------- Artists in my rotation. — small typographic masonry.
+   Tightly packed, baseline-aligned; subtle size jitter via nth-child
+   so the row reads as a varied density rather than a flat list. */
 .artist-cloud {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(14px, 1.8vw, 28px);
+  gap: 6px 14px;
   align-items: baseline;
 }
 .artist-cloud li {
   font-family: var(--font-display);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-size: clamp(22px, 3.2vw, 40px);
+  font-size: 17px;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
 }
 .artist-cloud li:first-child {
-  font-size: clamp(36px, 5.6vw, 80px);
+  font-size: 22px;
+  font-weight: 700;
 }
-.artist-cloud li:nth-child(3n) {
-  font-size: clamp(28px, 4.4vw, 56px);
+.artist-cloud li:nth-child(4n) {
+  font-size: 19px;
 }
 .artist-cloud li:nth-child(5n) {
-  font-size: clamp(20px, 2.6vw, 32px);
+  font-size: 15px;
+  color: var(--ink-mute);
+}
+.artist-cloud li::after {
+  content: '·';
+  margin-left: 14px;
+  color: var(--ink-mute);
+}
+.artist-cloud li:last-child::after {
+  content: '';
+  margin-left: 0;
 }
 .artist-cloud li a {
   text-decoration: none;
-  color: var(--ink);
-  border-bottom: 3px solid transparent;
+  color: inherit;
+  border-bottom: 2px solid transparent;
 }
 .artist-cloud li a:hover {
   color: var(--lavender);

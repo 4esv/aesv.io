@@ -199,92 +199,24 @@
   box-shadow: none;
 }
 
-/* ---------- Info block widget (the top-left bare cell) ----------
-   2×2 grid: clock, calendar page, location, weather gauges. The
-   bare modifier strips its frame; the four quadrants read as
-   text-on-cream that fills the space allotted to a tile. */
-.widget-cell.weather {
-  container-type: inline-size;
-}
+/* ---------- Info paragraph (the top-left bare cell) ----------
+   One sentence sized like a tile-label so it reads as the same family
+   of typography. Container-type lives on .widget-cell so cqi resolves
+   against the cell width. */
 .widget-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  text-align: center;
-  gap: clamp(6px, 2cqi, 20px);
-  padding: clamp(6px, 2cqi, 20px) clamp(4px, 1cqi, 12px);
-  height: 100%;
+  margin: 0;
+  padding: clamp(8px, 6cqi, 32px);
   width: 100%;
-  color: var(--ink);
+  height: 100%;
   box-sizing: border-box;
+  color: var(--ink);
   font-family: var(--font-display);
-  line-height: 1;
-  overflow: hidden;
-  min-width: 0;
-}
-
-.widget-info .info-time,
-.widget-info .info-loc,
-.widget-info .info-weather {
+  font-size: clamp(10px, 10cqi, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(2px, 0.6cqi, 6px);
-  min-width: 0;
-}
-.widget-info .info-time-meta {
-  justify-content: center;
-}
-
-/* Big numerals first row, mono meta second row — same pattern for each
-   block. Mins use cqi so tiles scale all the way down without overflow
-   (no fixed 28px min that would leak out of a small tile). */
-.widget-info .info-time-clock {
-  font-family: var(--font-display);
-  font-size: clamp(16px, 9cqi, 72px);
-  letter-spacing: -0.03em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-.widget-info .info-time-meta {
-  font-family: var(--font-display);
-  font-size: clamp(7px, 1.6cqi, 13px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  display: inline-flex;
-  justify-content: center;
-  gap: clamp(3px, 1cqi, 10px);
-  flex-wrap: wrap;
-}
-
-.widget-info .info-loc-city {
-  font-family: var(--font-display);
-  font-size: clamp(14px, 6.4cqi, 48px);
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-.widget-info .info-loc-state {
-  font-family: var(--font-display);
-  font-size: clamp(7px, 1.6cqi, 13px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-}
-
-.widget-info .info-weather-temp {
-  font-family: var(--font-display);
-  font-size: clamp(14px, 6.4cqi, 48px);
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-.widget-info .info-weather-cond {
-  font-family: var(--font-display);
-  font-size: clamp(7px, 1.6cqi, 13px);
-  letter-spacing: 0.14em;
-  text-transform: lowercase;
-  color: var(--ink-mute);
+  align-items: flex-end;
+  overflow: hidden;
 }
 
 /* Hobbies widget shares the unified .widget-cell frame above. */

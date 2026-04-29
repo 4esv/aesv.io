@@ -566,6 +566,23 @@ a:hover {
   font-weight: 700;
 }
 
+/* Section heading — shared by every subpage's h2 (work / activities /
+   music / etc.). Defined once here so titles render identically across
+   pages; per-page CSS only handles layout (gap, columns). */
+:where(.work-section, .act-section, .music-section) {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2vw, 28px);
+}
+:where(.work-section, .act-section, .music-section) > h2 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.4vw, 52px);
+  line-height: 1.05;
+  margin: 0;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
 /* Press-tile interaction — the cartoon-card shadow + nudge that
    every clickable tile/card on the site shares. Components carry the
    base box-shadow (--shadow-md / --shadow-sm) themselves; this only

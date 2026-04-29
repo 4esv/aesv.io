@@ -1,30 +1,12 @@
 {# Top-left info cell — text only on cream paper, no border/bg/shadow.
-   Live time + date (JS), location, current weather. Each line is its
-   own row so the cell reads like a small notice board. #}
+   One paragraph, sized like a tile-label. dashboard.js fills the time
+   + date spans on tick. #}
 {% set tempF = weather.tempF if weather else null %}
 {% set condition = weather.condition if weather else null %}
 
-<div class="widget-info" aria-label="Time, location, weather for Ithaca">
-  <div class="info-time">
-    <span class="info-time-clock" id="info-clock-text">—:—</span>
-    <span class="info-time-meta">
-      <span id="info-weekday">—</span>
-      <span id="info-month">—</span>
-      <span id="info-day">—</span>
-    </span>
-  </div>
-
-  <div class="info-loc">
-    <span class="info-loc-city">Ithaca</span>
-    <span class="info-loc-state">New York</span>
-  </div>
-
-  <div class="info-weather">
-    <span class="info-weather-temp">
-      {% if tempF != null %}{{ tempF }}°F{% else %}—{% endif %}
-    </span>
-    <span class="info-weather-cond">
-      {% if condition %}{{ condition }}{% else %}weather offline{% endif %}
-    </span>
-  </div>
-</div>
+<p class="widget-info" aria-label="Time, location, weather for Ithaca">
+  <span id="info-weekday">—</span> <span id="info-month">—</span> <span id="info-day">—</span>,
+  it's <span id="info-clock-text">—:—</span> in Ithaca, NY.
+  It's currently {% if condition %}{{ condition }}{% else %}—{% endif %} and
+  feels like {% if tempF != null %}{{ tempF }}°F{% else %}—{% endif %} right now.
+</p>
