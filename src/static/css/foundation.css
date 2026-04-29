@@ -787,11 +787,12 @@ a:hover {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(24px, 4vw, 48px);
+  gap: clamp(48px, 8vw, 120px);
 }
 @media (max-width: 640px) {
   .big-footer-inner {
     width: 100%;
+    gap: clamp(32px, 6vw, 56px);
   }
 }
 .footer-marquee {
