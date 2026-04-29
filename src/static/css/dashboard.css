@@ -200,9 +200,10 @@
 }
 
 /* ---------- Info paragraph (the top-left bare cell) ----------
-   One sentence sized like a tile-label so it reads as the same family
-   of typography. Container-type lives on .widget-cell so cqi resolves
-   against the cell width. */
+   Plain text broken into four hard lines via <br>. Block layout so
+   the inline spans flow as normal text — flex would make every child
+   its own line. Sized like a tile-label so it reads as the same
+   family of typography. */
 .widget-info {
   margin: 0;
   padding: clamp(8px, 6cqi, 32px);
@@ -211,11 +212,10 @@
   box-sizing: border-box;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(10px, 10cqi, 56px);
-  line-height: 1.15;
+  font-size: clamp(10px, 6cqi, 36px);
+  line-height: 1.25;
   letter-spacing: -0.01em;
-  display: flex;
-  align-items: flex-end;
+  display: block;
   overflow: hidden;
 }
 

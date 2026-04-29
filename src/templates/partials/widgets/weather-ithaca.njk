@@ -1,12 +1,11 @@
 {# Top-left info cell — text only on cream paper, no border/bg/shadow.
-   One paragraph, sized like a tile-label. dashboard.js fills the time
-   + date spans on tick. #}
+   Four hard-broken lines. dashboard.js fills the date + clock spans. #}
 {% set tempF = weather.tempF if weather else null %}
 {% set condition = weather.condition if weather else null %}
 
 <p class="widget-info" aria-label="Time, location, weather for Ithaca">
-  <span id="info-weekday">—</span> <span id="info-month">—</span> <span id="info-day">—</span>,
-  it's <span id="info-clock-text">—:—</span> in Ithaca, NY.
-  It's currently {% if condition %}{{ condition }}{% else %}—{% endif %} and
+  <span id="info-weekday">—</span> <span id="info-month">—</span> <span id="info-day">—</span>,<br>
+  it's <span id="info-clock-text">—:—</span> in Ithaca, NY.<br>
+  It's currently {% if condition %}{{ condition }}{% else %}—{% endif %} and<br>
   feels like {% if tempF != null %}{{ tempF }}°F{% else %}—{% endif %} right now.
 </p>
