@@ -209,8 +209,7 @@
    two paragraphs to opposite ends of the column. */
 .widget-info {
   margin: 0;
-  padding: clamp(8px, 6cqi, 32px);
-  padding-left: 15px;
+  padding: 2ch;
   width: 100%;
   box-sizing: border-box;
   color: var(--ink);
