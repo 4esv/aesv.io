@@ -98,10 +98,11 @@ github https://github.com/4esv
           </div>
         </div>
         {% if recentLog and recentLog.length %}
-        <ol class="ledger">
+        <ol class="ledger" start="2">
           {% for r in recentLog %}
+            {% set n = loop.index + 1 %}
             <li class="ledger-row">
-              <span class="ledger-num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index }}</span>
+              <span class="ledger-num">{{ '0' + (n|string) if n < 10 else n }}</span>
               <div class="ledger-meta">
                 <p class="ledger-track">{{ r.name }}</p>
                 <p class="ledger-artist">{{ r.artist }}{% if r.album.name %} · <span class="ledger-album">{{ r.album.name }}</span>{% endif %}</p>
@@ -115,19 +116,50 @@ github https://github.com/4esv
     </section>
     {% endif %}
 
-    {% if instruments and instruments.length %}
     <section class="music-section">
       <h2>I play.</h2>
-      <ul class="instrument-strip">
-        <li><img src="/instruments/piano.svg" alt="piano"></li>
-        <li><img src="/instruments/electric-bass.svg" alt="electric bass"></li>
-        <li><img src="/instruments/drumkit.svg" alt="drum kit"></li>
-        <li><img src="/instruments/acoustic.svg" alt="classical guitar"></li>
-        <li><img src="/instruments/ukelele.svg" alt="ukelele"></li>
-        <li><img src="/instruments/amp.svg" alt="amp"></li>
+      <ul class="instrument-room" aria-label="Instruments I play">
+        <li class="instrument" data-instrument="drums" tabindex="0">
+          <img src="/instruments/drumkit.svg" alt="">
+          <span class="instrument-label">
+            <strong>Drums</strong>
+            Will play if I must. I have fun, the people trying to play to my beat don't.
+          </span>
+        </li>
+        <li class="instrument" data-instrument="piano" tabindex="0">
+          <img src="/instruments/piano.svg" alt="">
+          <span class="instrument-label">
+            <strong>Piano / Keys</strong>
+            Ok enough for open mic, go to for noodling and accompanying.
+          </span>
+        </li>
+        <li class="instrument" data-instrument="bass" tabindex="0">
+          <img src="/instruments/electric-bass.svg" alt="">
+          <span class="instrument-label">
+            <strong>Bass</strong>
+            Most rehearsed, least talented. I will hold it down but don't expect fills.
+          </span>
+        </li>
+        <li class="instrument" data-instrument="guitar" tabindex="0">
+          <img src="/instruments/guitar.png" alt="">
+          <span class="instrument-label">
+            <strong>Guitar</strong>
+            If I must, ok enough to follow tabs and play rythm. Love my SG tho.
+          </span>
+        </li>
+        <li class="instrument" data-instrument="amp" aria-hidden="true">
+          <img src="/instruments/amp.svg" alt="">
+        </li>
+        <li class="instrument" data-instrument="ukulele" tabindex="0">
+          <img src="/instruments/ukelele.svg" alt="">
+          <span class="instrument-label">
+            <strong>Ukulele</strong>
+            My favorite for traveling, I have a baritone one so it's like a 2/3 guitar.
+          </span>
+        </li>
       </ul>
     </section>
-    {% endif %}
+
 
     {% if musicToMe %}
     <section class="music-section">
@@ -159,18 +191,6 @@ github https://github.com/4esv
     </section>
     {% endif %}
 
-    {% if topArtists and topArtists.length %}
-    <section class="music-section">
-      <h2>Artists in my rotation.</h2>
-      <ul class="artist-cloud">
-        {% for a in topArtists %}
-          <li>
-            {% if a.url %}<a href="{{ a.url }}" rel="noopener">{{ a.name }}</a>{% else %}<span>{{ a.name }}</span>{% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
-    {% endif %}
   </main>
 
   {% include "partials/big-footer.njk" %}

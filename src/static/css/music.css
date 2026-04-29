@@ -41,29 +41,95 @@
   }
 }
 
-/* ---------- I play. — show, don't tell. SVGs in /instruments/. */
-.instrument-strip {
+/* ---------- I play. — instruments arranged like in a room.
+   Items align to a "floor" baseline; sizes vary per the brief
+   (drums +5%, bass −5%, guitar −5%, ukulele −10%, amp −15%).
+   Hover/focus reveals a label-and-proficiency tooltip. */
+.instrument-room {
   list-style: none;
-  padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: clamp(16px, 2vw, 32px);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(16px, 2vw, 36px);
+  position: relative;
 }
-.instrument-strip li {
-  aspect-ratio: 1 / 1;
+.instrument {
+  position: relative;
+  flex: 0 0 auto;
+  --inst-h: clamp(120px, 18vw, 220px);
+}
+.instrument img {
+  display: block;
+  height: var(--inst-h);
+  width: auto;
+  object-fit: contain;
+  user-select: none;
+}
+.instrument[data-instrument='piano'] {
+  --inst-h: clamp(120px, 18vw, 220px);
+}
+.instrument[data-instrument='drums'] {
+  --inst-h: clamp(126px, 18.9vw, 231px);
+}
+.instrument[data-instrument='bass'] {
+  --inst-h: clamp(114px, 17.1vw, 209px);
+}
+.instrument[data-instrument='guitar'] {
+  --inst-h: clamp(114px, 17.1vw, 209px);
+}
+.instrument[data-instrument='ukulele'] {
+  --inst-h: clamp(108px, 16.2vw, 198px);
+}
+.instrument[data-instrument='amp'] {
+  --inst-h: clamp(102px, 15.3vw, 187px);
+}
+.instrument:focus {
+  outline: none;
+}
+.instrument:focus-visible {
+  outline: 3px solid var(--lavender);
+  outline-offset: 4px;
+}
+
+/* Tooltip — appears on hover/focus, sits above the instrument with
+   a small ink frame and the cartoon shadow so it reads as the same
+   visual family as buttons elsewhere on the site. */
+.instrument-label {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
   background: var(--cream);
   border: var(--border-thin);
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(14px, 2vw, 24px);
+  box-shadow: var(--shadow-sm);
+  padding: 10px 14px;
+  width: max-content;
+  max-width: min(280px, 80vw);
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+  z-index: 10;
 }
-.instrument-strip img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.instrument-label strong {
+  display: block;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.instrument:hover .instrument-label,
+.instrument:focus-visible .instrument-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* ---------- Music to me. — three short statements arranged as
@@ -176,54 +242,6 @@
   color: var(--ink-mute);
   margin: 0;
   overflow-wrap: anywhere;
-}
-
-/* ---------- Artists in my rotation. — small typographic masonry.
-   Tightly packed, baseline-aligned; subtle size jitter via nth-child
-   so the row reads as a varied density rather than a flat list. */
-.artist-cloud {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  align-items: baseline;
-}
-.artist-cloud li {
-  font-family: var(--font-display);
-  font-size: 17px;
-  line-height: 1.1;
-  letter-spacing: -0.005em;
-}
-.artist-cloud li:first-child {
-  font-size: 22px;
-  font-weight: 700;
-}
-.artist-cloud li:nth-child(4n) {
-  font-size: 19px;
-}
-.artist-cloud li:nth-child(5n) {
-  font-size: 15px;
-  color: var(--ink-mute);
-}
-.artist-cloud li::after {
-  content: '·';
-  margin-left: 14px;
-  color: var(--ink-mute);
-}
-.artist-cloud li:last-child::after {
-  content: '';
-  margin-left: 0;
-}
-.artist-cloud li a {
-  text-decoration: none;
-  color: inherit;
-  border-bottom: 2px solid transparent;
-}
-.artist-cloud li a:hover {
-  color: var(--lavender);
-  border-bottom-color: var(--lavender);
 }
 
 /* ---------- Recent ledger (inside .just-heard).

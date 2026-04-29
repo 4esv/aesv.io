@@ -1,27 +1,17 @@
-// /music — Spotify deep-dive. Album-led landing page; pulls recent +
-// top tracks + top artists in parallel and derives a deduped album view.
-// 5-min TTL per source.
+// /music — Spotify deep-dive. Album-led landing page; pulls recent
+// plays for the "Just heard" lead + ledger, and medium-term top tracks
+// for the album grid. 5-min TTL per source.
 
-import { getRecentTracks, getTopArtistsFull, getTopTracksFull } from '../services/spotify.js'
+import { getRecentTracks, getTopTracksFull } from '../services/spotify.js'
 
 const TEMPLATE = 'music/index.njk'
 
 const ALBUM_LIMIT = 16
-const ARTIST_LIMIT = 10
 const RECENT_LIMIT = 20
-const TOP_TRACK_LIMIT = 20
-// Recent log on /music: skip the lead (last-played) and show the next 5.
-const RECENT_LOG_SIZE = 5
-
-// What I play — kept here (not in CMS / config) so the page renders even
-// when every external API is down. Order is intentional: primary first.
-const INSTRUMENTS = [
-  { name: 'piano', note: 'classical roots, comfortable improvising over changes', tag: 'primary' },
-  { name: 'electric bass', note: 'pocket player, fingerstyle, occasional pick', tag: 'primary' },
-  { name: 'drum kit', note: 'emergency drummer — keep time, stay out of the way', tag: 'rescue' },
-  { name: 'classical guitar', note: 'fingerstyle, slow doughs only', tag: 'casual' },
-  { name: 'voice', note: 'low baritone, used sparingly and never first', tag: 'casual' },
-]
+const TOP_TRACK_LIMIT = 40
+// Recent log on /music: skip the lead (last-played) and show the next 4
+// numbered 02–05 (lead is implied as 01).
+const RECENT_LOG_SIZE = 4
 
 // "Music to me" — short paragraphs in my voice. Survives API outages.
 const MUSIC_TO_ME = [
@@ -87,19 +77,23 @@ export async function registerMusicRoutes(fastify) {
     const cfg = fastify.config.spotify
 
     // Each source wrapped — partial failures must still render.
-    const [recent, top, topArtists] = await Promise.all([
+    // Albums come from medium-term top tracks (not recent plays) so the
+    // grid reflects taste over weeks, not what's playing right now.
+    const [recent, top] = await Promise.all([
       cached('recent', () => getRecentTracks(cfg, { limit: RECENT_LIMIT })).catch(() => []),
-      cached('top', () => getTopTracksFull(cfg, { limit: TOP_TRACK_LIMIT })).catch(() => []),
-      cached('artists', () => getTopArtistsFull(cfg, { limit: ARTIST_LIMIT })).catch(() => []),
+      cached('top-medium', () =>
+        getTopTracksFull(cfg, { limit: TOP_TRACK_LIMIT, timeRange: 'medium_term' })
+      ).catch(() => []),
     ])
 
     const recentList = Array.isArray(recent) ? recent : []
     const topList = Array.isArray(top) ? top : []
-    const artistsList = Array.isArray(topArtists) ? topArtists : []
 
-    const albums = deriveAlbums([...recentList, ...topList], ALBUM_LIMIT)
+    const albums = deriveAlbums(topList, ALBUM_LIMIT)
     // `nowPlaying` (not `now`) — `now` is a global Date in template-helpers.
     const nowPlaying = pickNow(recentList)
+    // Skip the lead track (rendered as the big card, implied #1) and
+    // show the next RECENT_LOG_SIZE entries numbered #2 onward.
     const leadIndex = nowPlaying ? -1 : 0
     const recentLog = recentList.slice(leadIndex + 1, leadIndex + 1 + RECENT_LOG_SIZE)
 
@@ -111,10 +105,8 @@ export async function registerMusicRoutes(fastify) {
       recent: recentList,
       recentLog,
       albums,
-      topArtists: artistsList,
-      instruments: INSTRUMENTS,
       musicToMe: MUSIC_TO_ME,
-      hasData: Boolean(recentList.length || albums.length || artistsList.length),
+      hasData: Boolean(recentList.length || albums.length),
     }
 
     if (grid.isTerminal) {
