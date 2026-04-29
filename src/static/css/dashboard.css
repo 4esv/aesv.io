@@ -204,17 +204,9 @@
    the inline spans flow as normal text — flex would make every child
    its own line. Sized like a tile-label so it reads as the same
    family of typography. */
-/* The paragraph stays a block so inline spans + <br> flow as text;
-   the parent cell becomes a flex container so the whole block sits
-   vertically centered against the left edge. */
-.widget-cell.weather {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.widget-cell.weather > .widget-info {
-  height: auto;
-}
+/* When-block top-left, weather-block bottom-right. The widget-info
+   fills the cell and uses justify-content: space-between to push the
+   two paragraphs to opposite ends of the column. */
 .widget-info {
   margin: 0;
   padding: clamp(8px, 6cqi, 32px);
@@ -228,7 +220,7 @@
   letter-spacing: -0.01em;
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  justify-content: space-between;
   overflow: hidden;
 }
 .widget-info .info-when,
