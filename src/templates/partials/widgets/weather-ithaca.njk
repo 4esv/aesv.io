@@ -4,13 +4,13 @@
 {% set condition = weather.condition if weather else null %}
 
 <div class="widget-info" aria-label="Time, location, weather for Ithaca">
+  <p class="info-weather">
+    {% if condition %}{{ condition | capitalize }}{% else %}—{% endif %}<br>
+    Feels like {% if tempF != null %}{{ tempF }}°F{% else %}—{% endif %}
+  </p>
   <p class="info-when">
     <span id="info-clock-text">—:—</span><br>
     Ithaca, NY<br>
     <span id="info-weekday">—</span>, <span id="info-month">—</span> <span id="info-day">—</span>
-  </p>
-  <p class="info-weather">
-    {% if condition %}{{ condition | capitalize }}{% else %}—{% endif %}<br>
-    Feels like {% if tempF != null %}{{ tempF }}°F{% else %}—{% endif %}
   </p>
 </div>

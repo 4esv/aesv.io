@@ -810,10 +810,36 @@ a:hover {
 }
 .footer-cols {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
-  gap: clamp(24px, 3vw, 40px);
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 8vw, 120px);
   padding-top: clamp(24px, 3vw, 40px);
   border-top: 2px dashed rgba(244, 236, 216, 0.25);
+}
+@media (max-width: 640px) {
+  .footer-cols {
+    grid-template-columns: 1fr;
+    gap: clamp(24px, 5vw, 40px);
+  }
+}
+.footer-col-reach {
+  justify-self: end;
+}
+@media (max-width: 640px) {
+  .footer-col-reach {
+    justify-self: start;
+  }
+}
+
+.footer-icon-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.footer-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: currentColor;
 }
 .footer-col h4 {
   font-family: var(--font-display);
