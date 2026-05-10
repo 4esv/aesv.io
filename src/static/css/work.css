@@ -131,16 +131,6 @@
 }
 
 /* ---------- Case-study detail page ---------- */
-.case-study-detail .btn-back-to-work {
-  background: var(--lavender);
-  color: var(--cream);
-  border: 2px solid var(--lavender);
-}
-.case-study-detail .btn-back-to-work:hover {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--cream);
-}
 .case-study-detail .case-fact-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
