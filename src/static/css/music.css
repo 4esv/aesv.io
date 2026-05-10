@@ -198,11 +198,11 @@
   transition: transform var(--dur-press) var(--ease-press);
 }
 .album-link:hover {
-  transform: translate(-2px, -2px);
+  transform: translate(-3px, -3px);
   color: var(--ink);
 }
 .album-link:hover .album-art {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
 }
 .album-link:active .album-art {
   transform: translate(6px, 6px);
