@@ -14,7 +14,7 @@
   background: var(--cream);
   border: var(--border-thin);
   box-shadow: var(--shadow-md);
-  padding: 22px;
+  padding: var(--s-3);
   position: relative;
   margin: 0;
 }
@@ -47,7 +47,7 @@
   background: var(--cream);
   border: var(--border-thin);
   box-shadow: var(--shadow-sm);
-  padding: 22px 22px 16px;
+  padding: var(--s-3) var(--s-3) var(--s-2);
   margin: 0;
 }
 .sweep-title {
@@ -146,7 +146,7 @@
 }
 .pictogram-card {
   background: var(--cream);
-  border: 2px solid var(--ink);
+  border: var(--border-thin);
   box-shadow: var(--shadow-sm);
   padding: 16px 18px 14px;
   display: flex;
