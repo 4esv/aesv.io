@@ -12,17 +12,6 @@
   overflow-wrap: anywhere;
 }
 
-/* ---------- Section spacing
-   Each major section gets its own beat — but tight, not theatrical.
-   The .subpage flex gap stacks with this margin to give a clear break
-   between sections without tearing the page in half. */
-.work-shell .work-section {
-  margin-block: clamp(32px, 4.5vh, 64px);
-}
-.work-shell .work-section:first-of-type {
-  margin-block-start: clamp(16px, 2vh, 32px);
-}
-
 /* When an h2 is not followed by a .section-lede, the section's first
    content sits directly under the heading. Give those headings a real
    bottom margin so the title has room to breathe. The overlap rule
