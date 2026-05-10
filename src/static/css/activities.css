@@ -19,21 +19,22 @@
 
 /* ---------- Last victory + playthrough ---------- */
 .lv-grid {
+  --tile-border: var(--border-thick);
+  --tile-shadow: var(--shadow-lg);
   display: grid;
   grid-template-columns: minmax(220px, 0.55fr) 1fr;
   gap: clamp(20px, 2.6vw, 40px);
   align-items: start;
-  background: var(--cream);
-  border: var(--border-thick);
-  box-shadow: var(--shadow-lg);
   padding: clamp(18px, 2.2vw, 32px);
 }
 .lv-board {
+  /* Reset inherited --tile-* from parent .lv-grid (the chess board
+     is a regular card inside the hero card; shouldn't borrow its
+     thick border + heavy shadow via custom-property cascade). */
+  --tile-border: var(--border-thin);
+  --tile-shadow: var(--shadow-md);
   aspect-ratio: 1 / 1;
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
   overflow: hidden;
-  background: var(--cream);
 }
 .lv-board svg {
   display: block;

@@ -147,16 +147,13 @@
   gap: clamp(16px, 2vw, 24px);
 }
 .case-study-detail .case-fact {
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
   padding: clamp(16px, 2vw, 24px);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 .case-study-detail .case-fact-impact {
-  background: var(--lavender);
+  --tile-bg: var(--lavender);
   color: var(--offwhite);
 }
 .case-study-detail .case-fact-impact .block-eyebrow {
@@ -206,8 +203,7 @@
 }
 .service .num {
   font-family: var(--font-display);
-  font-size: 12px;
-  letter-spacing: var(--tracking-eyebrow);
+  font-size: 14px;
   color: var(--ink-mute);
   display: block;
   margin: 0;
@@ -229,8 +225,7 @@
 }
 .service-receipt {
   font-family: var(--font-display);
-  font-size: 12px;
-  letter-spacing: var(--tracking-eyebrow);
+  font-size: 14px;
   color: var(--ink-mute);
   margin: 16px 0 0;
 }
@@ -262,9 +257,7 @@
   }
 }
 .audience {
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-sm);
+  --tile-shadow: var(--shadow-sm);
   padding: clamp(20px, 2vw, 28px);
   display: flex;
   flex-direction: column;

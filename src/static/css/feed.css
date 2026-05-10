@@ -34,14 +34,12 @@
    ========================================================= */
 
 .feed-controls {
+  --tile-bg: var(--cream-deep);
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin: 0 0 var(--s-6);
   padding: 16px;
-  background: var(--cream-deep);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
 }
 .feed-search {
   display: flex;
@@ -59,17 +57,13 @@
 }
 .view-label {
   font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
+  font-size: 13px;
   color: var(--ink-mute);
   margin-right: 4px;
 }
 .view-chip {
   font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
+  font-size: 13px;
   padding: 4px 10px;
   color: var(--ink);
   cursor: pointer;
@@ -106,9 +100,7 @@
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
   font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
+  font-size: 13px;
   color: var(--ink-mute);
   background: var(--cream-deep);
   border-bottom: 2px solid var(--ink);
@@ -204,19 +196,8 @@
   flex-wrap: wrap;
   align-items: center;
   font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: 13px;
   color: var(--ink-mute);
-}
-.note-meta .tag {
-  padding: 2px 8px;
-  border: 2px solid var(--ink);
-  border-radius: var(--radius-pill);
-  background: var(--cream);
-  color: var(--ink);
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: var(--tracking-eyebrow);
 }
 .note-title {
   font-family: var(--font-display);
@@ -454,12 +435,8 @@
     padding: 8px;
   }
   .entry-meta {
-    font-size: 10px;
+    font-size: 12px;
     gap: 6px;
-  }
-  .entry-meta .tag {
-    font-size: 9px;
-    padding: 1px 6px;
   }
   .prose {
     font-size: 15px;
@@ -490,12 +467,8 @@
    resolves to (set in foundation.css). */
 @media (min-width: 2560px) {
   .entry-meta {
-    font-size: 14px;
+    font-size: 16px;
     gap: 14px;
-  }
-  .entry-meta .tag {
-    font-size: 12px;
-    padding: 3px 12px;
   }
 
   .prose {

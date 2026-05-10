@@ -600,7 +600,9 @@ code {
    of this pattern (the album art is meaningful content, not chrome)
    but matches the same magnitudes. */
 
-/* CHROME LIST — every element with a ::before chrome layer. */
+/* CHROME LIST — every element with a ::before chrome layer. Static
+   surfaces (figures, audiences, info cards, etc.) join the same list
+   so every cream-paper card on the site shares one source of truth. */
 .tile,
 .widget-cell.spotify,
 .widget-cell.hobbies,
@@ -613,7 +615,17 @@ code {
 .track-link,
 .field,
 .prose pre,
-.surface-press {
+.surface-press,
+.figure,
+.sweep,
+.aphorism,
+.pictogram-card,
+.audience,
+.case-fact,
+.lv-grid,
+.lv-board,
+.empty-state,
+.feed-controls {
   position: relative;
   isolation: isolate;
 }
@@ -630,7 +642,17 @@ code {
 .track-link::before,
 .field::before,
 .prose pre::before,
-.surface-press::before {
+.surface-press::before,
+.figure::before,
+.sweep::before,
+.aphorism::before,
+.pictogram-card::before,
+.audience::before,
+.case-fact::before,
+.lv-grid::before,
+.lv-board::before,
+.empty-state::before,
+.feed-controls::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -883,9 +905,7 @@ code {
 .dashboard-greeting .meta {
   display: block;
   font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
+  font-size: 13px;
   color: var(--ink-mute);
   margin-top: 6px;
 }

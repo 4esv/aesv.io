@@ -27,8 +27,8 @@
   <link rel="stylesheet" href="/css/katex.min.css">
   <link rel="stylesheet" href="/css/highlight.css">
   <link rel="stylesheet" href="/css/feed.css">
-  {% if entry.type === 'case-study' %}<link rel="stylesheet" href="/css/work.css">
-  <link rel="stylesheet" href="/css/case-study.css">{% endif %}
+  <link rel="stylesheet" href="/css/case-study.css">
+  {% if entry.type === 'case-study' %}<link rel="stylesheet" href="/css/work.css">{% endif %}
   {% for href in entry.extraCss %}<link rel="stylesheet" href="{{ href }}">{% endfor %}
   <link rel="stylesheet" href="/css/transitions.css">
   {% include "partials/analytics.njk" %}
