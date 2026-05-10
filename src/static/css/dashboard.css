@@ -133,13 +133,10 @@
   display: none;
 }
 
-/* Cell variants share THE TILE chrome from foundation. Apply the
-   .surface-press class on these cells so they get the universal
-   press primitive without a separate per-cell rule. */
-.widget-cell.spotify,
-.widget-cell.hobbies {
-  overflow: hidden;
-}
+/* Cell variants share THE TILE chrome from foundation.
+   No overflow: hidden — that would clip the ::before chrome's shadow
+   (CSS clips children's box-shadows under overflow:hidden parents).
+   The image inside .widget-art is constrained by object-fit: cover. */
 .widget-spotify {
   width: 100%;
   height: 100%;
@@ -151,7 +148,6 @@
 
 .widget-cell-link {
   position: relative;
-  overflow: hidden;
   text-decoration: none;
   color: inherit;
 }
