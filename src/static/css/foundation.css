@@ -334,7 +334,19 @@ a:hover {
   font-family: var(--font-mono);
 }
 
+/* Inline code — text with inverted background. Used as a primitive
+   so any element (lede, button, prose paragraph, etc.) renders inline
+   <code> consistently. Block code (<pre>) is a tile, defined below. */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 2px 6px;
+  border-radius: 0;
+}
 .t-code {
+  /* Legacy alias for inline code — same as the bare `code` rule above. */
   font-family: var(--font-mono);
   font-size: 14px;
   background: var(--ink);
@@ -507,39 +519,43 @@ a:hover {
   text-transform: uppercase;
 }
 
-/* ---------- Field ---------- */
+/* ---------- Field — form input
+   Reads its chrome from THE TILE primitive (foundation), so it
+   matches every other cream-paper card-shape. Focus state lifts
+   the wrapper and grows ::before's shadow, same magnitudes as
+   tile hover. */
 .field {
   font-family: var(--font-display);
   font-size: 17px;
   padding: 12px 16px;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-sm);
   color: var(--ink);
   outline: none;
-  border-radius: 0;
+  background: transparent;
+  border: none;
 }
 .field:focus {
-  box-shadow: var(--shadow-md);
-  transform: translate(-1px, -1px);
+  transform: translate(-2px, -2px);
+}
+.field:focus::before {
+  box-shadow: var(--shadow-lg);
 }
 
-/* ---------- Eyebrow / label utilities ---------- */
-.label {
-  font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-mute);
+/* ---------- Pill — universal small tag/label
+   Used for entry tags, category labels, anywhere a short word
+   needs a bordered pill chrome. Title case (capitalize), not
+   all-caps; the tiny-uppercase eyebrow look is forbidden site-wide. */
+.pill {
   display: inline-block;
-}
-.label-tag {
-  padding: 4px 10px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  line-height: 1.2;
+  text-transform: capitalize;
+  letter-spacing: 0;
+  padding: 3px 10px;
   border: 2px solid var(--ink);
   border-radius: var(--radius-pill);
   background: var(--cream);
   color: var(--ink);
-  font-weight: 700;
 }
 
 /* Section heading — shared by every subpage's h2 (work / activities /
@@ -560,24 +576,19 @@ a:hover {
 }
 
 /* ------------------------------------------------------------
-   THE TILE — the only clickable card-shape on the site.
+   THE TILE — every cream-paper card-shape on the site.
 
-   Home dashboard tiles, case-cards, note-cards, every button
-   (.btn / .btn-sm / .btn-lg / .btn-xl / .btn-primary / .btn-pill),
-   the back-link, view-chips on /feed, ledger-link on /music,
-   track-link on /listening. All of them are tiles. They look,
-   hover, and press identically.
+   CHROME LIST (gets ::before chrome layer): every element below.
+   PRESS LIST (lifts on hover): the clickable subset only.
 
-   The pattern: the wrapper translates -2px on hover and +6px on
-   active. The chrome (cream paper, ink border, cartoon shadow)
-   lives on a ::before pseudo-element. On hover, ::before's shadow
-   grows --shadow-md → --shadow-lg, so the wrapper appears to lift
-   off the page while the shadow extends down-right beneath it.
+   The pattern: chrome (cream paper, ink border, cartoon shadow)
+   lives on a ::before pseudo-element. Clickable tiles also
+   translate -2px on hover and +6px on active, while ::before's
+   shadow grows --shadow-md → --shadow-lg.
 
    Per-component CSS files are NOT allowed to set background,
-   border, or box-shadow on these elements. Variant tweaks (lavender
-   primary, pill radius, ink-on-cream toggle) go through these
-   custom properties:
+   border, or box-shadow on these elements. Variant tweaks go
+   through these custom properties:
 
      --tile-bg       background color of the chrome (default cream)
      --tile-border   border style (default --border-thin)
@@ -589,6 +600,7 @@ a:hover {
    of this pattern (the album art is meaningful content, not chrome)
    but matches the same magnitudes. */
 
+/* CHROME LIST — every element with a ::before chrome layer. */
 .tile,
 .widget-cell.spotify,
 .widget-cell.hobbies,
@@ -599,10 +611,11 @@ a:hover {
 .view-chip,
 .ledger-link,
 .track-link,
+.field,
+.prose pre,
 .surface-press {
   position: relative;
   isolation: isolate;
-  transition: transform var(--dur-press) var(--ease-press);
 }
 
 .tile::before,
@@ -615,6 +628,8 @@ a:hover {
 .view-chip::before,
 .ledger-link::before,
 .track-link::before,
+.field::before,
+.prose pre::before,
 .surface-press::before {
   content: '';
   position: absolute;
@@ -625,6 +640,23 @@ a:hover {
   border-radius: var(--tile-radius, 0);
   box-shadow: var(--tile-shadow, var(--shadow-md));
   transition: box-shadow var(--dur-press) var(--ease-press);
+}
+
+/* PRESS LIST — clickable subset that lifts on hover and presses
+   on active. .field has its own focus state (defined by the field
+   primitive above); .prose pre is static (block of code, no press). */
+.tile,
+.widget-cell.spotify,
+.widget-cell.hobbies,
+.case-card,
+.note-card,
+.btn,
+.back-link,
+.view-chip,
+.ledger-link,
+.track-link,
+.surface-press {
+  transition: transform var(--dur-press) var(--ease-press);
 }
 
 .tile:hover,
@@ -679,6 +711,89 @@ a:hover {
 .track-link:active::before,
 .surface-press:active::before {
   box-shadow: var(--shadow-pressed);
+}
+
+/* ------------------------------------------------------------
+   PROSE — long-form markdown body (essays, case studies, about
+   page). Promoted from feed.css so any future content surface
+   gets the same typography for free. Sizes use clamp() (Pretext-
+   style fluid scaling): comfortable on phone, capped on desktop. */
+
+.prose {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.1vw, 19px);
+  line-height: 1.7;
+  color: var(--ink);
+}
+.prose > * + * {
+  margin-top: 1.4em;
+}
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+.prose h2 {
+  font-size: clamp(24px, 2.6vw, 36px);
+}
+.prose h3 {
+  font-size: clamp(20px, 2vw, 28px);
+}
+.prose p {
+  margin: 0;
+}
+.prose a {
+  color: var(--ink);
+  text-decoration-color: var(--ink-mute);
+}
+.prose a:hover {
+  color: var(--lavender);
+}
+.prose blockquote {
+  border-left: 4px solid var(--ink);
+  padding: 0 0 0 24px;
+  margin: 1.6em 0;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+.prose ul,
+.prose ol {
+  padding-left: 28px;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+.prose hr {
+  border: 0;
+  border-top: 2px dashed var(--ink-mute);
+  margin: 2em 0;
+}
+
+/* Block code — a tile, with the dark-on-cream variant for syntax
+   readability. The chrome comes from the tile primitive above
+   (--tile-bg: var(--ink) inverts cream → ink). The <pre> element
+   itself holds typography + scroll. */
+.prose pre {
+  --tile-bg: var(--ink);
+  --tile-shadow: var(--shadow-md);
+  color: var(--cream);
+  padding: clamp(14px, 1.4vw, 22px) clamp(16px, 1.6vw, 26px);
+  margin: 1.6em 0;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 0.9vw, 15px);
+  line-height: 1.55;
+  overflow-x: auto;
+}
+.prose pre code {
+  /* Inline-code chrome would double up inside the <pre> tile. */
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
 }
 
 /* ---------- Layout ---------- */
@@ -1072,10 +1187,6 @@ a:hover {
   }
   .card-hero {
     padding: 56px;
-  }
-  .label-tag {
-    padding: 4px 12px;
-    font-size: 13px;
   }
   .h-hero {
     letter-spacing: -0.015em;

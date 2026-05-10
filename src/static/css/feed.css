@@ -258,103 +258,13 @@
   align-items: center;
   flex-wrap: wrap;
   font-family: var(--font-display);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--ink-mute);
-}
-.entry-meta .tag {
-  padding: 2px 10px;
-  border: 2px solid var(--ink);
-  border-radius: var(--radius-pill);
-  background: var(--cream);
-  color: var(--ink);
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: var(--tracking-eyebrow);
-}
-
-/* Prose */
-.prose {
-  font-family: var(--font-body);
-  font-size: 18px;
-  line-height: 1.7;
-  color: var(--ink);
-}
-.prose > * + * {
-  margin-top: 1.4em;
-}
-.prose h1,
-.prose h2,
-.prose h3 {
-  font-family: var(--font-display);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  margin-top: 2em;
-  margin-bottom: 0.5em;
-}
-.prose h2 {
-  font-size: 32px;
-}
-.prose h3 {
-  font-size: 24px;
-}
-.prose p {
-  margin: 0;
-}
-.prose a {
-  color: var(--ink);
-  text-decoration-color: var(--ink-mute);
-}
-.prose a:hover {
-  color: var(--lavender);
-}
-.prose blockquote {
-  border-left: 4px solid var(--ink);
-  padding: 0 0 0 24px;
-  margin: 1.6em 0;
-  color: var(--ink-mute);
-  font-style: italic;
-}
-.prose ul,
-.prose ol {
-  padding-left: 28px;
-}
-.prose li + li {
-  margin-top: 0.4em;
-}
-.prose hr {
-  border: 0;
-  border-top: 2px dashed var(--ink-mute);
-  margin: 2em 0;
-}
-
-/* Inline + block code — monospace stays for code-alignment fidelity. */
-.prose code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  background: var(--ink);
-  color: var(--cream);
-  padding: 2px 6px;
-  border-radius: 0;
-}
-.prose pre {
-  background: var(--ink);
-  color: var(--cream);
-  padding: 20px 24px;
-  overflow-x: auto;
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
-  font-family: var(--font-mono);
   font-size: 14px;
-  line-height: 1.55;
-  margin: 1.6em 0;
+  color: var(--ink-mute);
 }
-.prose pre code {
-  background: transparent;
-  color: inherit;
-  padding: 0;
-  font-size: inherit;
-}
+
+/* Base prose typography lives in foundation.css (.prose primitive).
+   This file only adds essay-specific extras: KaTeX, footnotes,
+   anchor links, and the responsive overrides at the bottom. */
 
 /* KaTeX overrides on cream paper */
 .prose .katex {

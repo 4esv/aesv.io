@@ -65,7 +65,7 @@
           <h2 class="note-title">{{ entry.title }}</h2>
           {% if entry.summary %}<p class="note-summary">{{ entry.summary }}</p>{% endif %}
           <div class="note-meta">
-            {% for tag in entry.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+            {% for tag in entry.tags %}<span class="pill">{{ tag }}</span>{% endfor %}
           </div>
           <span class="note-arrow" aria-hidden="true">↗</span>
         </a>

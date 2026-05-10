@@ -39,12 +39,12 @@
     {% include "partials/site-header.njk" %}
 
     <header class="page-head">
-      <div class="entry-meta">
-        {% if entry.date %}<time>{{ entry.date }}</time>{% endif %}
-        {% for tag in entry.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
-      </div>
       <h1>{{ entry.title }}</h1>
       {% if entry.summary %}<p class="lede">{{ entry.summary }}</p>{% endif %}
+      <div class="entry-meta">
+        {% if entry.date %}<time>{{ entry.date }}</time>{% endif %}
+        {% for tag in entry.tags %}<span class="pill">{{ tag }}</span>{% endfor %}
+      </div>
       <div class="page-cta-row">
         {% if entry.type === 'case-study' %}
         <a class="btn btn-sm btn-back-to-work" href="/work">← back to work</a>
