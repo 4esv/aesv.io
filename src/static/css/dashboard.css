@@ -134,13 +134,23 @@
 }
 
 /* Cell variants share the .tile frame so every cell reads as one
-   family. Press behavior is in foundation's :where(.tile, ...) rule. */
+   family. Chrome lives on ::before so the wrapper can translate on
+   hover while the inner shadow grows (foundation press primitive). */
 .widget-cell.spotify,
 .widget-cell.hobbies {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.widget-cell.spotify::before,
+.widget-cell.hobbies::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: var(--cream);
   border: var(--border-thin);
   box-shadow: var(--shadow-md);
-  overflow: hidden;
 }
 .widget-spotify {
   width: 100%;
@@ -340,17 +350,26 @@
 }
 
 /* Tile — single-word identifier bottom-left. Lavender on .tile-primary.
-   Press behavior comes from foundation's :where(.tile, ...) rule. */
+   The shadow surface lives on ::before so the wrapper can translate
+   on hover while the inner shadow grows (album-link pattern). */
 .tile {
   position: relative;
   display: block;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
   text-decoration: none;
   color: var(--ink);
   width: 100%;
   height: 100%;
+  isolation: isolate;
+}
+.tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--dur-press) var(--ease-press);
 }
 .tile:hover {
   color: var(--ink);
@@ -383,8 +402,10 @@
   line-height: 1;
 }
 .tile-primary {
-  background: var(--lavender);
   color: var(--offwhite);
+}
+.tile-primary::before {
+  background: var(--lavender);
 }
 .tile-primary .tile-label,
 .tile-primary .tile-label-arrow {
@@ -428,23 +449,18 @@
    regardless of which responsive grid mode is active. The fallbacks
    (-220, -160, -15deg) cover the case where JS hasn't run yet — same
    off-axis upper-left for every card.
-   Three things make it read as flight rather than evaporate-on-arrival:
+   Two things make it read as flight rather than evaporate-on-arrival:
    · opacity ramps to 1 inside the first 8%, so the card is solid for
      the bulk of its visible travel
    · the start is far enough to give the eye a real arc to track
-   · box-shadow lerps from lifted (14px 14px) to resting (6px 6px),
-     so the card visibly drops onto the table as it finishes traveling
-   The 'to' lands at 0,0,0 / --shadow-md — same as foundation's
-   resting state, so no transform/shadow handoff is needed. The
-   .widget-cell-bare cell uses dashboard-intro-text instead and never
-   sees this rule, so the shadow keyframe doesn't fight its
-   shadow:none override. */
+   The cartoon shadow lives on the tile's ::before chrome layer and
+   stays at --shadow-md throughout — animating it on the wrapper here
+   would render a second shadow on top of ::before's during flight. */
 @keyframes dashboard-intro-deal {
   0% {
     opacity: 0;
     transform: translate(var(--deal-x, -220px), var(--deal-y, -160px))
       rotate(var(--deal-rot, -15deg));
-    box-shadow: 14px 14px 0 0 var(--ink);
   }
   8% {
     opacity: 1;
@@ -452,7 +468,6 @@
   100% {
     opacity: 1;
     transform: translate(0, 0) rotate(0);
-    box-shadow: var(--shadow-md);
   }
 }
 

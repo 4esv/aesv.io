@@ -24,15 +24,14 @@
   margin-top: calc(var(--s-3) * -1 + 4px);
 }
 
-/* ---------- Bigger button variant, used by the contact block. */
+/* ---------- Bigger button variants, used by the contact block.
+   .btn-lg and .btn-xl share the .btn primitive (chrome lives on
+   ::before, press behavior comes from the foundation rule). They
+   only override sizing, not the press magnitudes. */
 .btn-lg {
   font-size: clamp(20px, 2vw, 24px);
   padding: 16px 32px;
   gap: 14px;
-  box-shadow: var(--shadow-lg);
-}
-.btn-lg:hover {
-  box-shadow: var(--shadow-xl, var(--shadow-lg));
 }
 
 /* Title-sized button, used inline with an h2 in the contact block so
@@ -44,10 +43,6 @@
   letter-spacing: -0.01em;
   padding: 14px 28px;
   gap: 14px;
-  box-shadow: var(--shadow-lg);
-}
-.btn-xl:hover {
-  box-shadow: var(--shadow-xl);
 }
 
 /* ---------- Small lede under section h2
@@ -93,12 +88,20 @@
   flex-direction: column;
   gap: 10px;
   padding: clamp(20px, 2vw, 28px);
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
   text-decoration: none;
   color: var(--ink);
   height: 100%;
+  position: relative;
+  isolation: isolate;
+}
+.case-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
 }
 .case-card:hover {
   color: var(--ink);

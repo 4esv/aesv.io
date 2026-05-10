@@ -351,40 +351,42 @@ a:hover {
   letter-spacing: 0.02em;
   text-transform: lowercase;
   padding: 12px 24px;
-  border: var(--border-thin);
-  background: var(--cream);
   color: var(--ink);
-  box-shadow: var(--shadow-md);
   cursor: pointer;
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  position: relative;
+  isolation: isolate;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: var(--border-thin);
+  background: var(--cream);
+  box-shadow: var(--shadow-md);
   border-radius: var(--radius-square);
 }
 .btn:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-lg);
   color: var(--ink);
 }
-.btn:active {
-  transform: translate(6px, 6px);
-  box-shadow: var(--shadow-pressed);
-}
 .btn-primary {
-  background: var(--lavender);
   color: var(--offwhite);
-  border-color: var(--ink);
+}
+.btn-primary::before {
+  background: var(--lavender);
 }
 .btn-primary:hover {
   color: var(--offwhite);
 }
 .btn-pill {
-  border-radius: var(--radius-pill);
   padding: 12px 24px;
+}
+.btn-pill::before {
+  border-radius: var(--radius-pill);
 }
 /* Small variant — used as the "go to <service>" CTA under page titles.
    Same cartoon shadow, smaller padding/type so it sits under an h1 as a
@@ -394,9 +396,11 @@ a:hover {
   padding: 6px 14px;
   gap: 8px;
   letter-spacing: 0.02em;
+}
+.btn-sm::before {
   box-shadow: var(--shadow-sm);
 }
-.btn-sm:hover {
+.btn-sm:hover::before {
   box-shadow: var(--shadow-md);
 }
 
@@ -576,39 +580,104 @@ a:hover {
   color: var(--ink);
 }
 
-/* Press-tile interaction — the cartoon-card shadow + nudge that
-   every clickable tile/card on the site shares. Components carry the
-   base box-shadow (--shadow-md / --shadow-sm) themselves; this only
-   animates the press. :where() keeps specificity at 0 so components
-   can still override locally without breaking.
+/* ------------------------------------------------------------
+   PRESS PRIMITIVE — the universal cartoon-tile pattern.
 
-   Magnitude matches the album-cover pattern on /music: 2px lift,
-   shadow-md → shadow-lg. Anything bigger reads as theatrical. */
-:where(.surface-press, .tile, .widget-cell.spotify, .widget-cell.hobbies, .case-card, .note-card) {
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
+   Every clickable card-shape on the site is a "tile": home dashboard
+   tiles, album cards, case-cards, note-cards, buttons (.btn family),
+   the back-link, view-chips, ledger-links, track-links. They all
+   share the same hover language so the site feels consistent.
+
+   The pattern: the wrapper (the <a> or <button>) translates on hover
+   and active. The shadow lives on a separate inner surface (a
+   ::before pseudo-element on most components, or the existing inner
+   .album-art element on .album-link). On hover, the wrapper moves up
+   while the inner surface's shadow grows: the visual reads as the
+   card lifting off the page.
+
+   Components are responsible for putting their chrome (background,
+   border, shadow-md base) on ::before; this rule only animates the
+   wrapper's transform and the ::before's shadow. :where() keeps
+   specificity at 0 so per-component overrides still work.
+
+   Magnitude is tuned to /music album cards: 2px lift, shadow-md →
+   shadow-lg. Anything bigger reads as theatrical. */
+:where(
+  .tile,
+  .case-card,
+  .note-card,
+  .btn,
+  .back-link,
+  .view-chip,
+  .ledger-link,
+  .track-link,
+  .surface-press
+) {
+  transition: transform var(--dur-press) var(--ease-press);
 }
 :where(
-  .surface-press,
   .tile,
-  .widget-cell.spotify,
-  .widget-cell.hobbies,
   .case-card,
-  .note-card
+  .note-card,
+  .btn,
+  .back-link,
+  .view-chip,
+  .ledger-link,
+  .track-link,
+  .surface-press
+)::before {
+  transition: box-shadow var(--dur-press) var(--ease-press);
+}
+:where(
+  .tile,
+  .case-card,
+  .note-card,
+  .btn,
+  .back-link,
+  .view-chip,
+  .ledger-link,
+  .track-link,
+  .surface-press
 ):hover {
   transform: translate(-2px, -2px);
+}
+:where(
+    .tile,
+    .case-card,
+    .note-card,
+    .btn,
+    .back-link,
+    .view-chip,
+    .ledger-link,
+    .track-link,
+    .surface-press
+  ):hover::before {
   box-shadow: var(--shadow-lg);
 }
 :where(
-  .surface-press,
   .tile,
-  .widget-cell.spotify,
-  .widget-cell.hobbies,
   .case-card,
-  .note-card
+  .note-card,
+  .btn,
+  .back-link,
+  .view-chip,
+  .ledger-link,
+  .track-link,
+  .surface-press
 ):active {
   transform: translate(6px, 6px);
+}
+:where(
+    .tile,
+    .case-card,
+    .note-card,
+    .btn,
+    .back-link,
+    .view-chip,
+    .ledger-link,
+    .track-link,
+    .surface-press
+  ):active::before {
   box-shadow: var(--shadow-pressed);
 }
 
@@ -687,22 +756,23 @@ a:hover {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
+  cursor: pointer;
+  position: relative;
+  isolation: isolate;
+}
+.back-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: var(--cream);
   border: 2px solid var(--ink);
   box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
 }
 .back-link:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-md);
   color: var(--ink);
 }
 .back-link:active {
-  transform: translate(2px, 2px);
-  box-shadow: var(--shadow-pressed);
   color: var(--ink);
 }
 .dashboard-greeting strong {
