@@ -629,7 +629,7 @@ a:hover {
   height: auto;
 }
 .brand:hover img {
-  animation: wiggle 200ms linear 1;
+  animation: wiggle var(--dur-wiggle) linear 1;
 }
 
 /* ---------- Site header (shared by every cream-paper page) ----------
