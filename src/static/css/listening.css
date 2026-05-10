@@ -178,33 +178,17 @@
   letter-spacing: 0.02em;
 }
 .track-link {
+  --tile-radius: var(--radius-pill);
   font-family: var(--font-display);
   font-size: clamp(20px, 2vw, 28px);
   text-decoration: none;
   color: var(--ink);
   padding: 4px 8px;
-  position: relative;
-  isolation: isolate;
   transition: color var(--dur-press) var(--ease-press);
 }
-.track-link::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border: 2px solid var(--ink);
-  border-radius: var(--radius-pill);
-  background: var(--cream);
-  box-shadow: var(--shadow-sm);
-  transition:
-    background var(--dur-press) var(--ease-press),
-    box-shadow var(--dur-press) var(--ease-press);
-}
 .track-link:hover {
+  --tile-bg: var(--lavender);
   color: var(--offwhite);
-}
-.track-link:hover::before {
-  background: var(--lavender);
 }
 
 /* Artist marquee — big names, wraps inline */

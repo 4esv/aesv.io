@@ -343,7 +343,11 @@ a:hover {
   border-radius: 0;
 }
 
-/* ---------- Primitives ---------- */
+/* ---------- Primitives ----------
+   .btn, .btn-sm, .btn-primary, .btn-pill all share THE TILE chrome
+   defined further down in this file. They only override sizing,
+   typography, and a small set of CSS custom properties consumed by
+   the tile primitive (--tile-bg, --tile-radius). */
 .btn {
   font-family: var(--font-display);
   font-weight: 400;
@@ -357,51 +361,26 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  position: relative;
-  isolation: isolate;
-}
-.btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border: var(--border-thin);
-  background: var(--cream);
-  box-shadow: var(--shadow-md);
-  border-radius: var(--radius-square);
 }
 .btn:hover {
   color: var(--ink);
 }
 .btn-primary {
+  --tile-bg: var(--lavender);
   color: var(--offwhite);
-}
-.btn-primary::before {
-  background: var(--lavender);
 }
 .btn-primary:hover {
   color: var(--offwhite);
 }
 .btn-pill {
+  --tile-radius: var(--radius-pill);
   padding: 12px 24px;
 }
-.btn-pill::before {
-  border-radius: var(--radius-pill);
-}
-/* Small variant — used as the "go to <service>" CTA under page titles.
-   Same cartoon shadow, smaller padding/type so it sits under an h1 as a
-   secondary action rather than a hero button. */
 .btn-sm {
   font-size: 15px;
   padding: 6px 14px;
   gap: 8px;
   letter-spacing: 0.02em;
-}
-.btn-sm::before {
-  box-shadow: var(--shadow-sm);
-}
-.btn-sm:hover::before {
-  box-shadow: var(--shadow-md);
 }
 
 /* Unified subpage shell — every cream-paper subpage uses this so the
@@ -581,103 +560,124 @@ a:hover {
 }
 
 /* ------------------------------------------------------------
-   PRESS PRIMITIVE — the universal cartoon-tile pattern.
+   THE TILE — the only clickable card-shape on the site.
 
-   Every clickable card-shape on the site is a "tile": home dashboard
-   tiles, album cards, case-cards, note-cards, buttons (.btn family),
-   the back-link, view-chips, ledger-links, track-links. They all
-   share the same hover language so the site feels consistent.
+   Home dashboard tiles, case-cards, note-cards, every button
+   (.btn / .btn-sm / .btn-lg / .btn-xl / .btn-primary / .btn-pill),
+   the back-link, view-chips on /feed, ledger-link on /music,
+   track-link on /listening. All of them are tiles. They look,
+   hover, and press identically.
 
-   The pattern: the wrapper (the <a> or <button>) translates on hover
-   and active. The shadow lives on a separate inner surface (a
-   ::before pseudo-element on most components, or the existing inner
-   .album-art element on .album-link). On hover, the wrapper moves up
-   while the inner surface's shadow grows: the visual reads as the
-   card lifting off the page.
+   The pattern: the wrapper translates -2px on hover and +6px on
+   active. The chrome (cream paper, ink border, cartoon shadow)
+   lives on a ::before pseudo-element. On hover, ::before's shadow
+   grows --shadow-md → --shadow-lg, so the wrapper appears to lift
+   off the page while the shadow extends down-right beneath it.
 
-   Components are responsible for putting their chrome (background,
-   border, shadow-md base) on ::before; this rule only animates the
-   wrapper's transform and the ::before's shadow. :where() keeps
-   specificity at 0 so per-component overrides still work.
+   Per-component CSS files are NOT allowed to set background,
+   border, or box-shadow on these elements. Variant tweaks (lavender
+   primary, pill radius, ink-on-cream toggle) go through these
+   custom properties:
 
-   Magnitude is tuned to /music album cards: 2px lift, shadow-md →
-   shadow-lg. Anything bigger reads as theatrical. */
-:where(
-  .tile,
-  .case-card,
-  .note-card,
-  .btn,
-  .back-link,
-  .view-chip,
-  .ledger-link,
-  .track-link,
-  .surface-press
-) {
+     --tile-bg       background color of the chrome (default cream)
+     --tile-border   border style (default --border-thin)
+     --tile-radius   border-radius (default 0; pill variants set it)
+     --tile-shadow   resting shadow (default --shadow-md)
+     --tile-shadow-hover  hover shadow (default --shadow-lg)
+
+   .album-link / .album-art on /music keeps a real-element variant
+   of this pattern (the album art is meaningful content, not chrome)
+   but matches the same magnitudes. */
+
+.tile,
+.widget-cell.spotify,
+.widget-cell.hobbies,
+.case-card,
+.note-card,
+.btn,
+.back-link,
+.view-chip,
+.ledger-link,
+.track-link,
+.surface-press {
+  position: relative;
+  isolation: isolate;
   transition: transform var(--dur-press) var(--ease-press);
 }
-:where(
-  .tile,
-  .case-card,
-  .note-card,
-  .btn,
-  .back-link,
-  .view-chip,
-  .ledger-link,
-  .track-link,
-  .surface-press
-)::before {
+
+.tile::before,
+.widget-cell.spotify::before,
+.widget-cell.hobbies::before,
+.case-card::before,
+.note-card::before,
+.btn::before,
+.back-link::before,
+.view-chip::before,
+.ledger-link::before,
+.track-link::before,
+.surface-press::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--tile-bg, var(--cream));
+  border: var(--tile-border, var(--border-thin));
+  border-radius: var(--tile-radius, 0);
+  box-shadow: var(--tile-shadow, var(--shadow-md));
   transition: box-shadow var(--dur-press) var(--ease-press);
 }
-:where(
-  .tile,
-  .case-card,
-  .note-card,
-  .btn,
-  .back-link,
-  .view-chip,
-  .ledger-link,
-  .track-link,
-  .surface-press
-):hover {
+
+.tile:hover,
+.widget-cell.spotify:hover,
+.widget-cell.hobbies:hover,
+.case-card:hover,
+.note-card:hover,
+.btn:hover,
+.back-link:hover,
+.view-chip:hover,
+.ledger-link:hover,
+.track-link:hover,
+.surface-press:hover {
   transform: translate(-2px, -2px);
 }
-:where(
-    .tile,
-    .case-card,
-    .note-card,
-    .btn,
-    .back-link,
-    .view-chip,
-    .ledger-link,
-    .track-link,
-    .surface-press
-  ):hover::before {
-  box-shadow: var(--shadow-lg);
+.tile:hover::before,
+.widget-cell.spotify:hover::before,
+.widget-cell.hobbies:hover::before,
+.case-card:hover::before,
+.note-card:hover::before,
+.btn:hover::before,
+.back-link:hover::before,
+.view-chip:hover::before,
+.ledger-link:hover::before,
+.track-link:hover::before,
+.surface-press:hover::before {
+  box-shadow: var(--tile-shadow-hover, var(--shadow-lg));
 }
-:where(
-  .tile,
-  .case-card,
-  .note-card,
-  .btn,
-  .back-link,
-  .view-chip,
-  .ledger-link,
-  .track-link,
-  .surface-press
-):active {
+
+.tile:active,
+.widget-cell.spotify:active,
+.widget-cell.hobbies:active,
+.case-card:active,
+.note-card:active,
+.btn:active,
+.back-link:active,
+.view-chip:active,
+.ledger-link:active,
+.track-link:active,
+.surface-press:active {
   transform: translate(6px, 6px);
 }
-:where(
-    .tile,
-    .case-card,
-    .note-card,
-    .btn,
-    .back-link,
-    .view-chip,
-    .ledger-link,
-    .track-link,
-    .surface-press
-  ):active::before {
+.tile:active::before,
+.widget-cell.spotify:active::before,
+.widget-cell.hobbies:active::before,
+.case-card:active::before,
+.note-card:active::before,
+.btn:active::before,
+.back-link:active::before,
+.view-chip:active::before,
+.ledger-link:active::before,
+.track-link:active::before,
+.surface-press:active::before {
   box-shadow: var(--shadow-pressed);
 }
 
@@ -757,21 +757,8 @@ a:hover {
   gap: 8px;
   padding: 6px 14px;
   cursor: pointer;
-  position: relative;
-  isolation: isolate;
 }
-.back-link::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--cream);
-  border: 2px solid var(--ink);
-  box-shadow: var(--shadow-sm);
-}
-.back-link:hover {
-  color: var(--ink);
-}
+.back-link:hover,
 .back-link:active {
   color: var(--ink);
 }

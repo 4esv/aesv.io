@@ -73,31 +73,12 @@
   padding: 4px 10px;
   color: var(--ink);
   cursor: pointer;
-  position: relative;
-  isolation: isolate;
   background: transparent;
   border: none;
-  transition:
-    color 120ms ease,
-    transform var(--dur-press) var(--ease-press);
-}
-.view-chip::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border: 2px solid var(--ink);
-  background: var(--cream);
-  box-shadow: var(--shadow-sm);
-  transition:
-    background 120ms ease,
-    box-shadow var(--dur-press) var(--ease-press);
 }
 .view-chip.is-active {
+  --tile-bg: var(--ink);
   color: var(--cream);
-}
-.view-chip.is-active::before {
-  background: var(--ink);
 }
 
 .feed-grid {
@@ -207,23 +188,12 @@
 }
 
 .note-card {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: var(--s-4);
   text-decoration: none;
   color: var(--ink);
-  isolation: isolate;
-}
-.note-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
 }
 .note-card:hover {
   color: var(--ink);

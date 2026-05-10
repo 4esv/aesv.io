@@ -133,24 +133,12 @@
   display: none;
 }
 
-/* Cell variants share the .tile frame so every cell reads as one
-   family. Chrome lives on ::before so the wrapper can translate on
-   hover while the inner shadow grows (foundation press primitive). */
+/* Cell variants share THE TILE chrome from foundation. Apply the
+   .surface-press class on these cells so they get the universal
+   press primitive without a separate per-cell rule. */
 .widget-cell.spotify,
 .widget-cell.hobbies {
-  position: relative;
-  isolation: isolate;
   overflow: hidden;
-}
-.widget-cell.spotify::before,
-.widget-cell.hobbies::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
 }
 .widget-spotify {
   width: 100%;
@@ -350,26 +338,13 @@
 }
 
 /* Tile — single-word identifier bottom-left. Lavender on .tile-primary.
-   The shadow surface lives on ::before so the wrapper can translate
-   on hover while the inner shadow grows (album-link pattern). */
+   Chrome + press behavior come from THE TILE primitive in foundation.css. */
 .tile {
-  position: relative;
   display: block;
   text-decoration: none;
   color: var(--ink);
   width: 100%;
   height: 100%;
-  isolation: isolate;
-}
-.tile::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
-  transition: box-shadow var(--dur-press) var(--ease-press);
 }
 .tile:hover {
   color: var(--ink);
@@ -402,10 +377,8 @@
   line-height: 1;
 }
 .tile-primary {
+  --tile-bg: var(--lavender);
   color: var(--offwhite);
-}
-.tile-primary::before {
-  background: var(--lavender);
 }
 .tile-primary .tile-label,
 .tile-primary .tile-label-arrow {

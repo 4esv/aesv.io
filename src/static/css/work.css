@@ -91,17 +91,6 @@
   text-decoration: none;
   color: var(--ink);
   height: 100%;
-  position: relative;
-  isolation: isolate;
-}
-.case-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--cream);
-  border: var(--border-thin);
-  box-shadow: var(--shadow-md);
 }
 .case-card:hover {
   color: var(--ink);
