@@ -582,10 +582,8 @@ a:hover {
    animates the press. :where() keeps specificity at 0 so components
    can still override locally without breaking.
 
-   Magnitude is tuned to the album-cover pattern (the most polished
-   hover on the site): 3px lift, shadow-md → shadow-xl. The bigger
-   delta reads as "lifting off the page" rather than a flat slide,
-   especially on cream-on-cream tiles where contrast is low. */
+   Magnitude matches the album-cover pattern on /music: 2px lift,
+   shadow-md → shadow-lg. Anything bigger reads as theatrical. */
 :where(.surface-press, .tile, .widget-cell.spotify, .widget-cell.hobbies, .case-card, .note-card) {
   transition:
     transform var(--dur-press) var(--ease-press),
@@ -599,8 +597,8 @@ a:hover {
   .case-card,
   .note-card
 ):hover {
-  transform: translate(-3px, -3px);
-  box-shadow: var(--shadow-xl);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
 }
 :where(
   .surface-press,
