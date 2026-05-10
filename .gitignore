@@ -20,6 +20,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Claude Code per-project config (local-only)
+.claude/
+
 # Build
 dist/
 build/
@@ -32,3 +35,11 @@ data/
 
 # Content
 CONTENT.md
+
+# Local-only sandbox: /lab tile-animation playground.
+# pages.js auto-discovers any pages/*.njk and mounts it as a route, so
+# excluding the template here prevents the route from existing in any
+# clone or deploy. The CSS/JS are local-only by the same logic.
+src/templates/pages/lab.njk
+src/static/css/lab.css
+src/static/js/lab.js
