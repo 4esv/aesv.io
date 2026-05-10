@@ -13,7 +13,7 @@ import { registerGridMiddleware } from './middleware/grid.js'
 import { registerAboutRoutes } from './routes/about.js'
 import { registerActivitiesRoutes } from './routes/activities.js'
 import { apiRoutes, getPageData } from './routes/api.js'
-import { registerGrdnRoutes } from './routes/grdn.js'
+import { registerFeedRoutes } from './routes/feed.js'
 import { registerMusicRoutes } from './routes/music.js'
 import { registerPageRoutes } from './routes/pages.js'
 import { registerWorkRoutes } from './routes/work.js'
@@ -22,11 +22,11 @@ const TEMPLATES_DIR = join(import.meta.dirname, 'templates')
 const STATIC_DIR = join(import.meta.dirname, 'static')
 const CSP_HEADER = [
   "default-src 'none'",
-  "script-src 'self'",
+  "script-src 'self' https://cloud.umami.is",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
   "img-src 'self' data: https://i.scdn.co https://mosaic.scdn.co https://image-cdn-ak.spotifycdn.com https://image-cdn-fa.spotifycdn.com",
-  "connect-src 'self'",
+  "connect-src 'self' https://cloud.umami.is https://api.umami.is",
   "manifest-src 'self'",
   "worker-src 'self'",
   "base-uri 'self'",
@@ -85,7 +85,7 @@ export async function build(opts = {}) {
 
   await registerAboutRoutes(fastify)
   await registerWorkRoutes(fastify)
-  await registerGrdnRoutes(fastify)
+  await registerFeedRoutes(fastify)
   await registerMusicRoutes(fastify)
   await registerActivitiesRoutes(fastify)
   await registerPageRoutes(fastify)

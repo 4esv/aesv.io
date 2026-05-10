@@ -3,136 +3,177 @@ import { describe, it, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import { build } from '../src/server.js'
 
-describe('Page Routes', () => {
-  let app
+let app
 
-  before(async () => {
-    app = await build({ logger: false })
+before(async () => {
+  app = await build({ logger: false })
+})
+
+after(async () => {
+  await app.close()
+})
+
+describe('Page routes', () => {
+  it('GET / returns 200 HTML', async () => {
+    const r = await app.inject({ method: 'GET', url: '/' })
+    assert.equal(r.statusCode, 200)
+    assert.match(r.headers['content-type'], /text\/html/)
   })
 
-  after(async () => {
-    await app.close()
+  it('GET /work returns 200', async () => {
+    const r = await app.inject({ method: 'GET', url: '/work' })
+    assert.equal(r.statusCode, 200)
+    assert.match(r.headers['content-type'], /text\/html/)
   })
 
-  describe('GET /', () => {
-    it('returns 200 with HTML', async () => {
-      const response = await app.inject({
-        method: 'GET',
-        url: '/',
-      })
-
-      assert.equal(response.statusCode, 200)
-      assert.ok(response.headers['content-type'].includes('text/html'))
-    })
-
-    it('returns plain text for curl', async () => {
-      const response = await app.inject({
-        method: 'GET',
-        url: '/',
-        headers: {
-          'user-agent': 'curl/7.79.1',
-        },
-      })
-
-      assert.equal(response.statusCode, 200)
-      assert.ok(response.headers['content-type'].includes('text/plain'))
-    })
+  it('GET /work/:slug returns 200 for a case study', async () => {
+    const r = await app.inject({ method: 'GET', url: '/work/interfolio' })
+    assert.equal(r.statusCode, 200)
+    assert.ok(r.body.includes('back to work'), 'case-study detail shows back-to-work link')
   })
 
-  describe('404 handling', () => {
-    it('returns 404 for unknown routes', async () => {
-      const response = await app.inject({
-        method: 'GET',
-        url: '/nonexistent',
-      })
+  it('GET /feed returns 200', async () => {
+    const r = await app.inject({ method: 'GET', url: '/feed' })
+    assert.equal(r.statusCode, 200)
+    assert.ok(r.body.includes('feed.'))
+  })
 
-      assert.equal(response.statusCode, 404)
-    })
+  it('GET /feed/:slug returns 200 for an existing entry', async () => {
+    const r = await app.inject({ method: 'GET', url: '/feed/gallows' })
+    assert.equal(r.statusCode, 200)
+  })
 
-    it('returns 404 page with grid context', async () => {
-      const response = await app.inject({
-        method: 'GET',
-        url: '/nonexistent',
-      })
+  it('GET /feed.xml returns RSS feed', async () => {
+    const r = await app.inject({ method: 'GET', url: '/feed.xml' })
+    assert.equal(r.statusCode, 200)
+    assert.match(r.headers['content-type'], /application\/rss\+xml/)
+    assert.ok(r.body.includes('<rss'), 'has rss root element')
+  })
 
-      assert.ok(response.body.includes('404'))
-    })
+  it('GET /about returns 200', async () => {
+    const r = await app.inject({ method: 'GET', url: '/about' })
+    assert.equal(r.statusCode, 200)
+  })
+
+  it('GET /activities returns 200', async () => {
+    const r = await app.inject({ method: 'GET', url: '/activities' })
+    assert.equal(r.statusCode, 200)
+  })
+
+  it('GET /music returns 200', async () => {
+    const r = await app.inject({ method: 'GET', url: '/music' })
+    assert.equal(r.statusCode, 200)
   })
 })
 
-describe('API Routes', () => {
-  let app
-
-  before(async () => {
-    app = await build({ logger: false })
+describe('Legacy redirects', () => {
+  it('GET /garden 301-redirects to /feed', async () => {
+    const r = await app.inject({ method: 'GET', url: '/garden' })
+    assert.equal(r.statusCode, 301)
+    assert.equal(r.headers.location, '/feed')
   })
 
-  after(async () => {
-    await app.close()
+  it('GET /garden/:slug 301-redirects to /feed/:slug', async () => {
+    const r = await app.inject({ method: 'GET', url: '/garden/click' })
+    assert.equal(r.statusCode, 301)
+    assert.equal(r.headers.location, '/feed/click')
   })
 
-  it('GET /api/gpg returns text/plain', async () => {
-    const response = await app.inject({
+  it('GET /files 301-redirects to /feed', async () => {
+    const r = await app.inject({ method: 'GET', url: '/files' })
+    assert.equal(r.statusCode, 301)
+    assert.equal(r.headers.location, '/feed')
+  })
+
+  it('GET /files/:slug 301-redirects to /feed/:slug', async () => {
+    const r = await app.inject({ method: 'GET', url: '/files/gallows' })
+    assert.equal(r.statusCode, 301)
+    assert.equal(r.headers.location, '/feed/gallows')
+  })
+
+  it('GET /chess 301-redirects to /activities', async () => {
+    const r = await app.inject({ method: 'GET', url: '/chess' })
+    assert.equal(r.statusCode, 301)
+    assert.equal(r.headers.location, '/activities')
+  })
+
+  it('GET /listening 301-redirects to /music', async () => {
+    const r = await app.inject({ method: 'GET', url: '/listening' })
+    assert.equal(r.statusCode, 301)
+    assert.equal(r.headers.location, '/music')
+  })
+})
+
+describe('Error pages', () => {
+  it('GET /nonexistent returns 404', async () => {
+    const r = await app.inject({ method: 'GET', url: '/nonexistent' })
+    assert.equal(r.statusCode, 404)
+  })
+
+  it('404 HTML includes the requested path and a dashboard link', async () => {
+    const r = await app.inject({ method: 'GET', url: '/clearly-not-real' })
+    assert.equal(r.statusCode, 404)
+    assert.ok(r.body.includes('/clearly-not-real'), 'requested path is shown')
+    assert.ok(r.body.includes('href="/"'), 'has a link back to the dashboard')
+  })
+
+  it('404 plain-text variant for terminal clients', async () => {
+    const r = await app.inject({
       method: 'GET',
-      url: '/api/gpg',
+      url: '/missing',
+      headers: { 'user-agent': 'curl/8.4.0' },
     })
-
-    assert.equal(response.statusCode, 200)
-    assert.ok(response.headers['content-type'].includes('text/plain'))
-    assert.ok(response.body.includes('BEGIN PGP PUBLIC KEY BLOCK'))
-  })
-
-  it('GET /api/auth/spotify returns 302', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/api/auth/spotify',
-    })
-
-    assert.equal(response.statusCode, 302)
-    assert.ok(response.headers.location.includes('accounts.spotify.com'))
-  })
-
-  it('GET /api/auth/strava returns 302', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/api/auth/strava',
-    })
-
-    assert.equal(response.statusCode, 302)
-    assert.ok(response.headers.location.includes('strava.com'))
+    assert.equal(r.statusCode, 404)
+    assert.match(r.headers['content-type'], /text\/plain/)
+    assert.ok(r.body.includes('404'))
   })
 })
 
 describe('Terminal detection', () => {
-  let app
-
-  before(async () => {
-    app = await build({ logger: false })
-  })
-
-  after(async () => {
-    await app.close()
-  })
-
   it('serves HTML to a regular browser', async () => {
-    const response = await app.inject({
+    const r = await app.inject({
       method: 'GET',
       url: '/',
       headers: { 'user-agent': 'Mozilla/5.0' },
     })
-
-    assert.equal(response.statusCode, 200)
-    assert.ok(response.headers['content-type'].includes('text/html'))
+    assert.equal(r.statusCode, 200)
+    assert.match(r.headers['content-type'], /text\/html/)
   })
 
   it('serves text/plain to curl', async () => {
-    const response = await app.inject({
+    const r = await app.inject({
       method: 'GET',
       url: '/',
       headers: { 'user-agent': 'curl/8.4.0' },
     })
+    assert.equal(r.statusCode, 200)
+    assert.match(r.headers['content-type'], /text\/plain/)
+  })
+})
 
-    assert.equal(response.statusCode, 200)
-    assert.ok(response.headers['content-type'].includes('text/plain'))
+describe('API routes', () => {
+  it('GET /health returns ok', async () => {
+    const r = await app.inject({ method: 'GET', url: '/health' })
+    assert.equal(r.statusCode, 200)
+    assert.equal(r.json().status, 'ok')
+  })
+
+  it('GET /api/gpg returns the public key', async () => {
+    const r = await app.inject({ method: 'GET', url: '/api/gpg' })
+    assert.equal(r.statusCode, 200)
+    assert.match(r.headers['content-type'], /text\/plain/)
+    assert.ok(r.body.includes('BEGIN PGP PUBLIC KEY BLOCK'))
+  })
+
+  it('GET /api/auth/spotify redirects to Spotify', async () => {
+    const r = await app.inject({ method: 'GET', url: '/api/auth/spotify' })
+    assert.equal(r.statusCode, 302)
+    assert.ok(r.headers.location.includes('accounts.spotify.com'))
+  })
+
+  it('GET /api/auth/strava redirects to Strava', async () => {
+    const r = await app.inject({ method: 'GET', url: '/api/auth/strava' })
+    assert.equal(r.statusCode, 302)
+    assert.ok(r.headers.location.includes('strava.com'))
   })
 })

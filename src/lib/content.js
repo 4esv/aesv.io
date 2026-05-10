@@ -1,4 +1,4 @@
-// Markdown-content loader shared by /work, /garden, /about.
+// Markdown-content loader shared by /work, /feed, /about.
 //
 // Parses front-matter, renders body HTML at load time, sorts by date.
 // Cache is hydrated once in production and bypassed in dev so edits
@@ -21,14 +21,13 @@ function normalizeDate(value) {
 
 function parseEntry(slug, raw, mapFrontmatter) {
   const { data, content } = matter(raw)
-  const html = renderMarkdown(content)
   const base = {
     slug,
     title: data.title || slug,
     date: normalizeDate(data.date),
     summary: data.summary || '',
     raw: content,
-    html,
+    html: renderMarkdown(content),
   }
   return mapFrontmatter ? mapFrontmatter(base, data) : base
 }

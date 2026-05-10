@@ -3,14 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>work — aesv.io</title>
-  <meta name="description" content="Axel Stevens — systems integrator. Six case studies. Available for contract work.">
+  {% include "partials/site-meta.njk" %}
+  <link rel="canonical" href="https://aesv.io/work">
+  <title>work · aesv.io</title>
+  <meta name="description" content="Axel Stevens. Systems integrator. Available for contract work: integrations, automation, AI, internal tools, MDM, and legacy systems.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="work · aesv.io">
+  <meta property="og:description" content="Axel Stevens. Systems integrator. Available for contract work: integrations, automation, AI, internal tools, MDM, and legacy systems.">
+  <meta property="og:url" content="https://aesv.io/work">
+  <meta property="og:site_name" content="aesv.io">
+  <meta property="og:image" content="https://aesv.io/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="work · aesv.io">
+  <meta name="twitter:description" content="Axel Stevens. Systems integrator. Available for contract work: integrations, automation, AI, internal tools, MDM, and legacy systems.">
+  <meta name="twitter:image" content="https://aesv.io/logo.png">
   <link rel="icon" href="/logo-pixel.png" type="image/png">
   <link rel="apple-touch-icon" href="/logo.png">
   <meta name="theme-color" content="#F4ECD8">
   <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/foundation.css">
   <link rel="stylesheet" href="/css/work.css">
+  <link rel="stylesheet" href="/css/transitions.css">
+  {% include "partials/analytics.njk" %}
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -19,15 +33,40 @@
 
     <header class="page-head">
       <h1>work.</h1>
-      <p class="lede">Systems integrator at Cornell's College of Human Ecology. I make system A talk to system B — workflow platforms, MDMs, directory services, AI pipelines, the legacy stack that has to keep running.</p>
+      <p class="lede">{{ lede }}</p>
       <div class="page-cta-row">
-        <a class="btn btn-sm btn-primary" href="mailto:mail@aesv.io">hire me ↗</a>
+        <a class="btn btn-sm" href="mailto:axel@aesv.io">axel@aesv.io ↗</a>
         <a class="btn btn-sm" href="https://github.com/4esv" rel="noopener">github ↗</a>
       </div>
     </header>
 
+    <section class="work-section" id="services">
+      <h2>What I do.</h2>
+      <ul class="services">
+        {% for s in services %}
+        <li class="service">
+          <span class="num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index|string }}</span>
+          <h3>{{ s.title }}</h3>
+          <p class="service-body">{{ s.body }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="work-section" id="audiences">
+      <h2>Who I work with.</h2>
+      <ul class="audiences">
+        {% for a in audiences %}
+        <li class="audience">
+          <h3>{{ a.title }}</h3>
+          <p>{{ a.body }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
     <section class="work-section" id="case-studies">
-      <h2>Things I've done.</h2>
+      <h2>How it goes.</h2>
       <ul class="case-card-grid">
         {% for cs in caseStudies %}
         <li>
@@ -42,36 +81,16 @@
       </ul>
     </section>
 
-    <section class="work-section" id="services">
-      <h2>Things I do.</h2>
-      <div class="services">
-        {% for s in services %}
-        <div class="service">
-          <span class="num">{{ '0' + (loop.index|string) if loop.index < 10 else loop.index|string }}</span>
-          <h3>{{ s.title }}</h3>
-          <p>{{ s.body }}</p>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-
-    <section class="work-section">
-      <h2>Who I do it for.</h2>
-      <div class="client-profile">
-        <p>Small businesses, nonprofits, and higher-ed-adjacent shops that need engineering, not a vendor demo.</p>
-        <p>Vague reaches cost money. I scope tightly, quote concretely. Two systems that don't talk? Tell me.</p>
-      </div>
-    </section>
-
     <section class="work-section contact-block" id="contact">
-      <h2>Let's talk.</h2>
-      <p>Email me what you're trying to connect. Scope and quote back within two business days.</p>
-      <div class="page-cta-row" style="justify-content: center;">
-        <a class="btn btn-primary" href="mailto:mail@aesv.io">mail@aesv.io →</a>
+      <div class="contact-line">
+        <h2>Let's talk.</h2>
+        <a class="btn btn-xl btn-primary" href="mailto:axel@aesv.io">axel@aesv.io →</a>
       </div>
+      <p>Email what you're trying to do. If you have nothing to email yet, that's also fine.</p>
     </section>
   </main>
 
   {% include "partials/big-footer.njk" %}
+  <script src="/js/transitions.js"></script>
 </body>
 </html>

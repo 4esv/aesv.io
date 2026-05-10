@@ -1,5 +1,5 @@
 /* =========================================================
-   WORK — /work on aesv.io
+   WORK: /work on aesv.io
    Inherits .subpage shell from foundation.css.
    ========================================================= */
 
@@ -12,9 +12,68 @@
   overflow-wrap: anywhere;
 }
 
-/* Section + h2 styles live in foundation under :where(.work-section, ...). */
+/* ---------- Section spacing
+   Each major section gets its own beat — but tight, not theatrical.
+   The .subpage flex gap stacks with this margin to give a clear break
+   between sections without tearing the page in half. */
+.work-shell .work-section {
+  margin-block: clamp(32px, 4.5vh, 64px);
+}
+.work-shell .work-section:first-of-type {
+  margin-block-start: clamp(16px, 2vh, 32px);
+}
 
-/* ---------- Case-study cards (new) ---------- */
+/* When an h2 is not followed by a .section-lede, the section's first
+   content sits directly under the heading. Give those headings a real
+   bottom margin so the title has room to breathe. The overlap rule
+   below pulls a present .section-lede back up to cuddle the h2 the
+   same way it always has. */
+.work-shell .work-section h2 {
+  margin-bottom: var(--s-3);
+}
+.work-shell .work-section h2 + .section-lede {
+  margin-top: calc(var(--s-3) * -1 + 4px);
+}
+
+/* ---------- Bigger button variant, used by the contact block. */
+.btn-lg {
+  font-size: clamp(20px, 2vw, 24px);
+  padding: 16px 32px;
+  gap: 14px;
+  box-shadow: var(--shadow-lg);
+}
+.btn-lg:hover {
+  box-shadow: var(--shadow-xl, var(--shadow-lg));
+}
+
+/* Title-sized button, used inline with an h2 in the contact block so
+   "let's talk." and the email CTA read as a single phrase. */
+.btn-xl {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.6vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  padding: 14px 28px;
+  gap: 14px;
+  box-shadow: var(--shadow-lg);
+}
+.btn-xl:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+/* ---------- Small lede under section h2
+   Used to intro the case studies grid (or any section that wants one
+   sentence of context before its content). */
+.section-lede {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+  margin: -8px 0 var(--s-3);
+  max-width: 60ch;
+}
+
+/* ---------- Case-study cards (existing) ---------- */
 .case-card-grid {
   list-style: none;
   padding: 0;
@@ -22,6 +81,23 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: clamp(16px, 1.6vw, 24px);
+}
+.case-card-grid > li {
+  aspect-ratio: 1 / 1;
+}
+
+/* Narrow viewports: drop the 1:1 aspect-ratio on services and case
+   cards. At 1- or 2-column, an enforced square stretches the card
+   tall and leaves the body text floating in a sea of empty space.
+   Letting the card size to its content keeps them small squares
+   with comfortable padding instead of balloons. */
+@media (max-width: 720px) {
+  .case-card-grid > li {
+    aspect-ratio: auto;
+  }
+  .service {
+    aspect-ratio: auto;
+  }
 }
 .case-card {
   display: flex;
@@ -75,6 +151,16 @@
 }
 
 /* ---------- Case-study detail page ---------- */
+.case-study-detail .btn-back-to-work {
+  background: var(--lavender);
+  color: var(--cream);
+  border: 2px solid var(--lavender);
+}
+.case-study-detail .btn-back-to-work:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--cream);
+}
 .case-study-detail .case-fact-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -116,17 +202,27 @@
   max-width: var(--reading-default);
 }
 
-/* ---------- Services ---------- */
+/* ---------- Services (square cards)
+   Sized identically to the case-card grid so What-I-Do and How-it-goes
+   read as the same component family. */
 .services {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--s-3);
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: clamp(16px, 1.6vw, 24px);
 }
+
 .service {
+  aspect-ratio: 1 / 1;
   background: var(--cream);
   border: var(--border-thin);
   box-shadow: var(--shadow-md);
-  padding: var(--s-4);
+  padding: clamp(20px, 2vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .service .num {
   font-family: var(--font-display);
@@ -134,54 +230,110 @@
   letter-spacing: var(--tracking-eyebrow);
   color: var(--ink-mute);
   display: block;
-  margin-bottom: 8px;
+  margin: 0;
 }
 .service h3 {
   font-family: var(--font-display);
-  font-size: 24px;
-  margin: 0 0 12px;
-  line-height: 1.2;
+  font-size: clamp(22px, 2.4vw, 30px);
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
 }
-.service p {
+.service-body {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
   margin: 0;
-  color: var(--ink);
+  color: var(--ink-mute);
+  flex: 1 1 auto;
 }
-@media (max-width: 720px) {
-  .services {
+.service-receipt {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--ink-mute);
+  margin: 16px 0 0;
+}
+.service-receipt a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink-mute);
+}
+.service-receipt a:hover {
+  color: var(--lavender);
+  border-bottom-color: var(--lavender);
+}
+
+/* ---------- Audiences (3-up, simpler than service cards)
+   Audiences answer "is this for me?". They are intentionally less
+   ornate than the services tiles: same cream-paper, lighter chrome,
+   no aspect-ratio so the card grows with its body text. */
+.audiences {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--s-3);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-3);
+}
+@media (max-width: 960px) {
+  .audiences {
     grid-template-columns: 1fr;
   }
 }
+.audience {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-sm);
+  padding: clamp(20px, 2vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.audience h3 {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.8vw, 24px);
+  margin: 0;
+  line-height: 1.2;
+}
+.audience p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  margin: 0;
+  color: var(--ink);
+}
+.audience-coda {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+  margin: var(--s-3) 0 0;
+  max-width: 60ch;
+}
 
-/* ---------- Client profile + contact ---------- */
-.client-profile {
+/* ---------- Contact block (final CTA) ---------- */
+.contact-block {
+  text-align: center;
   background: var(--cream);
   border: var(--border-thick);
   box-shadow: var(--shadow-lg);
-  padding: var(--s-6);
+  padding: clamp(40px, 6vh, 80px) clamp(24px, 4vw, 56px);
 }
-.client-profile p {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.6vw, 28px);
-  line-height: 1.3;
-  margin: 0 0 16px;
+.contact-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3vw, 36px);
 }
-.client-profile p:last-child {
-  margin-bottom: 0;
+.contact-line h2 {
+  margin: 0;
 }
-
-.contact-block {
-  text-align: center;
-  padding: var(--s-6) var(--s-4);
-}
-.contact-block h2 {
-  margin-bottom: 16px;
-}
-.contact-block p {
+.contact-block > p {
   font-family: var(--font-body);
   font-size: 18px;
+  line-height: 1.55;
   max-width: 50ch;
-  margin: 0 auto 24px;
+  margin: 24px auto 0;
 }

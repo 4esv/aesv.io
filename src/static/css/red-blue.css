@@ -1,0 +1,418 @@
+/* =========================================================
+   RED-BLUE — article-specific styles for /feed/red-button-blue-button
+   Layered on top of foundation.css + feed.css. Everything here is
+   article-only: pictograms, sweep charts, tweet/poll cards, aphorism
+   blocks, math sidenotes, the inline button glyphs.
+   ========================================================= */
+
+/* Red variant of the aphorism card for the empirics-finding line. The
+   lavender variant cheers; the red variant warns. Same chrome,
+   brick-coloured emphasis. */
+.aphorism.aphorism-red strong {
+  color: var(--brick);
+}
+
+/* Generous breathing room between the end of the piece and the start
+   of the footnotes block. */
+.prose > .footnotes {
+  margin-top: 7em;
+}
+
+/* Tiny inline button used in prose to show what red/blue look like at
+   reading scale. Used sparingly — punctuation, not refrain. */
+.btn-inline {
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  vertical-align: -0.12em;
+  margin: 0 0.05em;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+.btn-inline.red {
+  background: var(--brick);
+}
+.btn-inline.blue {
+  background: var(--lavender);
+}
+
+/* Sidenote for the math-curious. The plain-English claim sits in the
+   main paragraph; the formula sits here in case anyone wants to verify
+   the algebra. */
+.math-aside {
+  font-size: 0.92em;
+  color: var(--ink-mute);
+  border-left: 2px solid var(--ink-mute);
+  padding: 4px 0 4px 14px;
+  margin: 8px 0 16px 0;
+  font-style: normal;
+}
+
+/* Tim Urban's actual poll. Width-matched bars in red and blue, echoing
+   the screenshot from x.com. Styled to match .figure / .tweet-card so
+   it reads as a peer card, not a thin webform. */
+.poll-result {
+  margin: 0;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: 22px 26px;
+  max-width: 56ch;
+}
+.poll-result-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 26px);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0 0 14px 0;
+  color: var(--ink);
+}
+.poll-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.poll-bar-track {
+  flex: 1;
+  height: 40px;
+  position: relative;
+  background: transparent;
+}
+.poll-bar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 2px solid var(--ink);
+  box-sizing: border-box;
+}
+.poll-bar-red {
+  background: var(--brick);
+}
+.poll-bar-blue {
+  background: var(--lavender);
+  color: #fff;
+}
+.poll-pct {
+  width: 68px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+}
+.poll-meta {
+  margin: 14px 0 0 0;
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+
+/* Extra breathing room after raised/card elements before the next
+   paragraph kicks in. The default .prose rhythm of 1.4em is too tight
+   against the heavy borders+shadows. */
+.prose > .tweet-card + *,
+.prose > .figure + *,
+.prose > .poll-result + *,
+.prose > .sweep + *,
+.prose > .aphorism + * {
+  margin-top: 2.4em;
+}
+.prose > * + .sweep {
+  margin-top: 2.4em;
+}
+
+/* Same idea around the math-aside: the sidenote needs a clear beat
+   above and below so it doesn't bleed into normal prose. */
+.prose > * + .math-aside,
+.prose > .math-aside + * {
+  margin-top: 2em;
+}
+
+/* Intro paragraph between the tweet-card and the first h2 sits with
+   too much air below (h2 default 3.3em) and not enough above
+   (tweet-card rule 2.4em). Even it out so the paragraph doesn't look
+   stranded against the heading. */
+.prose > .tweet-card + p {
+  margin-top: 2.85em;
+}
+.prose > .tweet-card + p + h2 {
+  margin-top: 2.85em;
+}
+
+/* Match the breathing room above the tweet-card to the room below so
+   the intro line, the tweet, and the next paragraph all sit in the
+   same rhythm. */
+.prose > * + .tweet-card {
+  margin-top: 2.85em;
+}
+
+/* Lightweight phase-plane sweep that sits just before the country
+   pictogram and shows where the six countries land relative to the
+   phase boundary, the trap zone, and the blue-winning region. */
+.sweep {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 22px 16px 22px;
+  margin: 0;
+}
+.sweep-title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.01em;
+  margin: 0 0 10px 0;
+  color: var(--ink);
+}
+.sweep-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 260px;
+}
+.sweep-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.sweep-legend .swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  vertical-align: -2px;
+  margin-right: 4px;
+  border: 1px solid var(--ink);
+}
+
+/* Figures live in flow inside the prose. Cartoon-card chrome with
+   inline SVG; never their own scrollbars. */
+.figure {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: 22px;
+  position: relative;
+}
+.figure-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 26px);
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.figure-note {
+  margin: 14px 0 0;
+  color: var(--ink-mute);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.figure-note code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 1px 5px;
+}
+
+/* Single sentence pull-out used as a section refrain. */
+.aphorism {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-align: center;
+  background: var(--cream-deep);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-sm);
+  padding: clamp(24px, 3.2vw, 36px);
+}
+.aphorism strong {
+  font-weight: inherit;
+  color: var(--lavender);
+}
+.aphorism u {
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+/* Tweet card — Tim Urban's prompt sits at the very top of the article
+   in a styled blockquote. */
+.tweet-card {
+  margin: 0;
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: 22px 26px;
+  position: relative;
+  max-width: 56ch;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.tweet-card > * + * {
+  margin-top: 14px;
+}
+.tweet-card p {
+  margin: 0;
+}
+.tweet-card::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 18px;
+  height: 18px;
+  background: var(--ink);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>")
+    no-repeat center / contain;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>")
+    no-repeat center / contain;
+}
+.tweet-card .tweet-handle {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.tweet-card .tweet-handle .at {
+  font-weight: 400;
+}
+.tweet-card .tweet-foot {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+.tweet-card .tweet-foot a {
+  color: var(--lavender);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Button pictogram. Each unit is a small button (red or blue) shown as
+   a circle with subtle 3D depth. Color shows what was pressed. Faded
+   buttons died (blue lost in that scenario); full-saturation buttons
+   survived. */
+.pictogram-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 3vw, 32px);
+}
+.pictogram-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 22px);
+}
+@media (max-width: 740px) {
+  .pictogram-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 460px) {
+  .pictogram-pair,
+  .pictogram-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+.pictogram-card {
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pictogram-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.3vw, 17px);
+  letter-spacing: -0.01em;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.pictogram-card-title .flag {
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+.pictogram-card-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+.pictogram-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-display);
+  margin: 0;
+  flex-wrap: wrap;
+}
+.pictogram-readout .num {
+  font-size: clamp(22px, 2.2vw, 28px);
+  letter-spacing: -0.01em;
+}
+.pictogram-readout .num.alive {
+  color: var(--sage);
+}
+.pictogram-readout .num.dead {
+  color: var(--brick);
+}
+.pictogram-readout .label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+
+/* The button grid itself. Buttons size to fit the card width. */
+.btn-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+  margin: 2px 0;
+}
+
+/* The button pictogram. Subtle button-affordance: top highlight,
+   bottom shadow, thin ink border. Color tells you what was pressed.
+   Faded buttons are dead (blue lost in their world). */
+.btn-pict {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  position: relative;
+  box-shadow:
+    inset 0 -2px 0 rgba(0, 0, 0, 0.22),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.32),
+    1px 1px 0 rgba(26, 26, 26, 0.35);
+  transition: transform 100ms ease;
+}
+.btn-pict.red {
+  background: var(--brick);
+}
+.btn-pict.blue {
+  background: var(--lavender);
+}
+.btn-pict.dead {
+  opacity: 0.32;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+  border-color: var(--ink-mute);
+}
+.btn-pict:hover {
+  transform: translate(-0.5px, -0.5px);
+}

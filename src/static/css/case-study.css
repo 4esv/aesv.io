@@ -1,0 +1,373 @@
+/* =========================================================
+   CASE-STUDY — shared graphic primitives for /feed entries
+   with `type: case-study`. Layered on top of foundation.css,
+   feed.css, and work.css. Anything article-specific (a custom
+   palette, an interactive widget) belongs in extra_css; the
+   reusable kit lives here.
+   ========================================================= */
+
+/* --- figures ------------------------------------------------ */
+/* Hand-built figures that live in the reading flow. Cartoon-card
+   chrome around an inline SVG, pictogram, or stat tile grid.
+   Never their own scrollbars. */
+.figure {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-md);
+  padding: 22px;
+  position: relative;
+  margin: 0;
+}
+.figure-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 26px);
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.figure-note {
+  margin: 14px 0 0;
+  color: var(--ink-mute);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.figure-note code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 1px 5px;
+}
+
+/* --- sweep -------------------------------------------------- */
+/* Wide rectangular plot. Used for time-collapse curves, fleet
+   growth, distribution bars, before/after deltas. */
+.sweep {
+  background: var(--cream);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 22px 16px;
+  margin: 0;
+}
+.sweep-title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.sweep-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 260px;
+}
+.sweep-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.sweep-legend .swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  vertical-align: -2px;
+  margin-right: 4px;
+  border: 1px solid var(--ink);
+}
+
+/* --- aphorism ----------------------------------------------- */
+/* Single-sentence pull-out used at most twice per study. */
+.aphorism {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-align: center;
+  background: var(--cream-deep);
+  border: var(--border-thin);
+  box-shadow: var(--shadow-sm);
+  padding: clamp(24px, 3.2vw, 36px);
+  margin: 0;
+}
+.aphorism strong {
+  font-weight: inherit;
+  color: var(--lavender);
+}
+.aphorism u {
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+.aphorism.aphorism-red strong {
+  color: var(--brick);
+}
+.aphorism.aphorism-sage strong {
+  color: var(--sage);
+}
+
+/* --- math sidenote ----------------------------------------- */
+/* Plain English in the body, formula here. Opens with
+   "Formally put, …" — no all-caps "for the curious" labels. */
+.math-aside {
+  font-size: 0.92em;
+  color: var(--ink-mute);
+  border-left: 2px solid var(--ink-mute);
+  padding: 4px 0 4px 14px;
+  margin: 8px 0 16px;
+  font-style: normal;
+}
+
+/* --- pictogram tiles --------------------------------------- */
+.pictogram-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 3vw, 32px);
+}
+.pictogram-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 22px);
+}
+@media (max-width: 740px) {
+  .pictogram-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 460px) {
+  .pictogram-pair,
+  .pictogram-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+.pictogram-card {
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pictogram-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.3vw, 17px);
+  letter-spacing: -0.01em;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.pictogram-card-title .flag,
+.pictogram-card-title .glyph {
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+.pictogram-card-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+.pictogram-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-display);
+  margin: 0;
+  flex-wrap: wrap;
+}
+.pictogram-readout .num {
+  font-size: clamp(22px, 2.2vw, 28px);
+  letter-spacing: -0.01em;
+}
+.pictogram-readout .num.good {
+  color: var(--sage);
+}
+.pictogram-readout .num.bad {
+  color: var(--brick);
+}
+.pictogram-readout .num.mute {
+  color: var(--ink-mute);
+}
+.pictogram-readout .label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+
+/* --- unit dots --------------------------------------------- */
+/* Generic dictogram-of-N grid. Each .unit-pict represents a
+   countable item (a device, a form, a request). Tag with a color
+   class to encode category. */
+.unit-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+  margin: 2px 0;
+}
+.unit-grid.cols-12 {
+  grid-template-columns: repeat(12, 1fr);
+}
+.unit-grid.cols-15 {
+  grid-template-columns: repeat(15, 1fr);
+}
+.unit-grid.cols-20 {
+  grid-template-columns: repeat(20, 1fr);
+}
+.unit-pict {
+  aspect-ratio: 1 / 1;
+  border-radius: 2px;
+  border: 1.2px solid var(--ink);
+  position: relative;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.unit-pict.round {
+  border-radius: 50%;
+}
+.unit-pict.brick {
+  background: var(--brick);
+}
+.unit-pict.lavender {
+  background: var(--lavender);
+}
+.unit-pict.sage {
+  background: var(--sage);
+}
+.unit-pict.cream {
+  background: var(--cream);
+}
+.unit-pict.ink {
+  background: var(--ink);
+}
+.unit-pict.faded {
+  opacity: 0.32;
+  border-color: var(--ink-mute);
+}
+
+/* --- inline tokens ----------------------------------------- */
+/* Tiny inline pictogram for prose mentions. Use as punctuation,
+   not refrain — once or twice per study at most. */
+.inline-token {
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  border-radius: 2px;
+  border: 1.5px solid var(--ink);
+  vertical-align: -0.12em;
+  margin: 0 0.05em;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+.inline-token.round {
+  border-radius: 50%;
+}
+.inline-token.brick {
+  background: var(--brick);
+}
+.inline-token.lavender {
+  background: var(--lavender);
+}
+.inline-token.sage {
+  background: var(--sage);
+}
+.inline-token.ink {
+  background: var(--ink);
+}
+
+/* --- pipeline cards ---------------------------------------- */
+/* For the "system A → system B" schematics that case studies
+   like to draw. Pure CSS, no SVG required, scales down to
+   mobile by stacking. */
+.pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.pipeline-step {
+  flex: 1 1 140px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  padding: 12px 14px;
+  position: relative;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.4;
+  min-width: 0;
+}
+.pipeline-step + .pipeline-step {
+  margin-left: -2px;
+}
+.pipeline-step .stage {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+  display: block;
+  margin-bottom: 4px;
+}
+.pipeline-step strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+.pipeline-step.brick {
+  background: color-mix(in srgb, var(--brick) 12%, var(--cream));
+}
+.pipeline-step.lavender {
+  background: color-mix(in srgb, var(--lavender) 12%, var(--cream));
+}
+.pipeline-step.sage {
+  background: color-mix(in srgb, var(--sage) 14%, var(--cream));
+}
+@media (max-width: 640px) {
+  .pipeline-step {
+    flex-basis: 100%;
+  }
+  .pipeline-step + .pipeline-step {
+    margin-left: 0;
+    margin-top: -2px;
+  }
+}
+
+/* --- breathing room ---------------------------------------- */
+/* Default .prose rhythm is too tight against the heavy borders
+   + shadows of these cards. */
+.prose > .figure + *,
+.prose > .pictogram-pair + *,
+.prose > .pictogram-grid-3 + *,
+.prose > .sweep + *,
+.prose > .aphorism + *,
+.prose > .pipeline + * {
+  margin-top: 2.4em;
+}
+.prose > * + .figure,
+.prose > * + .pictogram-pair,
+.prose > * + .pictogram-grid-3,
+.prose > * + .sweep,
+.prose > * + .aphorism,
+.prose > * + .pipeline {
+  margin-top: 2.4em;
+}
+.prose > * + .math-aside,
+.prose > .math-aside + * {
+  margin-top: 2em;
+}
+
+/* --- footnote breathing room ------------------------------- */
+.prose > .footnotes {
+  margin-top: 6em;
+}
