@@ -166,14 +166,18 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(26, 26, 26, 0) 50%, rgba(26, 26, 26, 0.6) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgb(from var(--ink) r g b / 0) 50%,
+    rgb(from var(--ink) r g b / 0.6) 100%
+  );
   z-index: 4;
   pointer-events: none;
   transition: background var(--dur-press) var(--ease-press);
 }
 .widget-cell-link:hover::after,
 .widget-cell-link:focus-visible::after {
-  background: rgba(26, 26, 26, 0.78);
+  background: rgb(from var(--ink) r g b / 0.78);
 }
 .widget-cell-link .cell-hover-label {
   color: var(--cream);

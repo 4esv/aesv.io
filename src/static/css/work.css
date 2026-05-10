@@ -168,7 +168,7 @@
   color: var(--offwhite);
 }
 .case-study-detail .case-fact-impact .block-eyebrow {
-  color: rgba(244, 236, 216, 0.7);
+  color: rgb(from var(--cream) r g b / 0.7);
 }
 .case-study-detail .case-fact p {
   font-family: var(--font-body);
