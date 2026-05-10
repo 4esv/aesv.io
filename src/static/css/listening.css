@@ -158,7 +158,7 @@
   font-family: var(--font-display);
   font-size: clamp(20px, 2vw, 32px);
   font-weight: 700;
-  color: var(--lavender);
+  color: var(--ink-mute);
 }
 .track-meta {
   min-width: 0;
@@ -217,7 +217,7 @@
   content: '·';
   position: absolute;
   right: 0;
-  color: var(--lavender);
+  color: var(--ink-mute);
   font-weight: 700;
 }
 .artist-marquee li:last-child {

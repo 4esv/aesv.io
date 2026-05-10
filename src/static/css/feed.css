@@ -342,7 +342,7 @@
 }
 .prose a {
   color: var(--ink);
-  text-decoration-color: var(--lavender);
+  text-decoration-color: var(--ink-mute);
 }
 .prose a:hover {
   color: var(--lavender);
@@ -494,12 +494,15 @@
   text-decoration: none;
   display: inline-block;
   margin-left: 8px;
-  color: var(--lavender);
+  color: var(--ink-mute);
   font-family: var(--font-mono);
-  transition: transform var(--dur-press) var(--ease-press);
+  transition:
+    color var(--dur-press) var(--ease-press),
+    transform var(--dur-press) var(--ease-press);
 }
 .prose .footnote-backref:hover,
 .prose .footnote-backref:focus-visible {
+  color: var(--lavender);
   transform: translate(-1px, -1px);
 }
 
