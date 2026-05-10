@@ -38,11 +38,11 @@ artists
 
 aesv.io    /
 work       /work
-files      /garden
+feed       /feed
 about      /about
 activities /activities
 
-mail   mail@aesv.io
+mail   axel@aesv.io
 github https://github.com/4esv
 {% endblock %}
 {%- else -%}
@@ -51,14 +51,33 @@ github https://github.com/4esv
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% include "partials/site-meta.njk" %}
+  <link rel="dns-prefetch" href="https://i.scdn.co">
+  <link rel="dns-prefetch" href="https://mosaic.scdn.co">
+  <link rel="dns-prefetch" href="https://image-cdn-ak.spotifycdn.com">
+  <link rel="dns-prefetch" href="https://image-cdn-fa.spotifycdn.com">
+  <link rel="canonical" href="https://aesv.io/music">
   <title>music — aesv.io</title>
   <meta name="description" content="What I'm listening to and what I play. Albums, artists, tracks. Pulled live from Spotify.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="music — aesv.io">
+  <meta property="og:description" content="What I'm listening to and what I play. Albums, artists, tracks. Pulled live from Spotify.">
+  <meta property="og:url" content="https://aesv.io/music">
+  <meta property="og:site_name" content="aesv.io">
+  <meta property="og:image" content="https://aesv.io/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="music — aesv.io">
+  <meta name="twitter:description" content="What I'm listening to and what I play. Albums, artists, tracks. Pulled live from Spotify.">
+  <meta name="twitter:image" content="https://aesv.io/logo.png">
   <link rel="icon" href="/logo-pixel.png" type="image/png">
+  <link rel="apple-touch-icon" href="/logo.png">
   <meta name="theme-color" content="#F4ECD8">
   <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/foundation.css">
   <link rel="stylesheet" href="/css/listening.css">
   <link rel="stylesheet" href="/css/music.css">
+  <link rel="stylesheet" href="/css/transitions.css">
+  {% include "partials/analytics.njk" %}
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -67,7 +86,7 @@ github https://github.com/4esv
 
     <header class="page-head">
       <h1>music.</h1>
-      <p class="lede">What I'm listening to, what I play, what I'd like back on cassette.</p>
+      <p class="lede">What I'm listening to, playing, and practicing. Closest thing I have to a daily practice. I play to think; sit with a chord that's bothering me until it stops.</p>
       <div class="page-cta-row">
         <a class="btn btn-sm" href="https://open.spotify.com/user/4esv" rel="noopener">Open in Spotify ↗</a>
       </div>
@@ -116,6 +135,27 @@ github https://github.com/4esv
     </section>
     {% endif %}
 
+    {% if albums and albums.length %}
+    <section class="music-section">
+      <h2>Top albums.</h2>
+      <ul class="album-grid">
+        {% for a in albums %}
+          <li class="album-cell">
+            {% if a.url %}<a class="album-link" href="{{ a.url }}" rel="noopener">{% endif %}
+              <div class="album-art">
+                {% if a.artUrl %}<img src="{{ a.artUrl }}" alt="Album art for {{ a.name }} by {{ a.artist }}" loading="lazy">{% endif %}
+              </div>
+              <div class="album-meta">
+                <p class="album-name">{{ a.name }}</p>
+                <p class="album-artist">{{ a.artist }}</p>
+              </div>
+            {% if a.url %}</a>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
     <section class="music-section">
       <h2>I play.</h2>
       <ul class="instrument-room" aria-label="Instruments I play">
@@ -160,31 +200,21 @@ github https://github.com/4esv
       </ul>
     </section>
 
-
-    {% if musicToMe %}
+    {% if learning and learning.length %}
     <section class="music-section">
-      <h2>Music to me.</h2>
-      <div class="music-to-me">
-        {% for line in musicToMe %}<p>{{ line }}</p>{% endfor %}
-      </div>
-    </section>
-    {% endif %}
-
-    {% if albums and albums.length %}
-    <section class="music-section">
-      <h2>Albums I've been enjoying.</h2>
-      <ul class="album-grid">
-        {% for a in albums %}
+      <h2>Learning these.</h2>
+      <ul class="album-grid learning-grid">
+        {% for t in learning %}
           <li class="album-cell">
-            {% if a.url %}<a class="album-link" href="{{ a.url }}" rel="noopener">{% endif %}
+            {% if t.url %}<a class="album-link" href="{{ t.url }}" rel="noopener">{% endif %}
               <div class="album-art">
-                {% if a.artUrl %}<img src="{{ a.artUrl }}" alt="Album art for {{ a.name }} by {{ a.artist }}" loading="lazy">{% endif %}
+                {% if t.album.artUrl %}<img src="{{ t.album.artUrl }}" alt="Album art for {{ t.name }} by {{ t.artist }}" loading="lazy">{% endif %}
               </div>
               <div class="album-meta">
-                <p class="album-name">{{ a.name }}</p>
-                <p class="album-artist">{{ a.artist }}</p>
+                <p class="album-name">{{ t.name }}</p>
+                <p class="album-artist">{{ t.note }}</p>
               </div>
-            {% if a.url %}</a>{% endif %}
+            {% if t.url %}</a>{% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -194,6 +224,7 @@ github https://github.com/4esv
   </main>
 
   {% include "partials/big-footer.njk" %}
+  <script src="/js/transitions.js"></script>
 </body>
 </html>
 {%- endif -%}

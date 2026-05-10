@@ -66,7 +66,9 @@ async function refreshAccessToken(config) {
     await writeTokens({ strava_refresh_token: data.refresh_token })
   }
   // Strava returns absolute expires_at (epoch seconds) and expires_in.
-  const expiresAtMs = data.expires_at ? data.expires_at * 1000 : Date.now() + (data.expires_in || 21600) * 1000
+  const expiresAtMs = data.expires_at
+    ? data.expires_at * 1000
+    : Date.now() + (data.expires_in || 21600) * 1000
   tokenCache = {
     token: data.access_token,
     expiresAt: expiresAtMs - TOKEN_REFRESH_MARGIN_MS,

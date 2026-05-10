@@ -1,0 +1,5 @@
+Contact: mailto:axel@aesv.io
+Contact: https://aesv.io/api/gpg
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: en, es
+Canonical: https://aesv.io/.well-known/security.txt

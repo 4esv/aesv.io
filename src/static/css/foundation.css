@@ -1,35 +1,20 @@
 /* =========================================================
-   FOUNDATION — Simple-Friendly tokens for aesv.io family
+   FOUNDATION — Simple-Friendly tokens for aesv.io
    Cream paper · ink borders · cartoon shadows · halftone
    =========================================================
 
-   RESPONSIVE TIERS (literal px — CSS custom props are not
-   allowed inside @media expressions, so these live here as
-   documentation. Use the same numbers throughout the codebase.)
+   Active tiers (raw px — @media can't read var()):
 
-     watch     <  360px    one thing per page; ≥44px tap; no footer
-     phone     360–639px   single column, full sections
-     tablet    640–1023px  2-column where appropriate
-     laptop    1024–1599px existing default (3-col dashboard)
-     desktop   1600–2559px breathing room; type +10–15%
-     tv        ≥ 2560px    1.5–2× type; 4-col layouts; readable
-                           from across a room. Fewer, bigger.
-
-   EXTREME-RANGE BANDS (additive — co-exist with the tiers
-   above. Used by per-page CSS via media queries with these
-   exact pixel numbers. Custom properties below are docs for
-   tooling/JS; @media cannot read var()s.)
-
-     wrist      ≤ 280px       single column, one thing
-     palm       281 – 479px   vertical stack, full-width tiles
-     hand       480 – 767px   stack with comfortable padding
-     lap        768 – 1099px  2-column grid
-     desk       1100 – 1599px existing 3-col layout
-     wall       1600 – 2559px generous 3-col, more density
-     billboard  ≥ 2560px      4-col, type +50–100%
+     wrist       ≤  280px   riso off, shadows shrunk
+     watch       <  360px   one thing per page; ≥44px tap; no footer
+     phone       360–639px  base mobile
+     default              laptop / desk
+     desktop   1600–2559px  shell grows; type creeps up
+     billboard ≥  2560px    read-from-across-the-room scale
 
    Container queries: tiles/cards may also adapt independent
-   of viewport via `@container`. Use `inline-size` containers.
+   of viewport via `@container` — see the .tile / .widget-cell
+   declarations near the bottom of this file.
    ========================================================= */
 
 /* Responsive utilities — must precede any other rule per CSS spec. */
@@ -71,16 +56,18 @@
   --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Consolas', monospace;
 
   /* Fluid type via clamp(). Min · ideal (vw-based) · max.
-     "Pretext-equivalent" responsiveness with no JS. */
-  --fs-marquee: clamp(72px, 14vw, 240px);
-  --fs-hero: clamp(48px, 9vw, 112px);
-  --fs-h1: clamp(36px, 6vw, 80px);
-  --fs-h2: clamp(28px, 4vw, 48px);
-  --fs-h3: clamp(22px, 2.5vw, 32px);
-  --fs-body: clamp(16px, 1.1vw, 19px);
+     "Pretext-equivalent" responsiveness with no JS. Caps are tight on
+     purpose: we use the screen for layout, not for letter-size theatre.
+     The wall/billboard tiers below bump these only modestly. */
+  --fs-marquee: clamp(64px, 9vw, 144px);
+  --fs-hero: clamp(44px, 6.5vw, 84px);
+  --fs-h1: clamp(34px, 4.4vw, 60px);
+  --fs-h2: clamp(26px, 3vw, 40px);
+  --fs-h3: clamp(20px, 2vw, 26px);
+  --fs-body: clamp(16px, 1.05vw, 18px);
   --fs-small: clamp(13px, 0.9vw, 14px);
   --fs-eyebrow: clamp(11px, 0.75vw, 12px);
-  --fs-tile: clamp(20px, 2.4vw, 36px);
+  --fs-tile: clamp(18px, 1.8vw, 28px);
 
   --lh-display: 1;
   --lh-tight: 1.15;
@@ -89,15 +76,16 @@
   --tracking-eyebrow: 0.12em;
   --tracking-display: -0.01em;
 
-  --border-thin: 4px solid var(--ink);
-  --border-thick: 6px solid var(--ink);
+  --border-thin: 3px solid var(--ink);
+  --border-thick: 4px solid var(--ink);
 
   --radius-square: 0;
   --radius-pill: 9999px;
 
   --shadow-sm: 3px 3px 0 0 var(--ink);
   --shadow-md: 6px 6px 0 0 var(--ink);
-  --shadow-lg: 10px 10px 0 0 var(--ink);
+  --shadow-lg: 14px 14px 0 0 var(--ink);
+  --shadow-xl: 20px 20px 0 0 var(--ink);
   --shadow-pressed: 0 0 0 0 var(--ink);
 
   --s-1: 8px;
@@ -118,42 +106,16 @@
   --dur-press: 120ms;
   --dur-wiggle: 200ms;
 
-  /* Band thresholds — for documentation + JS handoff.
-     CSS @media cannot read var()s, but these numbers are
-     the source of truth referenced throughout the system. */
-  --bp-wrist: 280px;
-  --bp-palm: 480px;
-  --bp-hand: 768px;
-  --bp-lap: 1100px;
-  --bp-desk: 1600px;
-  --bp-wall: 2560px;
-
-  /* Type-step scale — 6 steps, fluid by default; the wall
-     and billboard media queries below bump the scale. Use
-     these in new components to avoid hard-coded clamps. */
-  --type-step-0: clamp(13px, 0.85vw, 14px); /* meta / eyebrow body */
-  --type-step-1: clamp(15px, 1.05vw, 17px); /* small body */
-  --type-step-2: clamp(17px, 1.2vw, 20px); /* body */
-  --type-step-3: clamp(22px, 2vw, 28px); /* tile-title-ish */
-  --type-step-4: clamp(28px, 3.5vw, 44px); /* h2 */
-  --type-step-5: clamp(40px, 6vw, 72px); /* hero */
-
-  /* Spacing-step alias — additive to --s-*. Components that
-     care about responsive growth at the wall/billboard ends
-     can use these instead of the fixed --s-* tokens. */
-  --space-step-1: clamp(8px, 1vw, 14px);
-  --space-step-2: clamp(16px, 1.6vw, 28px);
-  --space-step-3: clamp(24px, 2.4vw, 44px);
-  --space-step-4: clamp(32px, 3.6vw, 64px);
-
-  /* Reading-width tokens (used by grdn / case-study prose) */
-  --reading-narrow: 60ch;
-  --reading-default: 72ch;
-  --reading-wide: 84ch;
+  /* Reading-width tokens (used by /feed and /work case-study prose) */
+  --reading-narrow: 56ch;
+  --reading-default: 66ch;
+  --reading-wide: 78ch;
 
   /* Unified outer shell — every page uses this so the brand/back-link
-     line up across home, music, work, activities, garden, about. */
-  --shell-max: 1200px;
+     line up across home, music, work, activities, files, about.
+     Wall/billboard tiers below grow the shell modestly so we use the
+     extra screen real estate without ballooning. */
+  --shell-max: 1120px;
   --shell-pad-x: clamp(16px, 3vw, 48px);
   --shell-pad-y: clamp(16px, 3vw, 48px);
 }
@@ -172,6 +134,26 @@ body {
 }
 html {
   background-color: var(--cream);
+}
+
+/* Cross-document view transitions: modern browsers (Chrome 126+) crossfade
+   between same-origin documents on navigation, masking the white flash that
+   appears between unload and the next page's first paint. Older browsers
+   ignore the at-rule. The crossfade is short and runs after our outro
+   animations have completed. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+  animation-timing-function: ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
 body {
   font-family: var(--font-body);
@@ -428,7 +410,7 @@ a:hover {
   padding: var(--shell-pad-y) var(--shell-pad-x);
   display: flex;
   flex-direction: column;
-  gap: clamp(32px, 5vw, 64px);
+  gap: clamp(28px, 3.5vw, 56px);
 }
 
 /* Page hero block — title + small CTA card under it. Used on every
@@ -458,6 +440,29 @@ a:hover {
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 4px;
+}
+
+/* /404 + /500 hero — oversized status code above the headline so the page
+   reads at a glance even before the prose lands. */
+.error-page .page-head {
+  align-items: flex-start;
+}
+.error-page .error-code {
+  font-family: var(--font-display);
+  font-size: clamp(96px, 18vw, 220px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  margin: 0;
+  color: var(--ink);
+}
+.error-page .page-head h1 {
+  margin-top: 8px;
+}
+.error-page .page-head .lede code {
+  font-family: var(--font-mono);
+  background: var(--ink);
+  color: var(--cream);
+  padding: 1px 6px;
 }
 
 .card {
@@ -576,37 +581,30 @@ a:hover {
    base box-shadow (--shadow-md / --shadow-sm) themselves; this only
    animates the press. :where() keeps specificity at 0 so components
    can still override locally without breaking. */
-:where(
-    .surface-press,
-    .tile,
-    .widget-cell.spotify,
-    .widget-cell.hobbies,
-    .case-card,
-    .note-card
-  ) {
+:where(.surface-press, .tile, .widget-cell.spotify, .widget-cell.hobbies, .case-card, .note-card) {
   transition:
     transform var(--dur-press) var(--ease-press),
     box-shadow var(--dur-press) var(--ease-press);
 }
 :where(
-    .surface-press,
-    .tile,
-    .widget-cell.spotify,
-    .widget-cell.hobbies,
-    .case-card,
-    .note-card
-  ):hover {
+  .surface-press,
+  .tile,
+  .widget-cell.spotify,
+  .widget-cell.hobbies,
+  .case-card,
+  .note-card
+):hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--shadow-lg);
 }
 :where(
-    .surface-press,
-    .tile,
-    .widget-cell.spotify,
-    .widget-cell.hobbies,
-    .case-card,
-    .note-card
-  ):active {
+  .surface-press,
+  .tile,
+  .widget-cell.spotify,
+  .widget-cell.hobbies,
+  .case-card,
+  .note-card
+):active {
   transform: translate(6px, 6px);
   box-shadow: var(--shadow-pressed);
 }
@@ -665,7 +663,7 @@ a:hover {
 }
 .dashboard-greeting {
   font-family: var(--font-display);
-  font-size: clamp(20px, 2.2vw, 32px);
+  font-size: clamp(22px, 2.2vw, 32px);
   line-height: 1.1;
   color: var(--ink);
   margin: 0;
@@ -673,7 +671,8 @@ a:hover {
   max-width: 60ch;
 }
 /* Back-link is a button: same family as .btn-sm so the header CTA on
-   subpages reads as a real control, not a tertiary text link. */
+   subpages reads as a real control, not a tertiary text link. Border is
+   thinned vs --border-thin so it doesn't dominate the small footprint. */
 .back-link {
   font-family: var(--font-display);
   font-size: 15px;
@@ -686,7 +685,7 @@ a:hover {
   gap: 8px;
   padding: 6px 14px;
   background: var(--cream);
-  border: var(--border-thin);
+  border: 2px solid var(--ink);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition:
@@ -942,29 +941,38 @@ a:hover {
 }
 
 /* ---------- Desktop tier (1600–2559px) ----------
-   More breathing room; type +10–15%. */
+   More breathing room; shell grows to use the screen, type stays
+   capped so headings don't blow up. */
 @media (min-width: 1600px) and (max-width: 2559px) {
   :root {
+    --shell-max: 1280px;
     --fs-body: 19px;
     --fs-small: 15px;
     --fs-eyebrow: 13px;
   }
+  .card {
+    padding: 40px;
+  }
+  .card-hero {
+    padding: 56px;
+  }
 }
 
 /* ---------- TV / billboard tier (≥2560px) ----------
-   Read-from-across-the-room scale. Generous whitespace,
-   simplified density. */
+   Read-from-across-the-room scale, but capped: even at 4K we don't
+   want letter-size theatre. The shell grows; type creeps up modestly. */
 @media (min-width: 2560px) {
   :root {
-    --fs-marquee: 360px;
-    --fs-hero: 180px;
-    --fs-h1: 120px;
-    --fs-h2: 72px;
-    --fs-h3: 44px;
-    --fs-body: 26px;
-    --fs-small: 20px;
-    --fs-eyebrow: 16px;
-    --fs-tile: 52px;
+    --shell-max: 1480px;
+    --fs-marquee: 200px;
+    --fs-hero: 120px;
+    --fs-h1: 80px;
+    --fs-h2: 52px;
+    --fs-h3: 32px;
+    --fs-body: 22px;
+    --fs-small: 17px;
+    --fs-eyebrow: 14px;
+    --fs-tile: 36px;
 
     --s-1: 12px;
     --s-2: 24px;
@@ -977,23 +985,40 @@ a:hover {
     --shadow-sm: 5px 5px 0 0 var(--ink);
     --shadow-md: 10px 10px 0 0 var(--ink);
     --shadow-lg: 16px 16px 0 0 var(--ink);
-    --border-thin: 6px solid var(--ink);
-    --border-thick: 10px solid var(--ink);
+    --border-thin: 3px solid var(--ink);
+    --border-thick: 4px solid var(--ink);
   }
   body {
     line-height: 1.6;
+    letter-spacing: 0.005em;
   }
   .btn {
-    padding: 22px 36px;
-    font-size: 22px;
+    padding: 14px 28px;
+    font-size: 18px;
   }
   .brand {
-    font-size: 36px;
-    gap: 18px;
+    font-size: 22px;
+    gap: 12px;
   }
   .brand img {
-    width: 56px;
-    height: 56px;
+    width: 36px;
+    height: 36px;
+  }
+  .dashboard-greeting {
+    font-size: 22px;
+  }
+  .card {
+    padding: 40px;
+  }
+  .card-hero {
+    padding: 56px;
+  }
+  .label-tag {
+    padding: 4px 12px;
+    font-size: 13px;
+  }
+  .h-hero {
+    letter-spacing: -0.015em;
   }
 }
 
@@ -1007,18 +1032,11 @@ a:hover {
   container-type: inline-size;
 }
 
-/* =========================================================
-   EXTREME-RANGE — additive overrides for the named bands
-   that the existing tier system does not already handle.
-   Existing watch/phone/desktop/tv blocks above remain
-   load-bearing and are not removed.
-   ========================================================= */
-
 /* ---------- Wrist (≤280px) ----------
    Goes further than the watch tier (<360). At wrist we strip
-   the riso textures (perf + legibility on tiny screens),
-   force overflow:hidden as a safety net, and zero-out
-   non-essential decoration. */
+   the riso textures (perf + legibility on tiny screens), force
+   overflow:hidden as a safety net, and zero-out non-essential
+   decoration. */
 @media (max-width: 280px) {
   :root {
     --riso: 0;
@@ -1027,12 +1045,6 @@ a:hover {
     --shadow-lg: 4px 4px 0 0 var(--ink);
     --border-thin: 3px solid var(--ink);
     --border-thick: 4px solid var(--ink);
-    --type-step-0: 12px;
-    --type-step-1: 14px;
-    --type-step-2: 16px;
-    --type-step-3: 22px;
-    --type-step-4: 28px;
-    --type-step-5: 36px;
   }
   html,
   body {
@@ -1056,77 +1068,6 @@ a:hover {
   .skip-link:focus {
     padding: 6px 10px;
     font-size: 12px;
-  }
-}
-
-/* ---------- Wall (1600–2559px) ----------
-   Density + breathing room. The existing 1600–2559 desktop
-   block already bumps tokens; this layer adds container
-   max-widths and component-level polish. */
-@media (min-width: 1600px) and (max-width: 2559px) {
-  :root {
-    --type-step-0: 15px;
-    --type-step-1: 18px;
-    --type-step-2: 21px;
-    --type-step-3: 30px;
-    --type-step-4: 48px;
-    --type-step-5: 84px;
-  }
-  .tile {
-    min-height: 240px;
-    padding: 36px;
-  }
-  .card {
-    padding: 40px;
-  }
-  .card-hero {
-    padding: 56px;
-  }
-}
-
-/* ---------- Billboard (≥2560px) ----------
-   Read across the room. Massive type, generous spacing,
-   wider readable widths. The existing tv block bumps tokens
-   already — this adds component-level size growth. */
-@media (min-width: 2560px) {
-  :root {
-    --type-step-0: 20px;
-    --type-step-1: 24px;
-    --type-step-2: 28px;
-    --type-step-3: 44px;
-    --type-step-4: 72px;
-    --type-step-5: 132px;
-
-    --reading-narrow: 50ch;
-    --reading-default: 60ch;
-    --reading-wide: 72ch;
-  }
-  body {
-    letter-spacing: 0.005em;
-  }
-  .tile {
-    min-height: 360px;
-    padding: 56px;
-  }
-  .card {
-    padding: 64px;
-  }
-  .card-hero {
-    padding: 96px;
-  }
-  .btn {
-    padding: 28px 44px;
-  }
-  .label-tag {
-    padding: 8px 18px;
-    font-size: 18px;
-  }
-  .h-hero {
-    letter-spacing: -0.015em;
-  }
-  .h-h1,
-  .h-h2 {
-    letter-spacing: -0.01em;
   }
 }
 

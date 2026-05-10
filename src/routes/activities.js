@@ -1,8 +1,9 @@
 // /activities — chess last-victory + strava last-activity.
 
 import { Chess } from 'chess.js'
-import { renderBoardSvg } from '../lib/chess-board-svg.js'
 
+import { renderBoardSvg } from '../lib/chess-board-svg.js'
+import { renderPage } from '../lib/render.js'
 import { getLastVictory } from '../services/chess.js'
 import { getLastActivity } from '../services/strava.js'
 
@@ -28,8 +29,9 @@ function buildReplayFrames(pgn) {
 }
 
 export async function registerActivitiesRoutes(fastify) {
+  fastify.get('/chess', async (_request, reply) => reply.redirect('/activities', 301))
+
   fastify.get('/activities', async (request, reply) => {
-    const { grid } = request
     const username = fastify.config.chess.username
 
     const [lastVictory, strava] = await Promise.all([
@@ -50,23 +52,12 @@ export async function registerActivitiesRoutes(fastify) {
       )
     }
 
-    const payload = {
-      site: fastify.config.site,
-      grid,
-      route: '/activities',
+    return renderPage(fastify, request, reply, TEMPLATE, {
       username,
       lastVictory,
       replayFramesSvg,
       strava,
       hasData: Boolean(lastVictory || strava),
-    }
-
-    if (grid.isTerminal) {
-      reply.header('Content-Type', 'text/plain; charset=utf-8')
-    }
-
-    return reply.view(TEMPLATE, payload)
+    })
   })
-
-  fastify.get('/chess', async (_request, reply) => reply.redirect('/activities', 301))
 }

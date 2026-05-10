@@ -4,18 +4,27 @@ Personal website of Axel Stevens.
 
 ## About
 
-Systems Integrator at Cornell University.
+Systems Integrator at Cornell University. Mexican American sentient flesh
+pile. Casual pianist, bassist, and emergency drummer.
 
 ## Sections
 
-- / - Home page with dynamic widgets (Spotify, Strava, GitHub)
-- /work - Professional work and projects
-- /life - Personal interests and hobbies
+- /: Dashboard. Tiles linking to every page; weather, music, and activity
+       widgets pull live from APIs.
+- /work: Case studies and services. Hire-me page.
+- /feed: Notebook. Essays, fragments, fiction. RSS at /feed.xml.
+- /music: Spotify deep-dive. Recent plays, top albums, what music is to me.
+- /activities: Chess (Chess.com last victory) and Strava (last activity).
+- /about: Bio.
+
+## Endpoints
+
+- /api/gpg: GPG public key.
+- /api/auth/spotify: Spotify OAuth (admin-only).
+- /api/auth/strava: Strava OAuth (admin-only).
+- /health: Health check.
 
 ## Technical
 
-This site uses a terminal-as-viewport architecture where the server renders
-HTML to exact grid dimensions (columns × rows) received from the client.
-Everything renders inside a single `<pre>` element for a monospace aesthetic.
-
-Built with Node.js, Fastify, Nunjucks, and HTMX.
+Server-rendered HTML. Curl/wget receive a plain-text variant of every page.
+Built with Node.js, Fastify, and Nunjucks.

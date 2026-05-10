@@ -163,6 +163,26 @@ export async function getRecentTracks(config, { limit = 30 } = {}) {
     })
 }
 
+// Search a single track by free-text query. Used by /music to surface
+// the songs I'm currently learning (album art + a deep-link), pulled
+// fresh from Spotify so I don't have to host the cover images.
+export async function searchTrack(config, query) {
+  const data = await fetchApi(`/search?q=${encodeURIComponent(query)}&type=track&limit=1`, config)
+  const t = data?.tracks?.items?.[0]
+  if (!t) return null
+  return {
+    name: t.name,
+    artist: t.artists.map((a) => a.name).join(', '),
+    url: t.external_urls?.spotify || null,
+    album: {
+      id: t.album?.id || null,
+      name: t.album?.name || '',
+      artUrl: t.album?.images?.[0]?.url || null,
+      url: t.album?.external_urls?.spotify || null,
+    },
+  }
+}
+
 export async function getRecentlyPlayed(config) {
   const data = await fetchApi('/me/player/recently-played?limit=1', config)
   const item = data?.items?.[0]

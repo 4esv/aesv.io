@@ -4,6 +4,7 @@ site-prototypes/
 src/static/css/katex.min.css
 src/static/css/highlight.css
 src/static/js/htmx.min.js
+src/static/js/katex/
 package-lock.json
 content/grdn/
 canvas/

@@ -1,10 +1,8 @@
 /* TEAM */
-Developer: Axel Stevens
-Site: https://aesv.io
-Location: Ithaca, NY
-
-/* SITE */
-Last update: 2025
-Standards: HTML5, CSS3
-Software: Node.js, Fastify, Nunjucks, HTMX
-Font: IBM Plex Mono
+name: axel stevens
+role: systems integrator
+contact: axel [at] aesv.io
+location: ithaca, ny
+github: https://github.com/4esv
+mastodon: https://techhub.social/@aes
+site: https://aesv.io

@@ -20,11 +20,11 @@ strava — last activity
 ---
 aesv.io     /
 work        /work
-files       /garden
+feed        /feed
 music       /music
 activities  /activities (current)
 
-email       mail@aesv.io
+email       axel@aesv.io
 github      https://github.com/4esv
 
 MIT License. {{ now | date('Y') }}.
@@ -35,14 +35,28 @@ MIT License. {{ now | date('Y') }}.
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% include "partials/site-meta.njk" %}
+  <link rel="canonical" href="https://aesv.io/activities">
   <title>activities — aesv.io</title>
   <meta name="description" content="What I'm up to. Chess.com receipts and the last Strava activity.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="activities — aesv.io">
+  <meta property="og:description" content="What I'm up to. Chess.com receipts and the last Strava activity.">
+  <meta property="og:url" content="https://aesv.io/activities">
+  <meta property="og:site_name" content="aesv.io">
+  <meta property="og:image" content="https://aesv.io/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="activities — aesv.io">
+  <meta name="twitter:description" content="What I'm up to. Chess.com receipts and the last Strava activity.">
+  <meta name="twitter:image" content="https://aesv.io/logo.png">
   <link rel="icon" href="/logo-pixel.png" type="image/png">
   <link rel="apple-touch-icon" href="/logo.png">
   <meta name="theme-color" content="#F4ECD8">
   <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/foundation.css">
   <link rel="stylesheet" href="/css/activities.css">
+  <link rel="stylesheet" href="/css/transitions.css">
+  {% include "partials/analytics.njk" %}
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -51,6 +65,7 @@ MIT License. {{ now | date('Y') }}.
 
     <header class="page-head">
       <h1>activities.</h1>
+      <p class="lede">What I do off-screen. Chess at night, Strava in the morning. Both have an API, so both show up here.</p>
       <div class="page-cta-row">
         <a class="btn btn-sm" href="https://chess.com/member/4esv" rel="noopener">chess.com ↗</a>
         <a class="btn btn-sm" href="https://strava.com/athletes/51674641" rel="noopener">strava ↗</a>
@@ -84,7 +99,7 @@ MIT License. {{ now | date('Y') }}.
 
     {# Strava — same two-column shape as the chess widget. Map left, meta right. #}
     <section class="act-section">
-      <h2>Activity.</h2>
+      <h2>I move too.</h2>
       {% if strava %}
       <div class="lv-grid">
         <div class="lv-board strava-map">
@@ -114,6 +129,7 @@ MIT License. {{ now | date('Y') }}.
   {% endif %}
 
   {% include "partials/big-footer.njk" %}
+  <script src="/js/transitions.js"></script>
 </body>
 </html>
 {%- endif -%}

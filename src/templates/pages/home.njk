@@ -9,12 +9,12 @@ Casual pianist, bassist and emergency drummer.
 I make system A talk to system B.
 
 work       /work
-files      /garden
+feed       /feed
 about      /about
 activities /activities
 music      /music
 
-email      mail@aesv.io
+email      axel@aesv.io
 github     https://github.com/4esv
 gpg        https://aesv.io/api/gpg
 {% if recent %}
@@ -32,8 +32,24 @@ MIT License. {{ now | date('Y') }}.
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% include "partials/site-meta.njk" %}
+  <link rel="dns-prefetch" href="https://i.scdn.co">
+  <link rel="dns-prefetch" href="https://mosaic.scdn.co">
+  <link rel="dns-prefetch" href="https://image-cdn-ak.spotifycdn.com">
+  <link rel="dns-prefetch" href="https://image-cdn-fa.spotifycdn.com">
+  <link rel="canonical" href="https://aesv.io/">
   <title>aesv.io</title>
   <meta name="description" content="Axel Stevens — systems integrator. Work, writing, listening.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="aesv.io">
+  <meta property="og:description" content="Axel Stevens — systems integrator. Work, writing, listening.">
+  <meta property="og:url" content="https://aesv.io/">
+  <meta property="og:site_name" content="aesv.io">
+  <meta property="og:image" content="https://aesv.io/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="aesv.io">
+  <meta name="twitter:description" content="Axel Stevens — systems integrator. Work, writing, listening.">
+  <meta name="twitter:image" content="https://aesv.io/logo.png">
   <link rel="icon" href="/logo-pixel.png" type="image/png">
   <link rel="apple-touch-icon" href="/logo.png">
   <link rel="manifest" href="/manifest.json">
@@ -41,6 +57,7 @@ MIT License. {{ now | date('Y') }}.
   <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/foundation.css">
   <link rel="stylesheet" href="/css/dashboard.css">
+  {% include "partials/analytics.njk" %}
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -61,7 +78,7 @@ MIT License. {{ now | date('Y') }}.
         <span class="tile-label">work <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
       </a>
 
-      {# Bottom row: music · activities (chess + strava cycle) · files #}
+      {# Bottom row: music · activities (chess + strava cycle) · feed #}
       <a class="widget-cell spotify widget-cell-link" href="/music" aria-label="Open the music page">
         {% include "partials/widgets/spotify-album.njk" %}
         <span class="cell-hover-label">music <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
@@ -72,8 +89,8 @@ MIT License. {{ now | date('Y') }}.
         <span class="cell-hover-label">activities <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
       </a>
 
-      <a class="tile tile-link grdn" href="/garden">
-        <span class="tile-label">files <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
+      <a class="tile tile-link feed" href="/feed">
+        <span class="tile-label">feed <span class="tile-label-arrow" aria-hidden="true">↗</span></span>
       </a>
     </div>
 

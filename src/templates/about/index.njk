@@ -3,26 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% include "partials/site-meta.njk" %}
+  <link rel="canonical" href="https://aesv.io/about">
   <title>about — aesv.io</title>
   <meta name="description" content="{{ about.summary }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="about — aesv.io">
+  <meta property="og:description" content="{{ about.summary }}">
+  <meta property="og:url" content="https://aesv.io/about">
+  <meta property="og:site_name" content="aesv.io">
+  <meta property="og:image" content="https://aesv.io/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="about — aesv.io">
+  <meta name="twitter:description" content="{{ about.summary }}">
+  <meta name="twitter:image" content="https://aesv.io/logo.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Axel Stevens",
+    "url": "https://aesv.io",
+    "email": "axel@aesv.io",
+    "jobTitle": "Systems Integrator",
+    "sameAs": [
+      "https://github.com/4esv",
+      "https://techhub.social/@aes",
+      "https://linkedin.com/in/aesv"
+    ]
+  }
+  </script>
   <link rel="icon" href="/logo-pixel.png" type="image/png">
   <link rel="apple-touch-icon" href="/logo.png">
   <meta name="theme-color" content="#F4ECD8">
   <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/foundation.css">
-  <link rel="stylesheet" href="/css/grdn.css">
+  <link rel="stylesheet" href="/css/feed.css">
+  <link rel="stylesheet" href="/css/transitions.css">
+  {% include "partials/analytics.njk" %}
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
   <main id="main" class="subpage about">
-    {% set route = '/about' %}
     {% include "partials/site-header.njk" %}
 
     <header class="page-head">
       <h1>{{ about.title | lower }}.</h1>
       <p class="lede">{{ about.summary }}</p>
       <div class="page-cta-row">
-        <a class="btn btn-sm" href="mailto:mail@aesv.io">mail@aesv.io ↗</a>
+        <a class="btn btn-sm" href="mailto:axel@aesv.io">axel@aesv.io ↗</a>
         <a class="btn btn-sm" href="https://github.com/4esv" rel="noopener">github ↗</a>
       </div>
     </header>
@@ -33,5 +61,6 @@
   </main>
 
   {% include "partials/big-footer.njk" %}
+  <script src="/js/transitions.js"></script>
 </body>
 </html>

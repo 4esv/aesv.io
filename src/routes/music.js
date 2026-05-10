@@ -2,7 +2,8 @@
 // plays for the "Just heard" lead + ledger, and medium-term top tracks
 // for the album grid. 5-min TTL per source.
 
-import { getRecentTracks, getTopTracksFull } from '../services/spotify.js'
+import { getRecentTracks, getTopTracksFull, searchTrack } from '../services/spotify.js'
+import { renderPage } from '../lib/render.js'
 
 const TEMPLATE = 'music/index.njk'
 
@@ -13,11 +14,12 @@ const TOP_TRACK_LIMIT = 40
 // numbered 02–05 (lead is implied as 01).
 const RECENT_LOG_SIZE = 4
 
-// "Music to me" — short paragraphs in my voice. Survives API outages.
-const MUSIC_TO_ME = [
-  'Music is the closest thing I have to a daily practice. I play to think — sit with a chord that\'s bothering me until it stops.',
-  'No through-line in what I listen to. Corridos, Norwegian death metal, Vince Guaraldi, Rosalía. The connecting thread is "I want to hear that again right now."',
-  'I prefer a room with one good speaker over a soundbar with surround. Recordings are written for two ears.',
+// Songs I'm working on. Album art + deep links pulled live from
+// Spotify search so the covers stay correct without hosting images.
+const LEARNING_QUERIES = [
+  { query: 'Mas Que Nada Sergio Mendes Brasil 66', note: 'Sergio Mendes & Brasil 66' },
+  { query: 'Wave Joao Gilberto', note: 'João Gilberto' },
+  { query: 'Lithium Nirvana', note: 'Nirvana' },
 ]
 
 const CACHE_TTL_MS = 5 * 60 * 1000
@@ -73,17 +75,21 @@ export async function registerMusicRoutes(fastify) {
   fastify.get('/listening', async (_request, reply) => reply.redirect('/music', 301))
 
   fastify.get('/music', async (request, reply) => {
-    const { grid } = request
     const cfg = fastify.config.spotify
 
     // Each source wrapped — partial failures must still render.
     // Albums come from medium-term top tracks (not recent plays) so the
     // grid reflects taste over weeks, not what's playing right now.
-    const [recent, top] = await Promise.all([
+    const [recent, top, learningResults] = await Promise.all([
       cached('recent', () => getRecentTracks(cfg, { limit: RECENT_LIMIT })).catch(() => []),
       cached('top-medium', () =>
         getTopTracksFull(cfg, { limit: TOP_TRACK_LIMIT, timeRange: 'medium_term' })
       ).catch(() => []),
+      Promise.all(
+        LEARNING_QUERIES.map((q) =>
+          cached(`learning:${q.query}`, () => searchTrack(cfg, q.query)).catch(() => null)
+        )
+      ),
     ])
 
     const recentList = Array.isArray(recent) ? recent : []
@@ -97,22 +103,17 @@ export async function registerMusicRoutes(fastify) {
     const leadIndex = nowPlaying ? -1 : 0
     const recentLog = recentList.slice(leadIndex + 1, leadIndex + 1 + RECENT_LOG_SIZE)
 
-    const payload = {
-      site: fastify.config.site,
-      grid,
-      route: '/music',
+    const learning = learningResults
+      .map((track, i) => (track ? { ...track, note: LEARNING_QUERIES[i].note } : null))
+      .filter(Boolean)
+
+    return renderPage(fastify, request, reply, TEMPLATE, {
       nowPlaying,
       recent: recentList,
       recentLog,
       albums,
-      musicToMe: MUSIC_TO_ME,
+      learning,
       hasData: Boolean(recentList.length || albums.length),
-    }
-
-    if (grid.isTerminal) {
-      reply.header('Content-Type', 'text/plain; charset=utf-8')
-    }
-
-    return reply.view(TEMPLATE, payload)
+    })
   })
 }

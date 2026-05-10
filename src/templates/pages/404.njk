@@ -1,24 +1,70 @@
 {%- if grid.isTerminal -%}
 {% extends "base-text.njk" %}
 {% block content %}
-404
-===
+404 — not found
+===============
 
-{{ route }} is not a thing.
+{{ route }} doesn't exist.
+
+Try one of these instead:
+  /         dashboard
+  /work     case studies + hire-me
+  /feed     notebook
+  /music    spotify
+  /about    bio
 
 {{ site.url }}/
 {% endblock %}
-{%- else -%}
-{% extends "base.njk" %}
-{% block title %}404 — {{ site.name }}{% endblock %}
-{% block terminal %}
-<pre class="terminal">
+{%- else -%}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% include "partials/site-meta.njk" %}
+  <link rel="canonical" href="https://aesv.io/">
+  <meta name="robots" content="noindex">
+  <title>404 — aesv.io</title>
+  <meta name="description" content="Page not found.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="404 — aesv.io">
+  <meta property="og:description" content="Page not found.">
+  <meta property="og:url" content="https://aesv.io/">
+  <meta property="og:site_name" content="aesv.io">
+  <meta property="og:image" content="https://aesv.io/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="404 — aesv.io">
+  <meta name="twitter:description" content="Page not found.">
+  <meta name="twitter:image" content="https://aesv.io/logo.png">
+  <link rel="icon" href="/logo-pixel.png" type="image/png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <meta name="theme-color" content="#F4ECD8">
+  <link rel="preload" href="/fonts/birdie-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/foundation.css">
+  {% include "partials/analytics.njk" %}
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <main id="main" class="subpage error-page">
+    {% include "partials/site-header.njk" %}
 
-404
+    <header class="page-head">
+      <p class="error-code">404</p>
+      <h1>Not here.</h1>
+      <p class="lede">
+        <code>{{ route }}</code> doesn't exist. Maybe it never did, maybe it
+        moved. Either way — pick a direction.
+      </p>
+      <div class="page-cta-row">
+        <a class="btn btn-sm btn-primary" href="/">← dashboard</a>
+        <a class="btn btn-sm" href="/work">/work</a>
+        <a class="btn btn-sm" href="/feed">/feed</a>
+        <a class="btn btn-sm" href="/music">/music</a>
+        <a class="btn btn-sm" href="/about">/about</a>
+      </div>
+    </header>
+  </main>
 
-{{ route }} is not a thing.
-
-<a href="/">Home</a>
-</pre>
-{% endblock %}
+  {% include "partials/big-footer.njk" %}
+</body>
+</html>
 {%- endif -%}

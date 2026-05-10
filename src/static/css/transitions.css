@@ -1,0 +1,149 @@
+/* =========================================================
+   PAGE TRANSITIONS — global intro/outro for every subpage.
+   Loaded by base.njk only — home/dashboard has its own bespoke
+   single-source card-deal in dashboard.css and is unaffected.
+
+   System:
+   · text fades in / out
+   · cards + buttons unfold in / fall out
+   · transitions.js intercepts internal nav and adds body.is-leaving
+
+   Containers that hold cards (case-grid, etc.) are explicitly
+   excluded from the fade so their cards can animate cleanly without
+   being damped by a parent fade. The :has() guard does that work.
+   ========================================================= */
+
+/* ---------- INTRO keyframes ---------- */
+@keyframes page-intro-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Card unfolds from its top edge — paper laying down onto a table.
+   Slight overshoot at 60% gives the "thud + settle" the dashboard
+   deal has, so subpages share the same physical idiom. */
+@keyframes page-intro-unfold {
+  0% {
+    opacity: 0;
+    transform: rotateX(-95deg);
+  }
+  60% {
+    opacity: 1;
+    transform: rotateX(8deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+}
+
+/* ---------- OUTRO keyframes ----------
+   Subpage outros are deliberately quick — the navigation is the
+   payoff, not the animation. Total visible exit lasts ~140ms so the
+   next page lands fast. The gravity-fall idiom belongs to the
+   dashboard's bespoke leave; subpages just clear the way. */
+@keyframes page-outro-fade {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+@keyframes page-outro-cards {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ---------- Scope + 3D context ---------- */
+main:not(.dashboard) {
+  /* perspective so unfold rotateX renders as 3D, not a flat scale.
+     Layout is unaffected. */
+  perspective: 1200px;
+}
+
+/* ---------- INTRO: fade ----------
+   Direct children of main fade in — UNLESS they contain unfold
+   targets, in which case the parent skips the fade so its cards can
+   animate without parent-opacity damping. */
+main:not(.dashboard)
+  > *:not(:has(:is(.tile, .case-card, .note-card, .surface-press, button, .button, .btn))) {
+  animation: page-intro-fade 360ms 100ms ease-out backwards;
+}
+/* Header always reads first. */
+main:not(.dashboard) > .site-header {
+  animation: page-intro-fade 280ms 0ms ease-out backwards;
+}
+
+/* ---------- INTRO: unfold ----------
+   Cards + buttons unfold from their top edge. :not(.site-header *)
+   keeps any nested header buttons / brand links part of the header
+   fade rather than spawning a separate unfold. */
+main:not(.dashboard)
+  :is(.tile, .case-card, .note-card, .surface-press, button, .button, .btn):not(.site-header *) {
+  animation: page-intro-unfold 540ms 280ms cubic-bezier(0.5, 1.4, 0.4, 1) backwards;
+  transform-origin: 50% 0%;
+  backface-visibility: hidden;
+}
+
+/* Tight overlap stagger (80ms apart against 540ms unfold) so the row
+   reads as one continuous flowing motion rather than discrete card-
+   card-card beats. Cards 7+ snap to the nth-child(6) delay so a long
+   list still finishes within ~1.4s. */
+main:not(.dashboard) :is(.case-card, .note-card, .tile):nth-child(2) {
+  animation-delay: 360ms;
+}
+main:not(.dashboard) :is(.case-card, .note-card, .tile):nth-child(3) {
+  animation-delay: 440ms;
+}
+main:not(.dashboard) :is(.case-card, .note-card, .tile):nth-child(4) {
+  animation-delay: 520ms;
+}
+main:not(.dashboard) :is(.case-card, .note-card, .tile):nth-child(5) {
+  animation-delay: 600ms;
+}
+main:not(.dashboard) :is(.case-card, .note-card, .tile):nth-child(6) {
+  animation-delay: 680ms;
+}
+main:not(.dashboard) :is(.case-card, .note-card, .tile):nth-child(n + 7) {
+  animation-delay: 760ms;
+}
+
+/* ---------- OUTRO: instant fade ----------
+   Everything fades out together in a single ~140ms beat. No stagger,
+   no fall — the navigation is the point, not the animation. Cards
+   get their own keyframe so they translate down (not up) which reads
+   slightly more like "the page is leaving" than "headers floating
+   away." */
+body.is-leaving main:not(.dashboard) > * {
+  animation: page-outro-fade 130ms ease-in forwards;
+}
+body.is-leaving
+  main:not(.dashboard)
+  :is(.tile, .case-card, .note-card, .surface-press, button, .button, .btn):not(.site-header *) {
+  animation: page-outro-cards 140ms ease-in forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main:not(.dashboard) > *,
+  main:not(.dashboard) :is(.tile, .case-card, .note-card, .surface-press, button, .button, .btn),
+  body.is-leaving main:not(.dashboard) > *,
+  body.is-leaving
+    main:not(.dashboard)
+    :is(.tile, .case-card, .note-card, .surface-press, button, .button, .btn) {
+    animation: none !important;
+  }
+}

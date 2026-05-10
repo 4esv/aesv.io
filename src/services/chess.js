@@ -2,7 +2,7 @@ import { Chess } from 'chess.js'
 import { renderBoardSvg } from '../lib/chess-board-svg.js'
 
 const API_BASE = 'https://api.chess.com/pub/player'
-const USER_AGENT = 'aesv.io/1.0 (mail@aesv.io)'
+const USER_AGENT = 'aesv.io/1.0 (axel@aesv.io)'
 const CACHE_TTL_MS = 5 * 60 * 1000
 
 // NOTE: shared in-memory cache keyed by full URL. Both getLastVictory and the

@@ -12,6 +12,12 @@
   gap: clamp(20px, 2.4vw, 40px);
   min-height: 100svh;
   box-sizing: border-box;
+  /* The intro deals cards from translate(-220, -160) and the outro
+     drops them 130vh past their resting spot. Containing both
+     directions here keeps the off-canvas travel from creating
+     horizontal/vertical scroll on small viewports — cards visibly
+     appear from / disappear into "off the table." */
+  overflow: clip;
 }
 
 /* Header layout + greeting live in foundation.css so every page
@@ -127,7 +133,6 @@
   display: none;
 }
 
-
 /* Cell variants share the .tile frame so every cell reads as one
    family. Press behavior is in foundation's :where(.tile, ...) rule. */
 .widget-cell.spotify,
@@ -161,11 +166,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(26, 26, 26, 0) 50%,
-    rgba(26, 26, 26, 0.6) 100%
-  );
+  background: linear-gradient(to bottom, rgba(26, 26, 26, 0) 50%, rgba(26, 26, 26, 0.6) 100%);
   z-index: 4;
   pointer-events: none;
   transition: background var(--dur-press) var(--ease-press);
@@ -360,21 +361,21 @@
 .tile-label,
 .widget-cell-link .cell-hover-label {
   position: absolute;
-  bottom: clamp(8px, 6cqi, 32px);
-  left: clamp(8px, 6cqi, 32px);
-  right: clamp(8px, 6cqi, 32px);
+  bottom: clamp(8px, 5cqi, 24px);
+  left: clamp(8px, 5cqi, 24px);
+  right: clamp(8px, 5cqi, 24px);
   font-family: var(--font-display);
-  font-size: clamp(10px, 10cqi, 56px);
+  font-size: clamp(10px, 7cqi, 36px);
   line-height: 1;
   letter-spacing: -0.02em;
   display: inline-flex;
   align-items: baseline;
-  gap: clamp(3px, 2cqi, 16px);
+  gap: clamp(3px, 1.5cqi, 12px);
   color: inherit;
 }
 .tile-label-arrow {
   font-family: var(--font-display);
-  font-size: clamp(7px, 6cqi, 32px);
+  font-size: clamp(7px, 4.5cqi, 22px);
   line-height: 1;
 }
 .tile-primary {
@@ -382,13 +383,194 @@
   color: var(--offwhite);
 }
 .tile-primary .tile-label,
-.tile-primary .tile-label-arrow { color: var(--offwhite); }
+.tile-primary .tile-label-arrow {
+  color: var(--offwhite);
+}
 
 /* Music + activities labels read cream against the gradient overlay so
    they stay legible over album art / chess board / strava polyline. */
 .widget-cell-link .cell-hover-label,
 .widget-cell-link .cell-hover-label .tile-label-arrow {
   color: var(--cream);
+}
+
+/* =========================================================
+   DASHBOARD — INTRO
+   Header text fades in, then a tiny pause, then the six grid
+   cells are dealt in source order. Source-order stagger lands
+   correctly across all four grid modes:
+     · landscape (3×2): rows fill L→R, top row first
+     · portrait (2×3):  reads L→R per row, top to bottom
+     · tall band (1×6): top → bottom
+     · wide band (6×1): left → right
+   Scoped under .dashboard so the shared site-header partial
+   only animates on the home route.
+   ========================================================= */
+
+@keyframes dashboard-intro-text {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Card-deal feel: every card flies in from a single source above the
+   middle of the grid (the dealer's hand) to its own resting spot.
+   dashboard.js measures the grid + each cell on load and sets per-cell
+   --deal-x / --deal-y / --deal-rot so the cards converge on one point
+   regardless of which responsive grid mode is active. The fallbacks
+   (-220, -160, -15deg) cover the case where JS hasn't run yet — same
+   off-axis upper-left for every card.
+   Three things make it read as flight rather than evaporate-on-arrival:
+   · opacity ramps to 1 inside the first 8%, so the card is solid for
+     the bulk of its visible travel
+   · the start is far enough to give the eye a real arc to track
+   · box-shadow lerps from lifted (14px 14px) to resting (6px 6px),
+     so the card visibly drops onto the table as it finishes traveling
+   The 'to' lands at 0,0,0 / --shadow-md — same as foundation's
+   resting state, so no transform/shadow handoff is needed. The
+   .widget-cell-bare cell uses dashboard-intro-text instead and never
+   sees this rule, so the shadow keyframe doesn't fight its
+   shadow:none override. */
+@keyframes dashboard-intro-deal {
+  0% {
+    opacity: 0;
+    transform: translate(var(--deal-x, -220px), var(--deal-y, -160px))
+      rotate(var(--deal-rot, -15deg));
+    box-shadow: 14px 14px 0 0 var(--ink);
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.dashboard .site-header {
+  animation: dashboard-intro-text 280ms ease-out backwards;
+}
+
+/* The bare info cell (slot 1) is just text — it has no card chrome,
+   so dealing it from off-axis would look weird. It fades in like the
+   header, slightly delayed so the eye reads brand → greeting → info
+   as a single text wave before the cards drop. */
+.dashboard-grid > .widget-cell-bare {
+  animation: dashboard-intro-text 280ms ease-out 120ms backwards;
+}
+
+/* Sequential deal (cards 2–6):
+   · 320ms flight × back-out easing → 280ms of visible travel after
+     the opacity ramp, then ~9% overshoot past 0 and settle
+   · 110ms stagger → next card starts while current is still mid-air,
+     so the dealer reads as fast-handed without losing the per-card
+     rhythm
+   · 480ms slot-2 delay → header + info text have settled + a beat */
+.dashboard-grid > * {
+  animation: dashboard-intro-deal 320ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+.dashboard-grid > *:nth-child(2) {
+  animation-delay: 480ms;
+}
+.dashboard-grid > *:nth-child(3) {
+  animation-delay: 590ms;
+}
+.dashboard-grid > *:nth-child(4) {
+  animation-delay: 700ms;
+}
+.dashboard-grid > *:nth-child(5) {
+  animation-delay: 810ms;
+}
+.dashboard-grid > *:nth-child(6) {
+  animation-delay: 920ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard .site-header,
+  .dashboard-grid > * {
+    animation: none;
+  }
+}
+
+/* ---------- Dashboard outro — fires when a same-origin link inside
+   the dashboard is clicked. dashboard.js adds .is-leaving, runs the
+   animation, then navigates. Cards fall in source order (mirroring
+   the deal); the header fades quickly so the outro stays under
+   ~560ms total — long enough to read as a deliberate exit, short
+   enough that nav still feels snappy. fill-mode: forwards holds the
+   off-screen state until the next document loads. */
+@keyframes dashboard-outro-text {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+/* Anticipation lift then gravity fall all the way off-screen. The
+   tiny upward lift at 18% adds the "plucked up before dropping"
+   character the cards earn from being placed by hand. 130vh
+   guarantees the card exits the viewport regardless of viewport
+   size + a little rotational tumble. */
+@keyframes dashboard-outro-fall {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(0, -14px) rotate(-2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(14px, 130vh) rotate(14deg);
+  }
+}
+
+.dashboard.is-leaving .site-header {
+  animation: dashboard-outro-text 140ms ease-in forwards;
+}
+/* The bare info cell is just text — fade out like the header rather
+   than tumble. Same selector pattern as the intro override. */
+.dashboard.is-leaving .dashboard-grid > .widget-cell-bare {
+  animation: dashboard-outro-text 140ms ease-in forwards;
+}
+/* Snappier sequential fall (cards 2–6):
+   · 220ms drop with strong gravity easing
+   · 55ms stagger → quick visible cascade
+   · Last card lands off-screen at 4×55 + 220 = 440ms
+   OUTRO_CAP_MS in dashboard.js covers the failsafe nav. */
+.dashboard.is-leaving .dashboard-grid > * {
+  animation: dashboard-outro-fall 220ms cubic-bezier(0.55, 0, 0.95, 0.3) forwards;
+}
+.dashboard.is-leaving .dashboard-grid > *:nth-child(2) {
+  animation-delay: 0ms;
+}
+.dashboard.is-leaving .dashboard-grid > *:nth-child(3) {
+  animation-delay: 55ms;
+}
+.dashboard.is-leaving .dashboard-grid > *:nth-child(4) {
+  animation-delay: 110ms;
+}
+.dashboard.is-leaving .dashboard-grid > *:nth-child(5) {
+  animation-delay: 165ms;
+}
+.dashboard.is-leaving .dashboard-grid > *:nth-child(6) {
+  animation-delay: 220ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard.is-leaving .site-header,
+  .dashboard.is-leaving .dashboard-grid > * {
+    animation: none;
+  }
 }
 
 /* =========================================================
@@ -450,44 +632,30 @@
   }
 }
 
-/* ---------- Desktop tier (1600–2559px) — more air, type +. */
+/* ---------- Desktop tier (1600–2559px) — shell tracks --shell-max
+   from foundation.css; only padding/gap loosen here so tiles breathe
+   without the grid reading as "comically large." */
 @media (min-width: 1600px) and (max-width: 2559px) {
   .dashboard {
-    max-width: 1800px;
-    padding: 64px;
-    gap: 56px;
+    padding: 56px;
+    gap: 48px;
   }
   .dashboard-grid {
-    gap: 32px;
+    gap: 28px;
   }
 }
 
-/* ---------- TV / billboard (≥2560px) — type ramps for far-away
-   reading. Layout still resolves through MODE 1/2/4. */
+/* ---------- TV / billboard (≥2560px) — same: --shell-max is the
+   width source of truth, this block only nudges spacing. Brand and
+   greeting sizing are owned by foundation.css so the header reads the
+   same on home as on every subpage. */
 @media (min-width: 2560px) {
   .dashboard {
-    max-width: 3200px;
-    padding: 120px 96px;
-    gap: 96px;
+    padding: 88px 72px;
+    gap: 72px;
   }
   .site-header {
     gap: 32px;
-  }
-  .site-header .brand {
-    font-size: 48px;
-    gap: 24px;
-  }
-  .site-header .brand img {
-    width: 80px;
-    height: 80px;
-  }
-  .dashboard-greeting {
-    font-size: 56px;
-    max-width: 32ch;
-  }
-  .dashboard-greeting .meta {
-    font-size: 18px;
-    margin-top: 16px;
   }
   .dashboard-grid {
     gap: 48px;
@@ -495,10 +663,6 @@
 
   .widget-spotify .listen-overlay .cta {
     font-size: 96px;
-  }
-
-  .tile {
-    padding: 56px;
   }
 
   .big-footer {
@@ -530,4 +694,3 @@
     padding-top: 48px;
   }
 }
-
